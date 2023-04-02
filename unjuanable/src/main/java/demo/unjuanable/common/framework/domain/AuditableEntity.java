@@ -22,7 +22,7 @@ public abstract class AuditableEntity {
     }
 
     public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        lastUpdatedAt = lastUpdatedAt;
+        this.lastUpdatedAt = lastUpdatedAt;
     }
 
     public LocalDateTime getLastUpdatedAt() {

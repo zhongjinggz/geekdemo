@@ -32,11 +32,11 @@ public class SuperiorValidator {
 
     public OrgType findSuperiorOrgType(Long tenant, Long superior, Org superiorOrg) {
         return orgTypeRepository.findByCodeAndStatus(tenant
-                        , superiorOrg.getOrgType()
+                        , superiorOrg.getOrgTypeCode()
                         , OrgTypeStatus.EFFECTIVE)
                 .orElseThrow(() ->
                         new DirtyDataException("id 为 '" + superior
-                                + "' 的组织的组织类型代码 '" + superiorOrg.getOrgType() + "' 无效!"));
+                                + "' 的组织的组织类型代码 '" + superiorOrg.getOrgTypeCode() + "' 无效!"));
     }
 
     // 开发中心和直属部门的上级只能是企业

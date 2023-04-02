@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class TenantRepositoryIT {
-    TenantRepository tenantRepository;
+    private final TenantRepository tenantRepository;
 
     @Autowired
     TenantRepositoryIT(TenantRepository tenantRepository) {

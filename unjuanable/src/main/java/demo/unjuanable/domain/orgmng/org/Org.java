@@ -6,17 +6,17 @@ import java.time.LocalDateTime;
 
 public class Org extends AuditableEntity {
     private Long id;
-    private Long tenant;
-    private Long superior;
-    private String orgType;
-    private Long leader;
+    private Long tenantId;
+    private Long superiorId;
+    private String orgTypeCode;
+    private Long leaderId;
     private String name;
     private OrgStatus status;
 
-    public Org(Long tenant, String orgType, LocalDateTime createdAt, Long createdBy) {
+    public Org(Long tenantId, String orgTypeCode, LocalDateTime createdAt, Long createdBy) {
         super(createdAt, createdBy);
-        this.tenant = tenant;
-        this.orgType = orgType;
+        this.tenantId = tenantId;
+        this.orgTypeCode = orgTypeCode;
         status = OrgStatus.EFFECTIVE;
     }
 
@@ -24,20 +24,20 @@ public class Org extends AuditableEntity {
         return id;
     }
 
-    public Long getTenant() {
-        return tenant;
+    public Long getTenantId() {
+        return tenantId;
     }
 
-    public Long getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public String getOrgType() {
-        return orgType;
+    public String getOrgTypeCode() {
+        return orgTypeCode;
     }
 
-    public Long getLeader() {
-        return leader;
+    public Long getLeaderId() {
+        return leaderId;
     }
 
     public String getName() {
@@ -52,12 +52,12 @@ public class Org extends AuditableEntity {
         return status.equals(OrgStatus.EFFECTIVE);
     }
 
-    public void setSuperior(Long superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
-    public void setLeader(Long leader) {
-        this.leader = leader;
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
     }
 
     public void setName(String name) {
@@ -70,5 +70,9 @@ public class Org extends AuditableEntity {
 
     public void cancel() {
         this.status = OrgStatus.CANCELLED;
+    }
+
+    void setId(Long id) {
+        this.id = id;
     }
 }

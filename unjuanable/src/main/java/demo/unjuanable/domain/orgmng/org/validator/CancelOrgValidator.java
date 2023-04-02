@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CancelOrgValidator {
 
-    private EmpRepository empRepository;
+    private final EmpRepository empRepository;
 
     @Autowired
     public CancelOrgValidator(EmpRepository empRepository) {

@@ -1,19 +1,20 @@
 package demo.unjuanable.domain.orgmng.orgtype;
 
 
+import demo.unjuanable.common.framework.domain.AuditableEntity;
+
 import java.time.LocalDateTime;
 
-public class OrgType {
+public class OrgType extends AuditableEntity {
 
   private String code;
   private long tenant;
   private String name;
-  private OrgType status;
-  private LocalDateTime createdAt;
-  private long createdBy;
-  private LocalDateTime lastUpdatedAt;
-  private long lastUpdatedBy;
+  private OrgTypeStatus status;
 
+  public OrgType(LocalDateTime createdAt, Long createdBy) {
+    super(createdAt, createdBy);
+  }
 
   public String getCode() {
     return code;
@@ -41,48 +42,21 @@ public class OrgType {
     this.name = name;
   }
 
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
-  }
-
-
-  public long getCreatedBy() {
-    return createdBy;
-  }
-
-  public void setCreatedBy(long createdBy) {
-    this.createdBy = createdBy;
-  }
-
-
-  public LocalDateTime getLastUpdatedAt() {
-    return lastUpdatedAt;
-  }
-
   public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
     this.lastUpdatedAt = lastUpdatedAt;
   }
 
-
-  public long getLastUpdatedBy() {
-    return lastUpdatedBy;
-  }
 
   public void setLastUpdatedBy(long lastUpdatedBy) {
     this.lastUpdatedBy = lastUpdatedBy;
   }
 
 
-  public OrgType getStatus() {
+  public OrgTypeStatus getStatus() {
     return status;
   }
 
-  public void setStatus(OrgType status) {
+  public void setStatus(OrgTypeStatus status) {
     this.status = status;
   }
 

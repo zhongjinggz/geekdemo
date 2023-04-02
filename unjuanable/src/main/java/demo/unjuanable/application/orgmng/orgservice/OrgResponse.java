@@ -118,7 +118,7 @@ public class OrgResponse {
 
     @Override
     public String toString() {
-        String sb = "OrgDto{" + "id=" + id +
+        return "OrgDto{" + "id=" + id +
                 ", tenant=" + tenant +
                 ", superior=" + superior +
                 ", orgType='" + orgType + '\'' +
@@ -129,6 +129,5 @@ public class OrgResponse {
                 ", lastUpdatedAt=" + lastUpdatedAt +
                 ", lastUpdatedBy=" + lastUpdatedBy +
                 '}';
-        return sb;
     }
 }

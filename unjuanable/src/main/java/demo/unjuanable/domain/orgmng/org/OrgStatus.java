@@ -1,7 +1,8 @@
 package demo.unjuanable.domain.orgmng.org;
 
+import demo.unjuanable.domain.common.exception.BusinessException;
+
 import java.util.Arrays;
-import java.util.Optional;
 
 public enum OrgStatus {
     EFFECTIVE("EF", "有效"),
@@ -10,8 +11,11 @@ public enum OrgStatus {
     private final String code;
     private final String desc;
 
-    public static Optional<OrgStatus> ofCode(String code) {
-        return Arrays.stream(values()).filter( s -> s.code.equals(code)).findAny();
+    public static OrgStatus ofCode(String code) {
+        return Arrays.stream(values())
+                .filter( s -> s.code.equals(code))
+                .findAny()
+                .orElseThrow(() -> new BusinessException(code + "不是有效的组织状态代码！"));
     }
 
     OrgStatus(String code, String desc) {

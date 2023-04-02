@@ -10,6 +10,5 @@ public interface OrgRepository {
     Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status);
 
     boolean existsBySuperiorAndName(Long tenant, Long superior, String name);
-
     int update(Org org);
 }

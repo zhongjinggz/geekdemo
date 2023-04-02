@@ -27,8 +27,8 @@ class OrgRepositoryIT {
     void save_successfully() {
         Org org = new Org(1L, "DEVCET", LocalDateTime.now(), 1L);
         org.setName("大名府");
-        org.setLeader(1L);
-        org.setSuperior(1L);
+        org.setLeaderId(1L);
+        org.setSuperiorId(1L);
 
         Org created = orgRepository.save(org);
 

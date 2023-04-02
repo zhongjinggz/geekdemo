@@ -17,10 +17,10 @@ public class OrgBuilder {
     private final OrgNameValidator orgNameValidator;
     private final OrgLeaderValidator orgLeaderValidator;
 
-    private Long tenant;
-    private Long superior;
-    private String orgType;
-    private Long leader;
+    private Long tenantId;
+    private Long superiorId;
+    private String orgTypeCode;
+    private Long leaderId;
     private String name;
     private Long createdBy;
 
@@ -37,23 +37,23 @@ public class OrgBuilder {
         this.orgLeaderValidator = orgLeaderValidator;
     }
 
-    public OrgBuilder tenant(Long tenant) {
-        this.tenant = tenant;
+    public OrgBuilder tenantId(Long tenantId) {
+        this.tenantId = tenantId;
         return this;
     }
 
-    public OrgBuilder superior(Long superior) {
-        this.superior = superior;
+    public OrgBuilder superiorId(Long superiorId) {
+        this.superiorId = superiorId;
         return this;
     }
 
-    public OrgBuilder orgType(String orgType) {
-        this.orgType = orgType;
+    public OrgBuilder orgTypeCode(String orgTypeCode) {
+        this.orgTypeCode = orgTypeCode;
         return this;
     }
 
-    public OrgBuilder leader(Long leader) {
-        this.leader = leader;
+    public OrgBuilder leaderId(Long leaderId) {
+        this.leaderId = leaderId;
         return this;
     }
 
@@ -70,18 +70,18 @@ public class OrgBuilder {
     public Org build() {
         validate();
 
-        Org org = new Org(tenant, orgType, LocalDateTime.now(), createdBy);
-        org.setLeader(this.leader);
+        Org org = new Org(tenantId, orgTypeCode, LocalDateTime.now(), createdBy);
+        org.setLeaderId(this.leaderId);
         org.setName(this.name);
-        org.setSuperior(this.superior);
+        org.setSuperiorId(this.superiorId);
 
         return org;
     }
 
     private void validate() {
 
-        commonValidator.tenantShouldValid(tenant);
-        orgLeaderValidator.leaderShouldBeEffective(tenant, leader);
+        commonValidator.tenantShouldValid(tenantId);
+        orgLeaderValidator.leaderShouldBeEffective(tenantId, leaderId);
 
         verifyOrgType();
         verifySuperior();
@@ -90,20 +90,20 @@ public class OrgBuilder {
 
     private void verifyOrgName() {
         orgNameValidator.orgNameShouldNotEmpty(name);
-        orgNameValidator.nameShouldNotDuplicatedInSameSuperior(tenant, superior, name);
+        orgNameValidator.nameShouldNotDuplicatedInSameSuperior(tenantId, superiorId, name);
     }
 
     private void verifySuperior() {
-        Org superiorOrg = superiorValidator.superiorShouldEffective(tenant, superior);
-        OrgType superiorOrgType = superiorValidator.findSuperiorOrgType(tenant, superior, superiorOrg);
-        superiorValidator.superiorOfDevGroupMustDevCenter(superior, orgType, superiorOrgType);
-        superiorValidator.SuperiorOfDevCenterAndDirectDeptMustEntp(superior, orgType, superiorOrgType);
+        Org superiorOrg = superiorValidator.superiorShouldEffective(tenantId, superiorId);
+        OrgType superiorOrgType = superiorValidator.findSuperiorOrgType(tenantId, superiorId, superiorOrg);
+        superiorValidator.superiorOfDevGroupMustDevCenter(superiorId, orgTypeCode, superiorOrgType);
+        superiorValidator.SuperiorOfDevCenterAndDirectDeptMustEntp(superiorId, orgTypeCode, superiorOrgType);
     }
 
     private void verifyOrgType() {
-        orgTypeValidator.orgTypeShouldNotEmpty(orgType);
-        orgTypeValidator.orgTypeShouldBeValid(tenant, orgType);
-        orgTypeValidator.shouldNotCreateEntpAlone(orgType);
+        orgTypeValidator.orgTypeShouldNotEmpty(orgTypeCode);
+        orgTypeValidator.orgTypeShouldBeValid(tenantId, orgTypeCode);
+        orgTypeValidator.shouldNotCreateEntpAlone(orgTypeCode);
     }
 
 

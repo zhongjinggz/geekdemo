@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TenantRepository {
-    JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
     @Autowired
     public TenantRepository(JdbcTemplate jdbc) {

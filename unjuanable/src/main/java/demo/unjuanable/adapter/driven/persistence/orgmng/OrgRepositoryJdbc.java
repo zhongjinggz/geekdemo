@@ -1,8 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
-import demo.unjuanable.domain.orgmng.org.Org;
-import demo.unjuanable.domain.orgmng.org.OrgRepository;
-import demo.unjuanable.domain.orgmng.org.OrgStatus;
+import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -13,24 +11,61 @@ import java.util.Map;
 import java.util.Optional;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
+import static demo.unjuanable.common.util.SqlUtil.toLocalDateTime;
 
 @Repository
 public class OrgRepositoryJdbc implements OrgRepository {
-    JdbcTemplate jdbc;
-    SimpleJdbcInsert insertOrg;
+    private final JdbcTemplate jdbc;
+    private final SimpleJdbcInsert insertOrg;
+    private final OrgReBuilderFactory orgReBuilderFactory;
 
     @Autowired
-    public OrgRepositoryJdbc(JdbcTemplate jdbc) {
+    public OrgRepositoryJdbc(JdbcTemplate jdbc, OrgReBuilderFactory orgReBuilderFactory) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
                 .withTableName("org")
                 .usingGeneratedKeyColumns("id");
 
+        this.orgReBuilderFactory = orgReBuilderFactory;
+
     }
 
     @Override
     public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
-        return Optional.empty();
+        final String sql = " select id"
+                + ", tenant_id"
+                + ", superior_id"
+                + ", org_type_code"
+                + ", leader_id"
+                + ", name"
+                + ", status_code"
+                + ", created_at"
+                + ", created_by"
+                + ", last_updated_at"
+                + ", last_updated_by "
+                + " from org "
+                + " where tenant_id = ?  and id = ? and status_code = ? ";
+
+        return Optional.ofNullable(
+                jdbc.queryForObject(sql
+                        , (rs, rowNum) -> {
+                            OrgReBuilder orgReBuilder = orgReBuilderFactory.build();
+                            return orgReBuilder.id(rs.getLong("id"))
+                                    .tenantId(rs.getLong("tenant_id"))
+                                    .superiorId(rs.getLong("superior_id"))
+                                    .orgTypeCode(rs.getString("org_type_code"))
+                                    .leaderId(rs.getLong("leader_id"))
+                                    .name(rs.getString("name"))
+                                    .statusCode(rs.getString("status_code"))
+                                    .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
+                                    .createdBy(rs.getLong("created_by"))
+                                    .lastCreatedAt(toLocalDateTime(rs, "last_updated_at"))
+                                    .lastUpdatedBy(rs.getLong("last_updated_by"))
+                                    .build();
+                        }
+                        , tenantId
+                        , id
+                        , status.code()));
     }
 
     @Override
@@ -39,12 +74,12 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
         parms.put("created_at", org.getCreatedAt());
         parms.put("created_by", org.getCreatedBy());
-        parms.put("leader", org.getLeader());
+        parms.put("leader_id", org.getLeaderId());
         parms.put("name", org.getName());
-        parms.put("org_type", org.getOrgType());
-        parms.put("status", org.getStatus().code());
-        parms.put("superior", org.getSuperior());
-        parms.put("tenant", org.getTenant());
+        parms.put("org_type_code", org.getOrgTypeCode());
+        parms.put("status_code", org.getStatus().code());
+        parms.put("superior_id", org.getSuperiorId());
+        parms.put("tenant_id", org.getTenantId());
 
         Number createdId = insertOrg.executeAndReturnKey(parms);
 

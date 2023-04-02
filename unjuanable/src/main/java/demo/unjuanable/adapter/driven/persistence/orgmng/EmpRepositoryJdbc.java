@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class EmpRepositoryJdbc implements EmpRepository {
 
-    JdbcTemplate jdbc;
+    private final JdbcTemplate jdbc;
 
     @Autowired
     public EmpRepositoryJdbc(JdbcTemplate jdbc) {

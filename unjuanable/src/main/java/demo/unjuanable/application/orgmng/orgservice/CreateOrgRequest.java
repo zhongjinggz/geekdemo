@@ -49,12 +49,11 @@ public class CreateOrgRequest {
 
     @Override
     public String toString() {
-        String sb = "OrgDto{ tenant=" + tenant +
+        return "OrgDto{ tenant=" + tenant +
                 ", superior=" + superior +
                 ", orgType='" + orgType + '\'' +
                 ", leader=" + leader +
                 ", name='" + name + '\'' +
                 '}';
-        return sb;
     }
 }

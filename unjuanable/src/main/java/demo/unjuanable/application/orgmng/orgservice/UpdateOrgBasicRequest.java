@@ -39,10 +39,9 @@ public class UpdateOrgBasicRequest {
 
     @Override
     public String toString() {
-        String sb = "OrgDto{" + " tenant=" + tenant +
+        return "OrgDto{" + " tenant=" + tenant +
                 ", leader=" + leader +
                 ", name='" + name + '\'' +
                 '}';
-        return sb;
     }
 }
