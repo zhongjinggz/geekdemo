@@ -24,8 +24,8 @@ public class OrgNameValidator {
     }
 
     // 同一个组织下的下级组织不能重名
-    public void nameShouldNotDuplicatedInSameSuperior(Long tenant, Long superior, String name) {
-        if (orgRepository.existsBySuperiorAndName(tenant, superior, name)) {
+    public void nameShouldNotDuplicatedInSameSuperior(Long tenantId, Long superiorId, String name) {
+        if (orgRepository.existsBySuperiorIdAndName(tenantId, superiorId, name)) {
             throw new BusinessException("同一上级下已经有名为'" + name + "'的组织存在！");
         }
     }

@@ -96,7 +96,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
                 + " where tenant_id = ?  and id = ? ";
 
         try {
-            return Optional.of(jdbc.queryForObject(sql
+            return Optional.ofNullable(jdbc.queryForObject(sql
                     , orgRowMapper
                     , tenantId
                     , id));
@@ -107,8 +107,21 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    public boolean existsBySuperiorAndName(Long tenant, Long superior, String name) {
-        return false;
+    public boolean existsBySuperiorIdAndName(Long tenantId, Long superiorId, String name) {
+        final String sql = " select 1"
+                + " from org "
+                + " where tenant_id = ?  and superior_id = ? and name = ?"
+                + " limit 1 ";
+
+        try {
+            return jdbc.queryForObject(sql
+                    , Integer.class
+                    , tenantId
+                    , superiorId
+                    , name) != null;
+        }catch (IncorrectResultSizeDataAccessException e) {
+            return false;
+        }
     }
 
     @Override
