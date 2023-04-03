@@ -1,6 +1,6 @@
 package demo.unjuanable.common.util;
 
-import demo.unjuanable.domain.orgmng.org.Org;
+//import demo.unjuanable.domain.orgmng.org.Org;
 
 import java.lang.reflect.Field;
 
@@ -9,7 +9,7 @@ public final class ReflectUtil {
 
     public static void forceSet(Object theObj, String fieldName, Object fieldValue) {
         try {
-            Field idField = Org.class.getDeclaredField(fieldName);
+            Field idField = theObj.getClass().getDeclaredField(fieldName);
             idField.setAccessible(true);
             idField.set(theObj, fieldValue);
         } catch (NoSuchFieldException | IllegalAccessException e) {

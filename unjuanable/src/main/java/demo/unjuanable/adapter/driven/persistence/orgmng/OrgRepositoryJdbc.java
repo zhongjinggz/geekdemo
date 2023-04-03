@@ -61,7 +61,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
     @Override
     public Org save(Org org) {
-        Map<String, Object> parms = new HashMap<>(3);
+        Map<String, Object> parms = new HashMap<>(8);
 
         parms.put("created_at", org.getCreatedAt());
         parms.put("created_by", org.getCreatedBy());
@@ -100,7 +100,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
                     , orgRowMapper
                     , tenantId
                     , id));
-        }catch (IncorrectResultSizeDataAccessException e) {
+        } catch (IncorrectResultSizeDataAccessException e) {
             return Optional.empty();
         }
 
@@ -108,18 +108,13 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
     @Override
     public boolean existsBySuperiorIdAndName(Long tenantId, Long superiorId, String name) {
-        final String sql = " select 1"
-                + " from org "
+        final String sql = " select 1 from org "
                 + " where tenant_id = ?  and superior_id = ? and name = ?"
                 + " limit 1 ";
 
         try {
-            return jdbc.queryForObject(sql
-                    , Integer.class
-                    , tenantId
-                    , superiorId
-                    , name) != null;
-        }catch (IncorrectResultSizeDataAccessException e) {
+            return jdbc.queryForObject(sql, Integer.class, tenantId, superiorId, name) != null;
+        } catch (IncorrectResultSizeDataAccessException e) {
             return false;
         }
     }

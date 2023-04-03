@@ -1,7 +1,7 @@
 package demo.unjuanable.domain.orgmng.org;
 
 
-import demo.unjuanable.domain.common.validator.CommonValidator;
+import demo.unjuanable.domain.common.validator.CommonTenantValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgLeaderValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgNameValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgTypeValidator;
@@ -11,11 +11,11 @@ import demo.unjuanable.domain.orgmng.orgtype.OrgType;
 import java.time.LocalDateTime;
 
 public class OrgBuilder {
-    private final CommonValidator commonValidator;
-    private final OrgTypeValidator orgTypeValidator;
-    private final SuperiorValidator superiorValidator;
-    private final OrgNameValidator orgNameValidator;
-    private final OrgLeaderValidator orgLeaderValidator;
+    private final CommonTenantValidator assertOrgTenant;
+    private final OrgTypeValidator assertOrgType;
+    private final SuperiorValidator assertSuperior;
+    private final OrgNameValidator assertOrgName;
+    private final OrgLeaderValidator assertOrgLeader;
 
     private Long tenantId;
     private Long superiorId;
@@ -24,17 +24,17 @@ public class OrgBuilder {
     private String name;
     private Long createdBy;
 
-    OrgBuilder(CommonValidator commonValidator
-            , OrgTypeValidator orgTypeValidator
-            , SuperiorValidator superiorValidator
-            , OrgNameValidator orgNameValidator
-            , OrgLeaderValidator orgLeaderValidator) {
+    OrgBuilder(CommonTenantValidator assertOrgTenant
+            , OrgTypeValidator assertOrgType
+            , SuperiorValidator assertSuperior
+            , OrgNameValidator assertOrgName
+            , OrgLeaderValidator assertOrgLeader) {
 
-        this.commonValidator = commonValidator;
-        this.orgTypeValidator = orgTypeValidator;
-        this.superiorValidator = superiorValidator;
-        this.orgNameValidator = orgNameValidator;
-        this.orgLeaderValidator = orgLeaderValidator;
+        this.assertOrgTenant = assertOrgTenant;
+        this.assertOrgType = assertOrgType;
+        this.assertSuperior = assertSuperior;
+        this.assertOrgName = assertOrgName;
+        this.assertOrgLeader = assertOrgLeader;
     }
 
     public OrgBuilder tenantId(Long tenantId) {
@@ -79,31 +79,37 @@ public class OrgBuilder {
     }
 
     private void validate() {
-
-        commonValidator.tenantShouldValid(tenantId);
-        orgLeaderValidator.leaderShouldBeEffective(tenantId, leaderId);
-
-        verifyOrgType();
-        verifySuperior();
-        verifyOrgName();
+        validateOrgTenant();
+        validateOrgLeader();
+        validateOrgType();
+        validateSuperior();
+        validateOrgName();
     }
 
-    private void verifyOrgName() {
-        orgNameValidator.orgNameShouldNotEmpty(name);
-        orgNameValidator.nameShouldNotDuplicatedInSameSuperior(tenantId, superiorId, name);
+    private void validateOrgLeader() {
+        assertOrgLeader.shouldEffective(tenantId, leaderId);
     }
 
-    private void verifySuperior() {
-        Org superiorOrg = superiorValidator.superiorShouldEffective(tenantId, superiorId);
-        OrgType superiorOrgType = superiorValidator.findSuperiorOrgType(tenantId, superiorId, superiorOrg);
-        superiorValidator.superiorOfDevGroupMustDevCenter(superiorId, orgTypeCode, superiorOrgType);
-        superiorValidator.SuperiorOfDevCenterAndDirectDeptMustEntp(superiorId, orgTypeCode, superiorOrgType);
+    private void validateOrgTenant() {
+        assertOrgTenant.shouldEffective(tenantId);
     }
 
-    private void verifyOrgType() {
-        orgTypeValidator.orgTypeShouldNotEmpty(orgTypeCode);
-        orgTypeValidator.orgTypeShouldBeValid(tenantId, orgTypeCode);
-        orgTypeValidator.shouldNotCreateEntpAlone(orgTypeCode);
+    private void validateOrgName() {
+        assertOrgName.shouldNotEmpty(name);
+        assertOrgName.shouldNotDuplicatedInSameSuperior(tenantId, superiorId, name);
+    }
+
+    private void validateSuperior() {
+        Org superiorOrg = assertSuperior.shouldEffective(tenantId, superiorId);
+        OrgType superiorOrgType = assertSuperior.orgTypeShouldEffective(tenantId, superiorId, superiorOrg);
+        assertSuperior.ofDevGroupMustDevCenter(superiorId, orgTypeCode, superiorOrgType);
+        assertSuperior.ofDevCenterAndDirectDeptMustEntp(superiorId, orgTypeCode, superiorOrgType);
+    }
+
+    private void validateOrgType() {
+        assertOrgType.shouldNotEmpty(orgTypeCode);
+        assertOrgType.shouldEffective(tenantId, orgTypeCode);
+        assertOrgType.shouldNotEntp(orgTypeCode);
     }
 
 

@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 
 @Component
 public class OrgHandler {
-    private final OrgNameValidator nameValidator;
-    private final OrgLeaderValidator leaderValidator;
-    private final CancelOrgValidator cancelValidator;
+    private final OrgNameValidator assertOrgName;
+    private final OrgLeaderValidator assertOrgLeader;
+    private final CancelOrgValidator assertOrgToBeCanceled;
 
-    public OrgHandler( OrgNameValidator nameValidator
-            , OrgLeaderValidator leaderValidator
-            , CancelOrgValidator cancelValidator) {
+    public OrgHandler( OrgNameValidator assertOrgName
+            , OrgLeaderValidator assertOrgLeader
+            , CancelOrgValidator assertOrgToBeCanceled) {
 
-        this.nameValidator = nameValidator;
-        this.leaderValidator = leaderValidator;
-        this.cancelValidator = cancelValidator;
+        this.assertOrgName = assertOrgName;
+        this.assertOrgLeader = assertOrgLeader;
+        this.assertOrgToBeCanceled = assertOrgToBeCanceled;
     }
 
     public void updateBasic(Org org, String newName, Long newLeader, Long userId) {
@@ -29,23 +29,23 @@ public class OrgHandler {
     }
 
     public void cancel(Org org, Long userId) {
-        cancelValidator.OrgToBeCancelledShouldNotHasEmp(org.getTenantId(), org.getId());
-        cancelValidator.OnlyEffectiveOrgCanBeCancelled(org);
+        assertOrgToBeCanceled.shouldNotHasEmp(org.getTenantId(), org.getId());
+        assertOrgToBeCanceled.shouldEffective(org);
         org.cancel();
         updateAuditInfo(org, userId);
     }
 
     private void updateLeader(Org org, Long newLeader) {
         if (newLeader != null && !newLeader.equals(org.getLeaderId())) {
-            leaderValidator.leaderShouldBeEffective(org.getTenantId(), newLeader);
+            assertOrgLeader.shouldEffective(org.getTenantId(), newLeader);
             org.setLeaderId(newLeader);
         }
     }
 
     private void updateName(Org org, String newName) {
         if (newName != null && !newName.equals(org.getName())) {
-            nameValidator.orgNameShouldNotEmpty(newName);
-            nameValidator.nameShouldNotDuplicatedInSameSuperior(org.getTenantId(), org.getSuperiorId(), newName);
+            assertOrgName.shouldNotEmpty(newName);
+            assertOrgName.shouldNotDuplicatedInSameSuperior(org.getTenantId(), org.getSuperiorId(), newName);
             org.setName(newName);
         }
     }

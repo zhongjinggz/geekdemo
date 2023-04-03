@@ -29,7 +29,7 @@ class OrgNameValidatorTest {
         setupExists(true);
 
         assertThrows(BusinessException.class,
-                () -> validator.nameShouldNotDuplicatedInSameSuperior(
+                () -> validator.shouldNotDuplicatedInSameSuperior(
                         DEFAULT_TENANT_ID
                         , DEFAULT_ORG_ID
                         , DEFAULT_EMP_NAME));
@@ -41,7 +41,7 @@ class OrgNameValidatorTest {
     public void nameShouldNotDuplicatedInSameSuperior_shouldNotThrowException_whenNotDuplicated() {
         setupExists(false);
 
-        validator.nameShouldNotDuplicatedInSameSuperior(
+        validator.shouldNotDuplicatedInSameSuperior(
                 DEFAULT_TENANT_ID
                 , DEFAULT_ORG_ID
                 , DEFAULT_EMP_NAME);

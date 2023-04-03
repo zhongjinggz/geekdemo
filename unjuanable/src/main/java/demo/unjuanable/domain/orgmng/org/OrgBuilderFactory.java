@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.org;
 
-import demo.unjuanable.domain.common.validator.CommonValidator;
+import demo.unjuanable.domain.common.validator.CommonTenantValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgLeaderValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgNameValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgTypeValidator;
@@ -10,20 +10,20 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrgBuilderFactory {
-    private final CommonValidator commonValidator;
+    private final CommonTenantValidator commonTenantValidator;
     private final OrgTypeValidator orgTypeValidator;
     private final SuperiorValidator superiorValidator;
     private final OrgNameValidator orgNameValidator;
     private final OrgLeaderValidator orgLeaderValidator;
 
     @Autowired
-    public OrgBuilderFactory(CommonValidator commonValidator
+    public OrgBuilderFactory(CommonTenantValidator commonTenantValidator
             , OrgTypeValidator orgTypeValidator
             , SuperiorValidator superiorValidator
             , OrgNameValidator orgNameValidator
             , OrgLeaderValidator orgLeaderValidator) {
 
-        this.commonValidator = commonValidator;
+        this.commonTenantValidator = commonTenantValidator;
         this.orgTypeValidator = orgTypeValidator;
         this.superiorValidator = superiorValidator;
         this.orgNameValidator = orgNameValidator;
@@ -31,7 +31,7 @@ public class OrgBuilderFactory {
     }
 
     public OrgBuilder create() {
-        return new OrgBuilder(commonValidator
+        return new OrgBuilder(commonTenantValidator
                 , orgTypeValidator
                 , superiorValidator
                 , orgNameValidator

@@ -18,14 +18,14 @@ public class CancelOrgValidator {
     }
 
     // 要被撤销的组织不能有下属员工
-    public void OrgToBeCancelledShouldNotHasEmp(Long tenant, Long id) {
+    public void shouldNotHasEmp(Long tenant, Long id) {
         if (empRepository.existsByIdAndStatus(tenant, id, EmpStatus.PROBATION, EmpStatus.REGULAR)) {
             throw new BusinessException("该组织中仍然有员工，不能撤销！");
         }
     }
 
     // 只有有效组织才能被撤销
-    public void OnlyEffectiveOrgCanBeCancelled(Org org) {
+    public void shouldEffective(Org org) {
         if (!org.isEffective()){
             throw new BusinessException("该组织不是有效状态，不能撤销！");
         }

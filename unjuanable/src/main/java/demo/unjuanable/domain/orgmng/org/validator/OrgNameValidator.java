@@ -17,14 +17,14 @@ public class OrgNameValidator {
     }
 
     // 组织必须有名称
-    public void orgNameShouldNotEmpty(String name) {
+    public void shouldNotEmpty(String name) {
         if (isBlank(name)) {
             throw new BusinessException("组织没有名称！");
         }
     }
 
     // 同一个组织下的下级组织不能重名
-    public void nameShouldNotDuplicatedInSameSuperior(Long tenantId, Long superiorId, String name) {
+    public void shouldNotDuplicatedInSameSuperior(Long tenantId, Long superiorId, String name) {
         if (orgRepository.existsBySuperiorIdAndName(tenantId, superiorId, name)) {
             throw new BusinessException("同一上级下已经有名为'" + name + "'的组织存在！");
         }

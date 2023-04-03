@@ -23,14 +23,14 @@ public class SuperiorValidator {
     }
 
     // 上级组织应该是有效组织
-    public Org superiorShouldEffective(Long tenant, Long superior) {
+    public Org shouldEffective(Long tenant, Long superior) {
         return orgRepository.findByIdAndStatus(tenant
                         , superior, OrgStatus.EFFECTIVE)
                 .orElseThrow(() ->
                         new BusinessException("'" + superior + "' 不是有效的组织 id !"));
     }
 
-    public OrgType findSuperiorOrgType(Long tenant, Long superior, Org superiorOrg) {
+    public OrgType orgTypeShouldEffective(Long tenant, Long superior, Org superiorOrg) {
         return orgTypeRepository.findByCodeAndStatus(tenant
                         , superiorOrg.getOrgTypeCode()
                         , OrgTypeStatus.EFFECTIVE)
@@ -40,7 +40,7 @@ public class SuperiorValidator {
     }
 
     // 开发中心和直属部门的上级只能是企业
-    public void SuperiorOfDevCenterAndDirectDeptMustEntp(Long superior, String orgType, OrgType superiorOrgType) {
+    public void ofDevCenterAndDirectDeptMustEntp(Long superior, String orgType, OrgType superiorOrgType) {
         if (("DEVCENT".equals(orgType) || "DIRDEP".equals(orgType))
                 && !"ENTP".equals(superiorOrgType.getCode())) {
             throw new BusinessException("开发中心或直属部门的上级(id = '" + superior
@@ -49,7 +49,7 @@ public class SuperiorValidator {
     }
 
     // 开发组的上级只能是开发中心
-    public void superiorOfDevGroupMustDevCenter(Long superior, String orgType, OrgType superiorOrgType) {
+    public void ofDevGroupMustDevCenter(Long superior, String orgType, OrgType superiorOrgType) {
         if ("DEVGRP".equals(orgType) && !"DEVCENT".equals(superiorOrgType.getCode())) {
             throw new BusinessException("开发组的上级(id = '" + superior
                     + "')不是开发中心！");

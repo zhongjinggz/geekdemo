@@ -2,7 +2,7 @@ package demo.unjuanable.domain.tenantmng;
 
 public enum TenantStatus {
     EFFECTIVE("EF", "有效"),
-    TERMINATED("EF", "终止");
+    TERMINATED("TERMINATED", "终止");
 
     private final String code;
     private final String desc;
