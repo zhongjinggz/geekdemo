@@ -2,6 +2,7 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -94,12 +95,15 @@ public class OrgRepositoryJdbc implements OrgRepository {
                 + " from org "
                 + " where tenant_id = ?  and id = ? ";
 
-        return Optional.ofNullable(
-                jdbc.queryForObject(sql
-                        , orgRowMapper
-                        , tenantId
-                        , id)
-        );
+        try {
+            return Optional.of(jdbc.queryForObject(sql
+                    , orgRowMapper
+                    , tenantId
+                    , id));
+        }catch (IncorrectResultSizeDataAccessException e) {
+            return Optional.empty();
+        }
+
     }
 
     @Override
@@ -129,7 +133,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
                 , org.getLastUpdatedBy()
                 , org.getTenantId()
                 , org.getId()
-                );
+        );
     }
 
 

@@ -1,7 +1,6 @@
 package demo.unjuanable.application.orgmng.orgservice;
 
-import demo.unjuanable.domain.orgmng.org.Org;
-import demo.unjuanable.domain.orgmng.org.OrgRepository;
+import demo.unjuanable.domain.orgmng.org.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,19 +9,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Transactional
 class OrgServiceIT {
+    static final Long DEFAULT_ORG_ID = 1L;
     static final Long DEFAULT_USER_ID = 1L;
     static final long DEFAULT_TENANT_ID = 1L;
+    static final long DEFAULT_EMP_ID = 1L;
     @Autowired
     private OrgService orgService;
 
     @Autowired
     private OrgRepository orgRepository;
+
+    @Autowired
+    private OrgReBuilderFactory orgReBuilderFactory;
 
     @Test
     void addOrg_should_create_org_when_validation_passed() {
@@ -39,6 +45,7 @@ class OrgServiceIT {
         assertEquals(request.getLeaderId(), actualResponse.getLeaderId());
         assertEquals(request.getSuperiorId(), actualResponse.getSuperiorId());
         assertEquals(request.getName(), actualResponse.getName());
+        assertEquals(OrgStatus.EFFECTIVE.code(), actualResponse.getStatusCode());
 
         Org actualSaved = orgRepository.findById(actualResponse.getTenantId(),actualResponse.getId())
                 .orElseGet(Assertions::fail);
@@ -47,6 +54,7 @@ class OrgServiceIT {
         assertEquals(request.getLeaderId(), actualSaved.getLeaderId());
         assertEquals(request.getSuperiorId(), actualSaved.getSuperiorId());
         assertEquals(request.getName(), actualSaved.getName());
+        assertEquals(OrgStatus.EFFECTIVE, actualSaved.getStatus());
 
     }
 
@@ -54,7 +62,7 @@ class OrgServiceIT {
         CreateOrgRequest request = new CreateOrgRequest();
         request.setTenant(DEFAULT_TENANT_ID);
         request.setOrgType("DEVCENT");
-        request.setLeader(DEFAULT_USER_ID);
+        request.setLeader(DEFAULT_EMP_ID);
         request.setSuperior(1L);
         request.setName("忠义堂");
         return request;
@@ -62,23 +70,41 @@ class OrgServiceIT {
 
     @Test
     public void updateOrgBasic_should_update_org_when_org_exists() {
-        OrgResponse preparedOrg = prepareOrgTobeUpdated();
+        // Given
+        Org preparedOrg = prepareOrgTobeUpdated();
 
+        // When
         UpdateOrgBasicRequest request = buildUpdateRequest();
-
         OrgResponse actualResponse = orgService.updateOrgBasic(preparedOrg.getId(), request, 1L);
 
+        // Then
         assertNotNull(actualResponse);
         assertEquals(request.getName(), actualResponse.getName());
         assertEquals(request.getLeaderId(), actualResponse.getLeaderId());
 
-        //获取更新后的Org对象
         Org actualSaved = orgRepository.findById(preparedOrg.getTenantId(), preparedOrg.getId()).orElse(null);
-
         assertNotNull(actualSaved);
         assertEquals(request.getName(), actualSaved.getName());
         assertEquals(request.getLeaderId(), actualSaved.getLeaderId());
 
+    }
+
+    @Test
+    public void cancelOrg_should_cancel_when_org_exists() {
+//        //将待取消的组织机构添加到数据库中
+//        orgRepository.add(testOrg);
+//
+//        //执行要测试的方法
+//        Long canceledOrgId = orgService.cancelOrg(testOrg.getTenant(), testOrg.getId(), 1L);
+//
+//        //从数据库中获取已取消的Org对象
+//        Org canceledOrg = orgRepository.findById(testOrg.getTenant(), testOrg.getId()).orElse(null);
+//
+//        assertNotNull(canceledOrg);
+//        assertTrue(canceledOrg.isCanceled());
+//
+//        //验证返回值是否正确
+//        assertEquals(testOrg.getId(), canceledOrgId.longValue());
     }
 
     private UpdateOrgBasicRequest buildUpdateRequest() {
@@ -89,10 +115,20 @@ class OrgServiceIT {
         return request;
     }
 
-    private OrgResponse prepareOrgTobeUpdated() {
-        CreateOrgRequest createOrgRequest = buildCreateRequest();
-        OrgResponse addedOrg = orgService.addOrg(createOrgRequest, DEFAULT_USER_ID);
-        return addedOrg;
+    private Org prepareOrgTobeUpdated() {
+        OrgReBuilder orgReBuilder = orgReBuilderFactory.build();
+        Org org = orgReBuilder
+                .tenantId(DEFAULT_TENANT_ID)
+                .superiorId(DEFAULT_ORG_ID)
+                .orgTypeCode("DEVCENT")
+                .leaderId(DEFAULT_EMP_ID)
+                .name("忠义堂")
+                .statusCode(OrgStatus.EFFECTIVE.code())
+                .createdAt(LocalDateTime.now())
+                .createdBy(DEFAULT_USER_ID)
+                .build();
+        orgRepository.save(org);
+        return org;
     }
 
 

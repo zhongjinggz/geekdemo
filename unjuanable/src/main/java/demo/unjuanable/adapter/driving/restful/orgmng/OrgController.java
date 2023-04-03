@@ -31,7 +31,7 @@ public class OrgController {
     @PostMapping("/api/organizations/{id}/cancel")
     public Long cancelOrg(@PathVariable Long id, @RequestParam Long tenant) {
         Long user = acquireUserId();
-        return orgService.cancelOrg(id, tenant, user);
+        return orgService.cancelOrg(tenant, id, user);
     }
 
     private Long acquireUserId() {

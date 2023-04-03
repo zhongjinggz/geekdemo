@@ -10,8 +10,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -35,5 +37,11 @@ class OrgRepositoryIT {
         Org created = orgRepository.save(org);
 
         assertNotNull(created.getId());
+    }
+
+    @Test
+    void findById_notfound() {
+        Optional<Org> org = orgRepository.findById(1L, -1L);
+        assertTrue(org.isEmpty());
     }
 }
