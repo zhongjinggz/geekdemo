@@ -40,12 +40,12 @@ public class OrgService {
 
     @Transactional
     public OrgResponse updateOrgBasic(Long id, UpdateOrgBasicRequest request, Long userId) {
-        Org org = orgRepository.findById(request.getTenant(), id)
+        Org org = orgRepository.findById(request.getTenantId(), id)
                 .orElseThrow(() -> {
                     throw new BusinessException("要修改的组织(id =" + id + "  )不存在！");
                 });
 
-        orgHandler.updateBasic(org, request.getName() , request.getLeader(), userId);
+        orgHandler.updateBasic(org, request.getName() , request.getLeaderId(), userId);
         orgRepository.update(org);
 
         return buildOrgDto(org);

@@ -9,24 +9,24 @@ package demo.unjuanable.application.orgmng.orgservice;
 // created user should not blank
 
 public class UpdateOrgBasicRequest {
-    private Long tenant;
-    private Long leader;
+    private Long tenantId;
+    private Long leaderId;
     private String name;
 
-    public Long getTenant() {
-        return tenant;
+    public Long getTenantId() {
+        return tenantId;
     }
 
-    public void setTenant(Long tenant) {
-        this.tenant = tenant;
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
-    public Long getLeader() {
-        return leader;
+    public Long getLeaderId() {
+        return leaderId;
     }
 
-    public void setLeader(Long leader) {
-        this.leader = leader;
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
     }
 
     public String getName() {
@@ -39,8 +39,8 @@ public class UpdateOrgBasicRequest {
 
     @Override
     public String toString() {
-        return "OrgDto{" + " tenant=" + tenant +
-                ", leader=" + leader +
+        return "OrgDto{" + " tenant=" + tenantId +
+                ", leader=" + leaderId +
                 ", name='" + name + '\'' +
                 '}';
     }

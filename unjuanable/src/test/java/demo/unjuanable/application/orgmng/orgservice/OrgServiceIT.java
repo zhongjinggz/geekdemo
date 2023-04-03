@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 class OrgServiceIT {
+    static final Long DEFAULT_USER_ID = 1L;
+    static final long DEFAULT_TENANT_ID = 1L;
     @Autowired
     private OrgService orgService;
 
@@ -23,20 +25,14 @@ class OrgServiceIT {
     private OrgRepository orgRepository;
 
     @Test
-    void addOrg() {
-        CreateOrgRequest request = new CreateOrgRequest();
-        request.setTenant(1L);
-        request.setOrgType("DEVCENT");
-        request.setLeader(1L);
-        request.setSuperior(1L);
-        request.setName("忠义堂");
+    void addOrg_should_create_org_when_validation_passed() {
+        // Given
+        CreateOrgRequest request = buildCreateRequest();
 
-        Long userId = 1L;
+        // When
+        OrgResponse actualResponse = orgService.addOrg(request, DEFAULT_USER_ID);
 
-        // Act
-        OrgResponse actualResponse = orgService.addOrg(request, userId);
-
-        // Assert
+        // Then
         assertNotNull(actualResponse.getId());
         assertEquals(request.getTenantId(), actualResponse.getTenantId());
         assertEquals(request.getOrgTypeCode(), actualResponse.getOrgTypeCode());
@@ -53,4 +49,51 @@ class OrgServiceIT {
         assertEquals(request.getName(), actualSaved.getName());
 
     }
+
+    private CreateOrgRequest buildCreateRequest() {
+        CreateOrgRequest request = new CreateOrgRequest();
+        request.setTenant(DEFAULT_TENANT_ID);
+        request.setOrgType("DEVCENT");
+        request.setLeader(DEFAULT_USER_ID);
+        request.setSuperior(1L);
+        request.setName("忠义堂");
+        return request;
+    }
+
+    @Test
+    public void updateOrgBasic_should_update_org_when_org_exists() {
+        OrgResponse preparedOrg = prepareOrgTobeUpdated();
+
+        UpdateOrgBasicRequest request = buildUpdateRequest();
+
+        OrgResponse actualResponse = orgService.updateOrgBasic(preparedOrg.getId(), request, 1L);
+
+        assertNotNull(actualResponse);
+        assertEquals(request.getName(), actualResponse.getName());
+        assertEquals(request.getLeaderId(), actualResponse.getLeaderId());
+
+        //获取更新后的Org对象
+        Org actualSaved = orgRepository.findById(preparedOrg.getTenantId(), preparedOrg.getId()).orElse(null);
+
+        assertNotNull(actualSaved);
+        assertEquals(request.getName(), actualSaved.getName());
+        assertEquals(request.getLeaderId(), actualSaved.getLeaderId());
+
+    }
+
+    private UpdateOrgBasicRequest buildUpdateRequest() {
+        UpdateOrgBasicRequest request = new UpdateOrgBasicRequest();
+        request.setTenantId(DEFAULT_TENANT_ID);
+        request.setLeaderId(DEFAULT_USER_ID);
+        request.setName("聚义厅");
+        return request;
+    }
+
+    private OrgResponse prepareOrgTobeUpdated() {
+        CreateOrgRequest createOrgRequest = buildCreateRequest();
+        OrgResponse addedOrg = orgService.addOrg(createOrgRequest, DEFAULT_USER_ID);
+        return addedOrg;
+    }
+
+
 }

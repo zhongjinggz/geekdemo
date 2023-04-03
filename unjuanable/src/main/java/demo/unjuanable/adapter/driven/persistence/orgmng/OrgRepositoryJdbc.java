@@ -109,7 +109,27 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
     @Override
     public int update(Org org) {
-        return 0;
+        String sql = "update org "
+                + " set superior_id = ? "
+                + ", org_type_code =? "
+                + ", leader_id = ?"
+                + ", name = ?"
+                + ", status_code =?"
+                + ", last_updated_at = ?"
+                + ", last_updated_by = ? "
+                + " where tenant_id = ? and id = ? ";
+
+        return this.jdbc.update(sql
+                , org.getSuperiorId()
+                , org.getOrgTypeCode()
+                , org.getLeaderId()
+                , org.getName()
+                , org.getStatus().code()
+                , org.getLastUpdatedAt()
+                , org.getLastUpdatedBy()
+                , org.getTenantId()
+                , org.getId()
+                );
     }
 
 
