@@ -52,6 +52,10 @@ public class Org extends AuditableEntity {
         return status.equals(OrgStatus.EFFECTIVE);
     }
 
+    public boolean isCanceled() {
+        return status.equals(OrgStatus.CANCELLED);
+    }
+
     public void setSuperiorId(Long superiorId) {
         this.superiorId = superiorId;
     }

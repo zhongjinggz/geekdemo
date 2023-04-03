@@ -10,7 +10,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
@@ -91,20 +90,19 @@ class OrgServiceIT {
 
     @Test
     public void cancelOrg_should_cancel_when_org_exists() {
-//        //将待取消的组织机构添加到数据库中
-//        orgRepository.add(testOrg);
-//
-//        //执行要测试的方法
-//        Long canceledOrgId = orgService.cancelOrg(testOrg.getTenant(), testOrg.getId(), 1L);
-//
-//        //从数据库中获取已取消的Org对象
-//        Org canceledOrg = orgRepository.findById(testOrg.getTenant(), testOrg.getId()).orElse(null);
-//
-//        assertNotNull(canceledOrg);
-//        assertTrue(canceledOrg.isCanceled());
-//
-//        //验证返回值是否正确
-//        assertEquals(testOrg.getId(), canceledOrgId.longValue());
+        //Given
+        Org preparedOrg = prepareOrgTobeUpdated();
+
+        // When
+        Long canceledId = orgService.cancelOrg(preparedOrg.getTenantId(),preparedOrg.getId(), 1L);
+
+        // Then
+        Org canceledOrg = orgRepository.findById(preparedOrg.getTenantId(), preparedOrg.getId())
+                .orElseGet(() -> fail());
+
+        assertTrue(canceledOrg.isCanceled());
+        assertEquals(preparedOrg.getId(), canceledId);
+
     }
 
     private UpdateOrgBasicRequest buildUpdateRequest() {
@@ -130,6 +128,4 @@ class OrgServiceIT {
         orgRepository.save(org);
         return org;
     }
-
-
 }
