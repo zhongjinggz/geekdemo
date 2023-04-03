@@ -7,7 +7,7 @@ public class CreateOrgRequest {
     private Long leader;
     private String name;
 
-    public Long getTenant() {
+    public Long getTenantId() {
         return tenant;
     }
 
@@ -15,7 +15,7 @@ public class CreateOrgRequest {
         this.tenant = tenant;
     }
 
-    public Long getSuperior() {
+    public Long getSuperiorId() {
         return superior;
     }
 
@@ -23,7 +23,7 @@ public class CreateOrgRequest {
         this.superior = superior;
     }
 
-    public String getOrgType() {
+    public String getOrgTypeCode() {
         return orgType;
     }
 
@@ -31,7 +31,7 @@ public class CreateOrgRequest {
         this.orgType = orgType;
     }
 
-    public Long getLeader() {
+    public Long getLeaderId() {
         return leader;
     }
 

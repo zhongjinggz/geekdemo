@@ -25,10 +25,10 @@ public class OrgService {
     public OrgResponse addOrg(CreateOrgRequest request, Long userId) {
         OrgBuilder builder = orgBuilderFactory.create();
 
-        Org org = builder.tenantId(request.getTenant())
-                .orgTypeCode(request.getOrgType())
-                .leaderId(request.getLeader())
-                .superiorId(request.getSuperior())
+        Org org = builder.tenantId(request.getTenantId())
+                .orgTypeCode(request.getOrgTypeCode())
+                .leaderId(request.getLeaderId())
+                .superiorId(request.getSuperiorId())
                 .name(request.getName())
                 .createdBy(userId)
                 .build();
@@ -67,11 +67,11 @@ public class OrgService {
     private static OrgResponse buildOrgDto(Org org) {
         OrgResponse response = new OrgResponse();
         response.setId(org.getId());
-        response.setTenant(org.getTenantId());
-        response.setOrgType(org.getOrgTypeCode());
+        response.setTenantId(org.getTenantId());
+        response.setOrgTypeCode(org.getOrgTypeCode());
         response.setName(org.getName());
-        response.setLeader(org.getLeaderId());
-        response.setSuperior(org.getSuperiorId());
+        response.setLeaderId(org.getLeaderId());
+        response.setSuperiorId(org.getSuperiorId());
         response.setCreatedBy(org.getCreatedBy());
         response.setCreatedAt(org.getCreatedAt());
         response.setLastUpdatedBy(org.getLastUpdatedBy());

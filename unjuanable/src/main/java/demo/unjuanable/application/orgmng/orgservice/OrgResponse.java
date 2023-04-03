@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 public class OrgResponse {
 
     private Long id;
-    private Long tenant;
-    private Long superior;
-    private String orgType;
-    private Long leader;
+    private Long tenantId;
+    private Long superiorId;
+    private String orgTypeCode;
+    private Long leaderId;
     private String name;
-    private String status;
+    private String statusCode;
     private LocalDateTime createdAt;
     private Long createdBy;
     private LocalDateTime lastUpdatedAt;
@@ -33,36 +33,36 @@ public class OrgResponse {
     }
 
 
-    public Long getTenant() {
-        return tenant;
+    public Long getTenantId() {
+        return tenantId;
     }
 
-    public void setTenant(Long tenant) {
-        this.tenant = tenant;
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
     }
 
-    public Long getSuperior() {
-        return superior;
+    public Long getSuperiorId() {
+        return superiorId;
     }
 
-    public void setSuperior(Long superior) {
-        this.superior = superior;
+    public void setSuperiorId(Long superiorId) {
+        this.superiorId = superiorId;
     }
 
-    public String getOrgType() {
-        return orgType;
+    public String getOrgTypeCode() {
+        return orgTypeCode;
     }
 
-    public void setOrgType(String orgType) {
-        this.orgType = orgType;
+    public void setOrgTypeCode(String orgTypeCode) {
+        this.orgTypeCode = orgTypeCode;
     }
 
-    public Long getLeader() {
-        return leader;
+    public Long getLeaderId() {
+        return leaderId;
     }
 
-    public void setLeader(Long leader) {
-        this.leader = leader;
+    public void setLeaderId(Long leaderId) {
+        this.leaderId = leaderId;
     }
 
     public String getName() {
@@ -73,12 +73,12 @@ public class OrgResponse {
         this.name = name;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -119,10 +119,10 @@ public class OrgResponse {
     @Override
     public String toString() {
         return "OrgDto{" + "id=" + id +
-                ", tenant=" + tenant +
-                ", superior=" + superior +
-                ", orgType='" + orgType + '\'' +
-                ", leader=" + leader +
+                ", tenant=" + tenantId +
+                ", superior=" + superiorId +
+                ", orgType='" + orgTypeCode + '\'' +
+                ", leader=" + leaderId +
                 ", name='" + name + '\'' +
                 ", createdAt=" + createdAt +
                 ", createdBy=" + createdBy +
