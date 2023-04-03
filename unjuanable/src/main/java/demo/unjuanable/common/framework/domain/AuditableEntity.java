@@ -3,8 +3,8 @@ package demo.unjuanable.common.framework.domain;
 import java.time.LocalDateTime;
 
 public abstract class AuditableEntity {
-    protected LocalDateTime createdAt;
-    protected Long createdBy;
+    protected final LocalDateTime createdAt;
+    protected final Long createdBy;
     protected LocalDateTime lastUpdatedAt;
     protected Long lastUpdatedBy;
 

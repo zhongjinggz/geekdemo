@@ -98,7 +98,7 @@ class OrgServiceIT {
 
         // Then
         Org canceledOrg = orgRepository.findById(preparedOrg.getTenantId(), preparedOrg.getId())
-                .orElseGet(() -> fail());
+                .orElseGet(Assertions::fail);
 
         assertTrue(canceledOrg.isCanceled());
         assertEquals(preparedOrg.getId(), canceledId);

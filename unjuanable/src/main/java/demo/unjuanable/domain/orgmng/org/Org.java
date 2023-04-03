@@ -5,8 +5,8 @@ import demo.unjuanable.common.framework.domain.AuditableEntity;
 import java.time.LocalDateTime;
 
 public class Org extends AuditableEntity {
+    private final Long tenantId;
     private Long id;
-    private Long tenantId;
     private Long superiorId;
     private String orgTypeCode;
     private Long leaderId;

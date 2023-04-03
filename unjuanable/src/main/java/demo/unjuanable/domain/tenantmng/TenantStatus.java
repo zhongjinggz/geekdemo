@@ -16,4 +16,8 @@ public enum TenantStatus {
     public String code() {
         return code;
     }
+
+    public String getDesc() {
+        return desc;
+    }
 }

@@ -16,4 +16,8 @@ public enum EmpStatus {
     public String code() {
         return code;
     }
+
+    public String getDesc() {
+        return desc;
+    }
 }

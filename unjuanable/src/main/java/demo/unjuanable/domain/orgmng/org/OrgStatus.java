@@ -26,4 +26,8 @@ public enum OrgStatus {
     public String code() {
         return code;
     }
+
+    public String getDesc() {
+        return desc;
+    }
 }
