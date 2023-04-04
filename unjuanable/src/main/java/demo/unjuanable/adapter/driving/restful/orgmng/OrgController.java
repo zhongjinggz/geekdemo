@@ -16,22 +16,26 @@ public class OrgController {
     }
 
     @PostMapping("/api/organizations")
-    public OrgResponse addOrg(@RequestBody CreateOrgRequest request) {
-        Long userId = acquireUserId();
+    public OrgResponse addOrg(@RequestParam("userid") Long userId
+            , @RequestBody CreateOrgRequest request) {
         return orgService.addOrg(request, userId);
     }
 
     @PatchMapping("/api/organizations/{id}")
-    public OrgResponse updateOrgBasic(@PathVariable Long id, @RequestBody UpdateOrgBasicRequest request) {
-        Long user = acquireUserId();
-        return orgService.updateOrgBasic(id, request, user);
+    public OrgResponse updateOrgBasic(@PathVariable Long id
+            , @RequestParam("userid") Long userId
+            , @RequestBody UpdateOrgBasicRequest request) {
+        //Long user = acquireUserId();
+        return orgService.updateOrgBasic(id, request, userId);
     }
 
 
     @PostMapping("/api/organizations/{id}/cancel")
-    public Long cancelOrg(@PathVariable Long id, @RequestParam Long tenant) {
-        Long user = acquireUserId();
-        return orgService.cancelOrg(tenant, id, user);
+    public Long cancelOrg(@PathVariable Long id
+            , @RequestParam("userid") Long userId
+            , @RequestParam Long tenant) {
+        //Long user = acquireUserId();
+        return orgService.cancelOrg(tenant, id, userId);
     }
 
     private Long acquireUserId() {
