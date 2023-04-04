@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public enum OrgTypeStatus {
     EFFECTIVE("EF", "有效"),
-    TERMINATED("EF", "终止");
+    TERMINATED("TER", "终止");
 
     private final String code;
     private final String desc;
