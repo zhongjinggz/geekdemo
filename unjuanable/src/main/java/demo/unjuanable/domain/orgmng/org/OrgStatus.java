@@ -5,8 +5,8 @@ import demo.unjuanable.domain.common.exception.BusinessException;
 import java.util.Arrays;
 
 public enum OrgStatus {
-    EFFECTIVE("EF", "有效"),
-    CANCELLED("CA", "终止");
+    EFFECTIVE("EFF", "有效"),
+    CANCELLED("CAN", "终止");
 
     private final String code;
     private final String desc;
