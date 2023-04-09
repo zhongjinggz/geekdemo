@@ -33,7 +33,7 @@ create table org_type
     code            char(10)             not null primary key,
     tenant_id       int                  not null,
     name            varchar(50)          not null,
-    status_code     char(2) default 'EF' not null,
+    status_code     char(3) default 'EFF' not null,
     created_at      datetime             not null,
     created_by      int                  not null,
     last_updated_at datetime             null,

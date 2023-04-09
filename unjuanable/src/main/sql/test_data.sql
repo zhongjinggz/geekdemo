@@ -1,15 +1,15 @@
 -- org_type
 insert into org_type (tenant_id, code, name, status_code, created_at, created_by )
-values (1, "ENTP","企业", "EF", now(), 1);
+values (1, "ENTP","企业", "EFF", now(), 1);
 
 insert into unjuanable.org_type (tenant_id, code, name, status_code, created_at, created_by )
-values (1, "DEVCENT","开发中心","EF", now(), 1);
+values (1, "DEVCENT","开发中心","EFF", now(), 1);
 
 insert into unjuanable.org_type (tenant_id, code, name, status_code, created_at, created_by )
-values (1, "DEVGRP","开发组","EF", now(), 1);
+values (1, "DEVGRP","开发组","EFF", now(), 1);
 
 insert into unjuanable.org_type (tenant_id, code, name, status_code, created_at, created_by )
-values (1, "DIRDEP","直属部门", "EF", now(), 1);
+values (1, "DIRDEP","直属部门", "EFF", now(), 1);
 
 
 -- emp
