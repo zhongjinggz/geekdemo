@@ -22,7 +22,7 @@ class OrgRepositoryIT {
     static final long DEFAULT_TENANT_ID = 1L;
     static final long DEFAULT_EMP_ID = 1L;
     final private OrgRepository orgRepository;
-    private OrgReBuilderFactory orgReBuilderFactory;
+    final private OrgReBuilderFactory orgReBuilderFactory;
 
     @Autowired
     OrgRepositoryIT(OrgRepository orgRepository, OrgReBuilderFactory orgReBuilderFactory) {
@@ -72,6 +72,35 @@ class OrgRepositoryIT {
 
         assertFalse(found);
     }
+
+    @Test
+    public void existsByIdAndStatus_shouldBeTrue_whenExists() {
+        //given
+        Org org = prepareOrg();
+
+        //when
+        boolean found = orgRepository.existsByIdAndStatus(
+                org.getTenantId(),
+                org.getId(),
+                org.getStatus());
+
+        assertTrue(found);
+    }
+
+    @Test
+    public void existsByIdAndStatus_shouldBeFalse_whenNotExists() {
+        //given
+        Org org = prepareOrg();
+
+        //when
+        boolean found = orgRepository.existsByIdAndStatus(
+                org.getTenantId(),
+                -1L,
+                org.getStatus());
+
+        assertFalse(found);
+    }
+
 
     private Org prepareOrg() {
         OrgReBuilder orgReBuilder = orgReBuilderFactory.build();

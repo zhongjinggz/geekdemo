@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -120,10 +121,18 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    //TODO 未实现
-    public boolean existsByIdAndStatus(Long tenantId, Long orgId, OrgStatus effective) {
-        return false;
+    public boolean existsByIdAndStatus(Long tenantId, Long orgId, OrgStatus status) {
+        String sql = " select 1 from org "
+                + " where tenant_id = ?  and id = ? and status_code = ?"
+                + " limit 1 ";
+
+        List<Map<String, Object>> rows = jdbc.queryForList(
+                sql, tenantId, orgId, status.code());
+
+        return rows.size() > 0;
     }
+
+
 
     @Override
     public int update(Org org) {

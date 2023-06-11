@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class EmpAssembler {
     EmpHandler handler;
 
-    CommonOrgValidator commonOrgValidator;
+    CommonOrgValidator assertOrg;
 
     @Autowired
-    public EmpAssembler(EmpHandler handler, CommonOrgValidator commonOrgValidator) {
+    public EmpAssembler(EmpHandler handler, CommonOrgValidator assertOrg) {
         this.handler = handler;
-        this.commonOrgValidator = commonOrgValidator;
+        this.assertOrg = assertOrg;
     }
 
     Emp fromCreateRequest(CreateEmpRequest request, Long userId) {
@@ -37,7 +37,7 @@ public class EmpAssembler {
     }
 
     void validateCreateRequest(CreateEmpRequest request) {
-        commonOrgValidator.shouldValid(
+        assertOrg.shouldValid(
                 request.getTenantId(), request.getOrgId());
     }
 
