@@ -42,16 +42,6 @@ public class OrgType extends AuditableEntity {
     this.name = name;
   }
 
-  public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-    this.lastUpdatedAt = lastUpdatedAt;
-  }
-
-
-  public void setLastUpdatedBy(long lastUpdatedBy) {
-    this.lastUpdatedBy = lastUpdatedBy;
-  }
-
-
   public OrgTypeStatus getStatus() {
     return status;
   }

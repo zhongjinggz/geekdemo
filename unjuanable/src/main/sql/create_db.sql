@@ -72,7 +72,7 @@ create table emp
     emp_num         varchar(20)           not null,
     id_num          varchar(20)           not null,
     name            varchar(20)           not null,
-    gender          varchar(20)           null,
+    gender_code     varchar(20)           null,
     dob             date                  null,
     status_code     char(3) default 'REG' not null,
     created_at      datetime              not null,
