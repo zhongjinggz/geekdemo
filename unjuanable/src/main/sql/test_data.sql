@@ -1,3 +1,9 @@
+-- tenant
+delete from tenant;
+
+insert into tenant (id, name, status_code, created_at, created_by)
+values (1, "梁山", "EF", now(), 1);
+
 -- org_type
 delete from org_type;
 
@@ -16,13 +22,13 @@ values (1, "DIRDEP","直属部门", "EF", now(), 1);
 -- org
 delete from org;
 
-insert into org (tenant_id, org_type_code, superior_id, name, leader_id, status_code, created_at, created_by)
-values (1, "ENTP", -1, "梁山科技有限公司", 1, "EF", now(), 1);
+insert into org (id, tenant_id, org_type_code, superior_id, name, leader_id, status_code, created_at, created_by)
+values (1, 1, "ENTP", -1, "梁山科技有限公司", 1, "EF", now(), 1);
 
 -- emp
 delete from emp;
 
-insert into emp (tenant_id, org_id, emp_num, id_num, name, gender, dob, status_code, created_at, created_by)
-values (1, 1, "20020001","440101197001011234","宋江","M", "1970-01-01", "REG", now(), 1);
+insert into emp (id, tenant_id, org_id, emp_num, id_num, name, gender, dob, status_code, created_at, created_by)
+values (1, 1, 1, "20020001","440101197001011234","宋江","M", "1970-01-01", "REG", now(), 1);
 
 
