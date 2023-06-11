@@ -120,6 +120,12 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
+    //TODO 未实现
+    public boolean existsByIdAndStatus(Long tenantId, Long orgId, OrgStatus effective) {
+        return false;
+    }
+
+    @Override
     public int update(Org org) {
         String sql = "update org "
                 + " set superior_id = ? "

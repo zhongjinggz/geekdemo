@@ -1,5 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.emp.EmpRepository;
 import demo.unjuanable.domain.orgmng.emp.EmpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,11 @@ public class EmpRepositoryJdbc implements EmpRepository {
     @Autowired
     public EmpRepositoryJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
+    }
+
+    @Override
+    public boolean save(Emp emp) {
+        return false;
     }
 
     @Override
@@ -44,19 +50,18 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     private static String buildSqlExistsByIdAndStatus(int statusCount) {
-        String status_condition = "";
+        StringBuilder status_condition = new StringBuilder();
         for (int i = 0; i < statusCount; i++) {
             if (i == 0) {
-                status_condition = status_condition + " and (status_code = ?";
+                status_condition.append(" and (status_code = ?");
             } else {
-                status_condition = status_condition + "or status_code = ?";
+                status_condition.append("or status_code = ?");
             }
         }
-        status_condition += ")";
+        status_condition.append(")");
 
-        String sql = " select 1 from emp  where tenant_id = ? and id = ?"
+        return " select 1 from emp  where tenant_id = ? and id = ?"
                 + status_condition
                 + " limit 1 ";
-        return sql;
     }
 }
