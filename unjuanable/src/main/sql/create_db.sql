@@ -2,13 +2,13 @@
 drop table if exists tenant;
 create table tenant
 (
-    id              int auto_increment primary key,
+    id              bigint auto_increment primary key,
     name            varchar(50) not null,
     status_code     char(2)     not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime    null,
-    last_updated_by int         null
+    last_updated_by bigint         null
 );
 -- Tenant module end
 
@@ -17,12 +17,12 @@ drop table if exists post;
 create table post
 (
     code            char(10)    primary key,
-    tenant_id       int         not null,       -- virtual fk to tenant.id
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
     name            varchar(50) not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int
+    last_updated_by bigint
 );
 
 create index post__tenant on post (tenant_id);
@@ -31,13 +31,13 @@ drop table if exists org_type;
 create table org_type
 (
     code            char(10)             not null primary key,
-    tenant_id       int                  not null,
+    tenant_id       bigint                  not null,
     name            varchar(50)          not null,
     status_code     char(2) default 'EF' not null,
     created_at      datetime             not null,
-    created_by      int                  not null,
+    created_by      bigint                  not null,
     last_updated_at datetime             null,
-    last_updated_by int                  null
+    last_updated_by bigint                  null
 );
 
 create index org_type__tenant on org_type (tenant_id);
@@ -45,17 +45,17 @@ create index org_type__tenant on org_type (tenant_id);
 drop table if exists org;
 create table org
 (
-    id              int         auto_increment primary key,
-    tenant_id       int         not null,       -- virtual fk to tenant.id
-    superior_id     int,                        -- virtual fk to org.id
+    id              bigint         auto_increment primary key,
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
+    superior_id     bigint,                        -- virtual fk to org.id
     org_type_code   char(10)    not null,       -- virtual fk to org_type.code
-    leader_id       int,                        -- virtual fk to emp.id
+    leader_id       bigint,                        -- virtual fk to emp.id
     name            varchar(50) not null,
     status_code     char(10)    not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int
+    last_updated_by bigint
 );
 
 create index org__tenant on org (tenant_id);
@@ -66,9 +66,9 @@ create index org__leader on org (leader_id);
 drop table if exists emp;
 create table emp
 (
-    id              int auto_increment primary key,
-    tenant_id       int                   not null,
-    org_id          int                   null,
+    id              bigint auto_increment primary key,
+    tenant_id       bigint                   not null,
+    org_id          bigint                   null,
     emp_num         varchar(20)           not null,
     id_num          varchar(20)           not null,
     name            varchar(20)           not null,
@@ -76,9 +76,9 @@ create table emp
     dob             date                  null,
     status_code     char(3) default 'REG' not null,
     created_at      datetime              not null,
-    created_by      int                   not null,
+    created_by      bigint                   not null,
     last_updated_at datetime              null,
-    last_updated_by int                   null
+    last_updated_by bigint                   null
 );
 
 create index emp__org on emp (org_id);
@@ -88,13 +88,13 @@ create index emp__tenant on emp (tenant_id);
 drop table if exists emp_post;
 create table emp_post
 (
-    emp_id          int,                        -- pk, virtual fk to tenant.id
+    emp_id          bigint,                        -- pk, virtual fk to tenant.id
     post_code       char(10),                   -- pk, virtual fk to org.id
-    tenant_id       int         not null,       -- virtual fk to tenant.id
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int,
+    last_updated_by bigint,
     primary key (emp_id, post_code)
 );
 
@@ -105,14 +105,14 @@ create index emp_post__post on emp_post (post_code);
 drop table if exists client;
 create table client
 (
-    id              int         auto_increment primary key,
-    tenant_id       int         not null,       -- virtual fk to tenant.id
-    curr_mng_id     int         not null,       -- virtual fk to emp.id
+    id              bigint         auto_increment primary key,
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
+    curr_mng_id     bigint         not null,       -- virtual fk to emp.id
     name            varchar(10) not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int
+    last_updated_by bigint
 );
 
 create index client__tenant on client (tenant_id);
@@ -121,17 +121,17 @@ create index client__curr_mng on client (curr_mng_id);
 drop table if exists contract;
 create table contract
 (
-    id              int         auto_increment primary key,
-    tenant_id       int         not null,       -- virtual fk to tenant.id
-    client_id       int         not null,       -- virtual fk to client.id
-    curr_mng_id     int         not null,       -- virtual fk to emp.id
+    id              bigint         auto_increment primary key,
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
+    client_id       bigint         not null,       -- virtual fk to client.id
+    curr_mng_id     bigint         not null,       -- virtual fk to emp.id
     num             varchar(50) not null,
     name            varchar(50),
     status_code     char(2)     not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int
+    last_updated_by bigint
 );
 
 create index contract__tenant on contract (tenant_id);
@@ -141,17 +141,17 @@ create index contract__curr_mng on contract (curr_mng_id);
 drop table if exists project;
 create table project
 (
-    id              int         auto_increment primary key,
-    tenant_id       int         not null,       -- virtual fk to tenant.id
-    contract_id     int         not null,       -- virtual fk to client.id
-    curr_mng_id     int         not null,       -- virtual fk to emp.id
+    id              bigint         auto_increment primary key,
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
+    contract_id     bigint         not null,       -- virtual fk to client.id
+    curr_mng_id     bigint         not null,       -- virtual fk to emp.id
     num             varchar(50) not null,
     name            varchar(50),
     status_code     char(5)     not null,
     created_at      datetime    not null,
-    created_by      int         not null,
+    created_by      bigint         not null,
     last_updated_at datetime,
-    last_updated_by int
+    last_updated_by bigint
 );
 
 create index project__tenant on project (tenant_id);
@@ -161,10 +161,10 @@ create index project__curr_mng on project (curr_mng_id);
 drop table if exists client_mng;
 create table client_mng
 (
-    id              int      auto_increment primary key,
-    tenant_id       int      not null,       -- virtual fk to tenant.id
-    client_id       int      not null,       -- virtual fk to client.id
-    mng_id          int      not null,       -- virtual fk to emp.id
+    id              bigint      auto_increment primary key,
+    tenant_id       bigint      not null,       -- virtual fk to tenant.id
+    client_id       bigint      not null,       -- virtual fk to client.id
+    mng_id          bigint      not null,       -- virtual fk to emp.id
     start_at        datetime not null,
     end_at          datetime,
     created_at      datetime not null,
@@ -181,10 +181,10 @@ create index client_mng__mng on client_mng (mng_id);
 drop table if exists contract_mng;
 create table contract_mng
 (
-    id              int      auto_increment primary key,
-    tenant_id       int      not null,       -- virtual fk to tenant.id
-    contract_id     int      not null,       -- virtual fk to contract.id
-    mng_id          int      not null,       -- virtual fk to emp.id
+    id              bigint      auto_increment primary key,
+    tenant_id       bigint      not null,       -- virtual fk to tenant.id
+    contract_id     bigint      not null,       -- virtual fk to contract.id
+    mng_id          bigint      not null,       -- virtual fk to emp.id
     start_at        datetime not null,
     end_at          datetime,
     created_at      datetime not null,
@@ -201,10 +201,10 @@ create index contract_mng__mng on contract_mng (mng_id);
 drop table if exists project_mng;
 create table project_mng
 (
-    id              int      auto_increment primary key,
-    tenant_id       int      not null,       -- virtual fk to tenant.id
-    project_id      int      not null,       -- virtual fk to project.id
-    mng_id          int      not null,       -- virtual fk to emp.id
+    id              bigint      auto_increment primary key,
+    tenant_id       bigint      not null,       -- virtual fk to tenant.id
+    project_id      bigint      not null,       -- virtual fk to project.id
+    mng_id          bigint      not null,       -- virtual fk to emp.id
     start_at        datetime not null,
     end_at          datetime,
     created_at      datetime not null,
@@ -220,10 +220,10 @@ create index project_mng__mng on project_mng (mng_id);
 drop table if exists project_member;
 create table project_member
 (
-    id              int      auto_increment primary key,
-    tenant_id       int      not null,       -- virtual fk to tenant.id
-    project_id      int      not null,      -- virtual fk to project.id
-    emp_id          int      not null,       -- virtual fk to emp.id
+    id              bigint      auto_increment primary key,
+    tenant_id       bigint      not null,       -- virtual fk to tenant.id
+    project_id      bigint      not null,      -- virtual fk to project.id
+    emp_id          bigint      not null,       -- virtual fk to emp.id
     estimate_invest_ratio    smallint not null,
     start_at        datetime not null,
     end_at          datetime,
@@ -245,10 +245,10 @@ create index project_member__emp on project_member (emp_id);
 drop table if exists effort_record;
 create table effort_record
 (
-    id              int      auto_increment primary key,
-    tenant_id       int      not null,       -- virtual fk to tenant.id
-    project_id      int      not null,      -- virtual fk to project.id
-    emp_id          int      not null,       -- virtual fk to emp.id
+    id              bigint      auto_increment primary key,
+    tenant_id       bigint      not null,       -- virtual fk to tenant.id
+    project_id      bigint      not null,      -- virtual fk to project.id
+    emp_id          bigint      not null,       -- virtual fk to emp.id
     work_date       date     not null,
     effort          decimal(2,1) not null,
     notes           varchar(255),
