@@ -1,7 +1,7 @@
 package demo.unjuanable.application.orgmng.empservice;
 
 
-import demo.unjuanable.domain.common.validator.OrgValidator;
+import demo.unjuanable.domain.common.validator.CommonOrgValidator;
 import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.emp.EmpHandler;
 import demo.unjuanable.domain.orgmng.emp.Gender;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 public class EmpAssembler {
     EmpHandler handler;
 
-    OrgValidator orgValidator;
+    CommonOrgValidator commonOrgValidator;
 
     @Autowired
-    public EmpAssembler(EmpHandler handler, OrgValidator orgValidator) {
+    public EmpAssembler(EmpHandler handler, CommonOrgValidator commonOrgValidator) {
         this.handler = handler;
-        this.orgValidator = orgValidator;
+        this.commonOrgValidator = commonOrgValidator;
     }
 
     Emp fromCreateRequest(CreateEmpRequest request, Long userId) {
@@ -37,7 +37,7 @@ public class EmpAssembler {
     }
 
     void validateCreateRequest(CreateEmpRequest request) {
-        orgValidator.orgShouldValid(
+        commonOrgValidator.shouldValid(
                 request.getTenantId(), request.getOrgId());
     }
 

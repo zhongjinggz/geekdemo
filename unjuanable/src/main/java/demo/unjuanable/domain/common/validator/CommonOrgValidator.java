@@ -7,18 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrgValidator {
+public class CommonOrgValidator {
     private final OrgRepository orgRepository;
 
     @Autowired
-    public OrgValidator(OrgRepository orgRepository) {
+    public CommonOrgValidator(OrgRepository orgRepository) {
         this.orgRepository = orgRepository;
     }
 
-    public void orgShouldValid(Long tenantId, Long orgId) {
+    public void shouldValid(Long tenantId, Long orgId) {
         if (!orgRepository.existsByIdAndStatus(tenantId, orgId, OrgStatus.EFFECTIVE)){
             throw new BusinessException("id为'" + orgId + "'的组织不是有效组织！");
         }
     }
+
+
 
 }
