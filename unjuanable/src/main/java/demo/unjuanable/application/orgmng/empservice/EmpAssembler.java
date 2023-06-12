@@ -24,7 +24,7 @@ public class EmpAssembler {
 
         validateCreateRequest(request);
 
-        String empNum = handler.generateNum();
+        String empNum = handler.generateEmpNum();
 
         Emp result = new Emp(request.getTenantId(), userId);
         result.setNum(empNum)

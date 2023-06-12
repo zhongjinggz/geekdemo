@@ -82,8 +82,17 @@ create table emp
 );
 
 create index emp__org on emp (org_id);
-
 create index emp__tenant on emp (tenant_id);
+
+drop table if exists emp_num_counter;
+create table emp_num_counter
+(
+    tenant_id       bigint         not null,       -- virtual fk to tenant.id
+    year_num        int            not null,
+    max_emp_num     int            not null,
+    primary key (tenant_id, year_num)
+);
+
 
 drop table if exists emp_post;
 create table emp_post

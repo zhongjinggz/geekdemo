@@ -31,4 +31,10 @@ delete from emp where 1 = 1;
 insert into emp (id, tenant_id, org_id, emp_num, id_num, name, gender_code, dob, status_code, created_at, created_by)
 values (1, 1, 1, "20020001","440101197001011234","宋江","M", "1970-01-01", "REG", now(), 1);
 
+-- emp_num_counter
+delete from emp_num_counter where 1 = 1;
+insert into emp_num_counter (tenant_id, year_num, max_emp_num)
+values(1, 2023, 1);
+
+
 
