@@ -2,6 +2,7 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.common.exception.SystemException;
 import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounter;
+import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -9,24 +10,24 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class EmpNumCounterDao {
+public class EmpNumCounterRepositoryJdbc implements EmpNumCounterRepository {
     private final JdbcTemplate jdbc;
 
     private final SimpleJdbcInsert insertEmpNumCounter;
 
     @Autowired
-    public EmpNumCounterDao(JdbcTemplate jdbc) {
+    public EmpNumCounterRepositoryJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.insertEmpNumCounter = new SimpleJdbcInsert(jdbc)
                 .withTableName("emp_num_counter");
     }
 
-    public void insert(EmpNumCounter empNumCounter) {
+    @Override
+    public void save(EmpNumCounter empNumCounter) {
         Map<String, Object> params = new HashMap<>(8);
 
         params.put("tenant_id", empNumCounter.getTenantId());
@@ -36,7 +37,8 @@ public class EmpNumCounterDao {
         insertEmpNumCounter.execute(params);
     }
 
-    public EmpNumCounter selectByPk(Long tenantId, int yearNum) {
+    @Override
+    public EmpNumCounter findByYear(Long tenantId, int yearNum) {
         final String sql = " select tenant_id"
                 + ", year_num"
                 + ", max_emp_num"
@@ -64,7 +66,8 @@ public class EmpNumCounterDao {
 
     }
 
-    public Integer selectMaxNumByYear(Long tenantId, int yearNum) {
+    @Override
+    public Integer increaseMaxNumByYear(Long tenantId, int yearNum) {
         final String increaseSql = " update emp_num_counter "
                 + " set max_emp_num = max_emp_num + 1 "
                 + " where tenant_id = ?  and year_num = ? ";

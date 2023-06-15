@@ -1,17 +1,16 @@
 package demo.unjuanable.domain.orgmng.emp;
 
-import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterDao;
-import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounter;
+import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterRepositoryJdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmpHandler {
-    final EmpNumCounterDao empNumCounterDao;
+    final EmpNumCounterRepositoryJdbc empNumCounterRepositoryJdbc;
 
     @Autowired
-    public EmpHandler(EmpNumCounterDao empNumCounterDao) {
-        this.empNumCounterDao = empNumCounterDao;
+    public EmpHandler(EmpNumCounterRepositoryJdbc empNumCounterRepositoryJdbc) {
+        this.empNumCounterRepositoryJdbc = empNumCounterRepositoryJdbc;
     }
 
 

@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.empnumcounter;
 
-import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterDao;
+import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterRepositoryJdbc;
 import demo.unjuanable.domain.common.exception.SystemException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,7 +26,7 @@ class EmpNumGeneratorIT {
     //);
 
     @Autowired
-    EmpNumCounterDao empNumCounterDao;
+    EmpNumCounterRepositoryJdbc empNumCounterRepositoryJdbc;
 
     @Autowired
     EmpNumGenerator empNumGenerator;
@@ -34,12 +34,12 @@ class EmpNumGeneratorIT {
     @Test
     void generateEmpNumByYear_returnEmpNum_whenCounterExists() {
         EmpNumCounter empNumCounter = new EmpNumCounter(1, 9999, 100);
-        empNumCounterDao.insert(empNumCounter);
+        empNumCounterRepositoryJdbc.save(empNumCounter);
 
         String actualEmpNum = empNumGenerator.generateEmpNumByYear(1L, 9999);
         assertEquals("999900000101", actualEmpNum);
 
-        EmpNumCounter actualEmpNumCounter = empNumCounterDao.selectByPk(1L, 9999);
+        EmpNumCounter actualEmpNumCounter = empNumCounterRepositoryJdbc.findByYear(1L, 9999);
         assertEquals(101, actualEmpNumCounter.getMaxEmpNum());
 
     }
