@@ -1,8 +1,8 @@
 package demo.unjuanable.domain.orgmng.org.validator;
 
 import demo.unjuanable.adapter.driven.persistence.orgmng.OrgTypeRepositoryJdbc;
-import demo.unjuanable.domain.common.exception.BusinessException;
-import demo.unjuanable.domain.common.exception.DirtyDataException;
+import demo.unjuanable.common.framework.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.DirtyDataException;
 import demo.unjuanable.domain.orgmng.org.Org;
 import demo.unjuanable.domain.orgmng.org.OrgRepository;
 import demo.unjuanable.domain.orgmng.org.OrgStatus;

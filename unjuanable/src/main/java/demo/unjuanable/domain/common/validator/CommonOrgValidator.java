@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.common.validator;
 
-import demo.unjuanable.domain.common.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.org.OrgRepository;
 import demo.unjuanable.domain.orgmng.org.OrgStatus;
 import org.springframework.beans.factory.annotation.Autowired;

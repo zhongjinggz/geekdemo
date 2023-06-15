@@ -1,6 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
-import demo.unjuanable.domain.common.exception.SystemException;
+import demo.unjuanable.common.framework.exception.SystemException;
 import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounter;
 import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 import org.springframework.beans.factory.annotation.Autowired;

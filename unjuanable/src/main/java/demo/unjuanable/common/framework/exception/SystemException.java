@@ -1,4 +1,4 @@
-package demo.unjuanable.domain.common.exception;
+package demo.unjuanable.common.framework.exception;
 
 public class SystemException extends RuntimeException {
 

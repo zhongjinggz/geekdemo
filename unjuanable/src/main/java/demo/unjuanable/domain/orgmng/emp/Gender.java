@@ -3,7 +3,7 @@ package demo.unjuanable.domain.orgmng.emp;
 
 
 import demo.unjuanable.common.framework.domain.WithCode;
-import demo.unjuanable.domain.common.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.BusinessException;
 
 import java.util.Arrays;
 

@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.org.validator;
 
-import demo.unjuanable.domain.common.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.org.OrgRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

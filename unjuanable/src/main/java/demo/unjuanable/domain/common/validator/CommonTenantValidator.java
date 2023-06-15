@@ -1,7 +1,7 @@
 package demo.unjuanable.domain.common.validator;
 
 import demo.unjuanable.adapter.driven.persistence.tenantmng.TenantRepositoryJdbc;
-import demo.unjuanable.domain.common.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.tenantmng.TenantStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

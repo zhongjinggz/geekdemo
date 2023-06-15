@@ -1,9 +1,7 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.common.framework.domain.ChangingStatus;
-import demo.unjuanable.domain.orgmng.emp.Emp;
-import demo.unjuanable.domain.orgmng.emp.EmpStatus;
-import demo.unjuanable.domain.orgmng.emp.Gender;
+import demo.unjuanable.domain.orgmng.emp.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -54,25 +52,25 @@ public class RebuiltEmp extends Emp {
         return this;
     }
 
-//    public RebuiltEmp reAddSkill(Long id, Long skillTypeId, SkillLevel level, int duration, Long createdBy) {
-//
-//        RebuiltSkill newSkill = new RebuiltSkill(tenantId, id, skillTypeId, createdBy)
-//                .resetLevel(level)
-//                .resetDuration(duration);
-//
-//        skills.add(newSkill);
-//        return this;
-//    }
-//
-//    public RebuiltEmp reAddExperience(LocalDate startDate, LocalDate endDate, String company, Long userId) {
-//        //TODO
-//        return this;
-//
-//    }
-//
-//    public RebuiltEmp reAddEmpPost(String postCode, Long userId) {
-//        //TODO
-//        return this;
-//    }
+    public RebuiltEmp reAddSkill(Long id, Long skillTypeId, SkillLevel level, int duration, Long createdBy) {
+
+        RebuiltSkill newSkill = new RebuiltSkill(tenantId, id, skillTypeId, createdBy)
+                .resetLevel(level)
+                .resetDuration(duration);
+
+        skills.put(skillTypeId, newSkill);
+        return this;
+    }
+
+    public RebuiltEmp reAddExperience(LocalDate startDate, LocalDate endDate, String company, Long userId) {
+        //TODO
+        return this;
+
+    }
+
+    public RebuiltEmp reAddEmpPost(String postCode, Long userId) {
+        //TODO
+        return this;
+    }
 
 }

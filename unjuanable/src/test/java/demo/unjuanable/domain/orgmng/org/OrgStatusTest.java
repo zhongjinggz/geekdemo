@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.org;
 
-import demo.unjuanable.domain.common.exception.BusinessException;
+import demo.unjuanable.common.framework.exception.BusinessException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

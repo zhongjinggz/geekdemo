@@ -1,6 +1,5 @@
 package demo.unjuanable.application.orgmng.empservice;
 
-import demo.unjuanable.domain.common.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.emp.EmpRepository;
 import org.springframework.beans.factory.annotation.Autowired;

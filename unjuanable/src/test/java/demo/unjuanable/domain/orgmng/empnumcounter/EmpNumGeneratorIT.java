@@ -1,7 +1,7 @@
 package demo.unjuanable.domain.orgmng.empnumcounter;
 
 import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterRepositoryJdbc;
-import demo.unjuanable.domain.common.exception.SystemException;
+import demo.unjuanable.common.framework.exception.SystemException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
