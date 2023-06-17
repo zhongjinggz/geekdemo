@@ -4,15 +4,22 @@ public class SkillDto {
 
     Long id;
     private Long skillTypeId;
-    String levelCode;
-    private int duration;
+    String levelCode; // “BEG” - Beginner, "MED" - Medium, "ADV" - Advanced
+    private Integer duration;
 
-    public SkillDto(Long id, Long skillTypeId, String levelCode, int duration) {
+    public SkillDto(Long skillTypeId, String levelCode, Integer duration) {
+        this.skillTypeId = skillTypeId;
+        this.levelCode = levelCode;
+        this.duration = duration;
+    }
+    public SkillDto(Long id, Long skillTypeId, String levelCode, Integer duration) {
         this.id = id;
         this.skillTypeId = skillTypeId;
         this.levelCode = levelCode;
         this.duration = duration;
     }
+
+
 
     public Long getSkillTypeId() {
         return skillTypeId;
@@ -30,11 +37,11 @@ public class SkillDto {
         this.levelCode = levelCode;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(Integer duration) {
         this.duration = duration;
     }
 }

@@ -3,9 +3,9 @@ package demo.unjuanable.domain.orgmng.emp;
 import java.util.Arrays;
 import demo.unjuanable.common.framework.exception.BusinessException;
 public enum SkillLevel {
-    JUNIOR("JU","初级")
-    , MEDIUM("ME", "中级")
-    , SENIOR("SE","高级");
+    BEGINNER("BEG","初级")
+    , MEDIUM("MED", "中级")
+    , ADVANCED("ADV","高级");
 
     private final String code;
     private final String desc;

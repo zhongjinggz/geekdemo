@@ -36,5 +36,11 @@ delete from emp_num_counter where 1 = 1;
 insert into emp_num_counter (tenant_id, year_num, max_emp_num)
 values(1, 2023, 1);
 
+delete from skill_type where 1 = 1;
+insert into skill_type (tenant_id, id, name, created_at, created_by)
+values (1, 1, "Java", now(), 1);
+insert into skill_type (tenant_id, id, name, created_at, created_by)
+values (1, 2, "Python", now(), 1);
+
 
 

@@ -16,7 +16,7 @@ public class RebuiltSkill extends Skill {
         return this;
     }
 
-    RebuiltSkill resetDuration(int duration) {
+    RebuiltSkill resetDuration(Integer duration) {
         this.duration = duration;
         return this;
     }

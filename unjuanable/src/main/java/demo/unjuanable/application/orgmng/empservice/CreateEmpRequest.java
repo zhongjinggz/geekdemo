@@ -83,6 +83,11 @@ public class CreateEmpRequest {
         this.skills = skills;
     }
 
+    public CreateEmpRequest addSkill(Long skillTypeId, String levelCode, Integer duration) {
+        this.skills.add(new SkillDto(skillTypeId, levelCode, duration));
+        return this;
+    }
+
     public List<WorkExperienceDto> getExperiences() {
         return experiences;
     }

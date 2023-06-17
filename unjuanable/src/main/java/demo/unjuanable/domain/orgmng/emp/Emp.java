@@ -132,7 +132,7 @@ public class Emp extends AggregateRoot {
         return Optional.ofNullable(skills.get(skillTypeId));
     }
 
-    public void addSkill(Long skillTypeId, SkillLevel level, int duration, Long userId) {
+    public void addSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
         skillTypeShouldNotDuplicated(skillTypeId);
 
         Skill newSkill = new Skill(tenantId, skillTypeId, userId).setLevel(level).setDuration(duration);
@@ -141,10 +141,12 @@ public class Emp extends AggregateRoot {
         skills.put(skillTypeId, newSkill);
     }
 
-    public Emp updateSkill(Long skillTypeId, SkillLevel level, int duration, Long userId) {
+    public Emp updateSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
         Skill theSkill = this.getSkill(skillTypeId).orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!"));
 
-        if (!theSkill.getSkillTypeId().equals(skillTypeId) || theSkill.getLevel() != level || theSkill.getDuration() != duration) {
+        if (!theSkill.getSkillTypeId().equals(skillTypeId)
+                || theSkill.getLevel() != level
+                || !theSkill.getDuration().equals(duration)) {
 
             theSkill.setLevel(level).setDuration(duration).setLastUpdatedBy(userId).setLastUpdatedAt(LocalDateTime.now()).toUpdate();
         }

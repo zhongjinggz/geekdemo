@@ -52,7 +52,7 @@ public class RebuiltEmp extends Emp {
         return this;
     }
 
-    public RebuiltEmp reAddSkill(Long id, Long skillTypeId, SkillLevel level, int duration, Long createdBy) {
+    public RebuiltEmp reAddSkill(Long id, Long skillTypeId, SkillLevel level, Integer duration, Long createdBy) {
 
         RebuiltSkill newSkill = new RebuiltSkill(tenantId, id, skillTypeId, createdBy)
                 .resetLevel(level)
