@@ -7,13 +7,13 @@ public class EmpResponse {
     private Long id;
     private Long tenantId;
     private Long orgId;
-    private String num;
+    private String empNum;
     private String idNum;
 
     private String name;
-    private String gender;
+    private String genderCode;
     private LocalDate dob;
-    private String status;
+    private String statusCode;
     private List<SkillDto> skills;
     private List<WorkExperienceDto> experiences;
     private List<String> postCodes;
@@ -45,12 +45,12 @@ public class EmpResponse {
         return this;
     }
 
-    public String getNum() {
-        return num;
+    public String getEmpNum() {
+        return empNum;
     }
 
-    public EmpResponse setNum(String num) {
-        this.num = num;
+    public EmpResponse setEmpNum(String empNum) {
+        this.empNum = empNum;
         return this;
     }
 
@@ -72,12 +72,12 @@ public class EmpResponse {
         return this;
     }
 
-    public String getGender() {
-        return gender;
+    public String getGenderCode() {
+        return genderCode;
     }
 
-    public EmpResponse setGender(String gender) {
-        this.gender = gender;
+    public EmpResponse setGenderCode(String genderCode) {
+        this.genderCode = genderCode;
         return this;
     }
 
@@ -90,12 +90,12 @@ public class EmpResponse {
         return this;
     }
 
-    public String getStatus() {
-        return status;
+    public String getStatusCode() {
+        return statusCode;
     }
 
-    public EmpResponse setStatus(String status) {
-        this.status = status;
+    public EmpResponse setStatusCode(String statusCode) {
+        this.statusCode = statusCode;
         return this;
     }
 

@@ -120,7 +120,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
                 , emp.getName()
                 , emp.getGender().code()
                 , emp.getDob()
-                , emp.getStatus()
+                , emp.getStatus().code()
                 , emp.getLastUpdatedAt()
                 , emp.getLastUpdatedBy()
                 , emp.getTenantId()
@@ -180,7 +180,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
 
     private void deleteSkillRecord(Skill skill) {
-        this.jdbc.update("delete from skll where tenant_id = ? and id = ?"
+        this.jdbc.update("delete from skill where tenant_id = ? and id = ?"
                 , skill.getTenantId()
                 , skill.getId());
     }

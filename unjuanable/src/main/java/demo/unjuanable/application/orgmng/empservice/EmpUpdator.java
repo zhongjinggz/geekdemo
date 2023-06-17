@@ -10,8 +10,7 @@ import java.util.Optional;
 public class EmpUpdator {
     public void update(Emp emp, UpdateEmpRequest request, Long userId) {
 
-        emp.setEmpNum(request.getNum())
-                .setIdNum(request.getIdNum())
+        emp.setIdNum(request.getIdNum())
                 .setDob(request.getDob())
                 .setGender(Gender.ofCode(request.getGenderCode()))
                 .setLastUpdatedAt(LocalDateTime.now())
@@ -42,7 +41,7 @@ public class EmpUpdator {
     private void operatePresentSkills(Emp emp, UpdateEmpRequest request, Long userId) {
         for (SkillDto skill : request.getSkills()) {
             Optional<Skill> skillMaybe = emp.getSkill(skill.getSkillTypeId());
-            if(skillMaybe.isPresent()) {
+            if (skillMaybe.isPresent()) {
                 emp.updateSkill(skill.getSkillTypeId()
                         , SkillLevel.ofCode(skill.getLevelCode())
                         , skill.getDuration()

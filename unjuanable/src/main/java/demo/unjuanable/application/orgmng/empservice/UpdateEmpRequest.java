@@ -3,19 +3,19 @@ package demo.unjuanable.application.orgmng.empservice;
 import demo.unjuanable.domain.orgmng.emp.Skill;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateEmpRequest {
     private Long tenantId;
-    private String num;
     private String idNum;
 
     private String name;
     private String genderCode;
     private LocalDate dob;
 
-    private List<SkillDto> skills;
-    private List<WorkExperienceDto> experiences;
+    private List<SkillDto> skills = new ArrayList<>();
+    private List<WorkExperienceDto> experiences = new ArrayList<>();
 
     public Long getTenantId() {
         return tenantId;
@@ -73,12 +73,8 @@ public class UpdateEmpRequest {
         this.experiences = experiences;
     }
 
-    public String getNum() {
+    public String getEmpNum() {
         return null;
-    }
-
-    public void setNum(String num) {
-        this.num = num;
     }
 
     boolean isSkillAbsent(Skill otherSkill) {

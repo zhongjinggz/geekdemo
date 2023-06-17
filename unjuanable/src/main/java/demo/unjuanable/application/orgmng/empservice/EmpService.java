@@ -24,7 +24,7 @@ public class EmpService {
 
     @Transactional
     public EmpResponse addEmp(CreateEmpRequest request, Long userId) {
-        Emp emp = assembler.fromCreateRequest(request, userId);
+        Emp emp = assembler.toEmp(request, userId);
 
         empRepository.save(emp);
         return assembler.toResponse(emp);
@@ -39,7 +39,7 @@ public class EmpService {
         updator.update(emp, request, userId);
 
         if(!empRepository.save(emp)) {
-            throw new BusinessException("这个员工已将被其他人同时修改了，请重新修改！");
+            throw new BusinessException("这个员工已被其他人同时修改了，请重新修改！");
         }
         return assembler.toResponse(emp);
     }

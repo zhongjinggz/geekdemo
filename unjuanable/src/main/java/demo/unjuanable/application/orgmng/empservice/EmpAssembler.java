@@ -23,7 +23,7 @@ public class EmpAssembler {
         this.empNumGenerator = empNumGenerator;
     }
 
-    Emp fromCreateRequest(CreateEmpRequest request, Long userId) {
+    Emp toEmp(CreateEmpRequest request, Long userId) {
 
         validateCreateRequest(request);
 
@@ -81,12 +81,12 @@ public class EmpAssembler {
         result.setId(emp.getId())
                 .setTenantId(emp.getTenantId())
                 .setOrgId(emp.getOrgId())
-                .setNum(emp.getEmpNum())
+                .setEmpNum(emp.getEmpNum())
                 .setIdNum(emp.getIdNum())
                 .setName(emp.getName())
-                .setGender(emp.getGender().code())
+                .setGenderCode(emp.getGender().code())
                 .setDob(emp.getDob())
-                .setStatus(emp.getStatus().code())
+                .setStatusCode(emp.getStatus().code())
                 .setSkills(skills)
                 .setExperiences(experiences);
 
