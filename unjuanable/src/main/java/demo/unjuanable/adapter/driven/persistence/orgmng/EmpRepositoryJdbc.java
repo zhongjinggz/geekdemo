@@ -69,20 +69,33 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     private void insertEmpRecord(Emp emp) {
-        Map<String, Object> parms = Map.of(
-                "tenant_id", emp.getTenantId()
-                , "org_id", emp.getOrgId()
-                , "num", emp.getNum()
-                , "id_num", emp.getIdNum()
-                , "name", emp.getName()
-                , "gender", emp.getGender().code()
-                , "dob", emp.getDob()
-                , "status", emp.getStatus().code()
-                , "created_at", emp.getCreatedAt()
-                , "created_by", emp.getCreatedBy()
-        );
+//        Map<String, Object> parms = Map.of(
+//                "tenant_id", emp.getTenantId()
+//                , "org_id", emp.getOrgId()
+//                , "num", emp.getNum()
+//                , "id_num", emp.getIdNum()
+//                , "name", emp.getName()
+//                , "gender", emp.getGender().code()
+//                , "dob", emp.getDob()
+//                , "status", emp.getStatus().code()
+//                , "created_at", emp.getCreatedAt()
+//                , "created_by", emp.getCreatedBy()
+//        );
 
-        Number createdId = empInsert.executeAndReturnKey(parms);
+        Map<String, Object> params = new HashMap<>();
+        params.put("tenant_id", emp.getTenantId());
+        params.put("org_id", emp.getOrgId());
+        params.put("emp_num", emp.getEmpNum());
+        params.put("id_num", emp.getIdNum());
+        params.put("name", emp.getName());
+        params.put("gender_code", emp.getGender().code());
+        params.put("dob", emp.getDob());
+        params.put("status_code", emp.getStatus().code());
+        params.put("created_at", emp.getCreatedAt());
+        params.put("created_by", emp.getCreatedBy());
+        params.put("version", 0);
+
+        Number createdId = empInsert.executeAndReturnKey(params);
 
         forceSet(emp, "id", createdId.longValue());
     }
@@ -102,7 +115,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
                 " where tenant_id = ? and id = ? and version = ?";
         int affected = this.jdbc.update(sql
                 , emp.getOrgId()
-                , emp.getNum()
+                , emp.getEmpNum()
                 , emp.getIdNum()
                 , emp.getName()
                 , emp.getGender().code()
@@ -207,26 +220,28 @@ public class EmpRepositoryJdbc implements EmpRepository {
         empPostInsert.execute(parms);
     }
 
+
     @Override
-    public int countByIdAndStatus(long tenantId, long id, EmpStatus... statuses) {
-        final String sql = "select count(*) from emp " +
+    public boolean existsByIdAndStatus(Long tenantId, Long id, EmpStatus... statuses) {
+        String sql = "select 1 from emp " +
                 "where tenant_id = ? " +
                 "and id = ? ";
 
         if (statuses.length > 0) {
-            StringBuilder orSql = new StringBuilder(sql).append("and (status = '' ");
+            StringBuilder orSql = new StringBuilder(sql).append("and (status_code = '' ");
             for (EmpStatus status : statuses) {
-                orSql.append("or status = '").append(status.code()).append("' ");
+                orSql.append("or status_code = '").append(status.code()).append("' ");
             }
             orSql.append(")");
+            sql = orSql.toString();
         }
 
-        return jdbc.queryForObject(sql, Integer.class, tenantId, id);
-    }
+        sql += " limit 1 ";
 
-    @Override
-    public boolean existsByIdAndStatus(Long tenant, Long id, EmpStatus... statuses) {
-        return countByIdAndStatus(tenant, id, statuses) > 0;
+        List<Integer> result = jdbc.queryForList(sql, Integer.class, tenantId, id);
+        return result.size() == 1;
+
+
     }
 
     @Override
@@ -244,7 +259,16 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     private Optional<RebuiltEmp> retrieveEmp(Long tenantId, Long id) {
-        String sql = " select version, org_id, emp_num, id_num, name, gender_code, dob, status_code "
+        String sql = " select version" +
+                ", org_id" +
+                ", emp_num" +
+                ", id_num" +
+                ", name" +
+                ", gender_code" +
+                ", dob" +
+                ", status_code" +
+                ", created_at" +
+                ", created_by"
                 + " from emp "
                 + " where id = ? and tenant_id = ? ";
 
@@ -253,12 +277,12 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
                     RebuiltEmp newEmp = new RebuiltEmp(tenantId
                             , id
-                            , rs.getTimestamp("create_at").toLocalDateTime()
+                            , rs.getTimestamp("created_at").toLocalDateTime()
                             , rs.getLong("created_by"));
 
                     newEmp.resetVersion(rs.getLong("version"))
                             .resetOrgId(rs.getLong("org_id"))
-                            .resetNum(rs.getString("num"))
+                            .resetNum(rs.getString("emp_num"))
                             .resetIdNum(rs.getString("id_num"))
                             .resetName(rs.getString("name"))
                             .resetGender(Gender.ofCode(rs.getString("gender_code")))
@@ -272,7 +296,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     private void retrieveSkills(RebuiltEmp emp) {
-        String sql = " select id, tenant_id, skill_type_id, level, duration "
+        String sql = " select id, tenant_id, skill_type_id, level_code, duration "
                 + " from skill "
                 + " where tenant_id = ? and emp_id = ? ";
 

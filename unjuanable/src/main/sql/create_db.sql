@@ -75,6 +75,7 @@ create table emp
     gender_code     varchar(20)           null,
     dob             date                  null,
     status_code     char(3) default 'REG' not null,
+    version         bigint default 0      null,
     created_at      datetime              not null,
     created_by      bigint                   not null,
     last_updated_at datetime              null,
@@ -83,6 +84,51 @@ create table emp
 
 create index emp__org on emp (org_id);
 create index emp__tenant on emp (tenant_id);
+
+drop table if exists skill;
+create table skill_type
+(
+    id              bigint auto_increment primary key,
+    tenant_id       bigint                   not null,
+    name            varchar(50)              not null,
+    created_at      datetime                 not null,
+    created_by      bigint                   not null,
+    last_updated_at datetime                 null,
+    last_updated_by bigint                   null
+);
+
+drop table if exists skill;
+create table skill
+(
+    id              bigint auto_increment primary key,
+    tenant_id       bigint                   not null,
+    skill_type_id   bigint                   not null,
+    emp_id          bigint                   not null,
+    level_code      char(2)                  null,
+    duration        smallint                 null,
+    created_at      datetime                 not null,
+    created_by      bigint                   not null,
+    last_updated_at datetime                 null,
+    last_updated_by bigint                   null
+);
+create index skill__emp_id on skill (emp_id);
+
+drop table if exists work_experience;
+create table work_experience
+(
+    id              bigint auto_increment primary key,
+    tenant_id       bigint                   not null,
+    emp_id          bigint                   not null,
+    company         varchar(50)              not null,
+    start_date      date                     not null,
+    end_date        date                     null,
+    created_at      datetime                 not null,
+    created_by      bigint                   not null,
+    last_updated_at datetime                 null,
+    last_updated_by bigint                   null
+);
+create index work_experience__emp_id on work_experience (emp_id);
+
 
 drop table if exists emp_num_counter;
 create table emp_num_counter

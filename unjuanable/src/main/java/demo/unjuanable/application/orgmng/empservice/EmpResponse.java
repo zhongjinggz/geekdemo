@@ -1,6 +1,7 @@
 package demo.unjuanable.application.orgmng.empservice;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class EmpResponse {
     private Long id;
@@ -13,6 +14,9 @@ public class EmpResponse {
     private String gender;
     private LocalDate dob;
     private String status;
+    private List<SkillDto> skills;
+    private List<WorkExperienceDto> experiences;
+    private List<String> postCodes;
 
     public Long getId() {
         return id;
@@ -95,4 +99,30 @@ public class EmpResponse {
         return this;
     }
 
+    public List<SkillDto> getSkills() {
+        return skills;
+    }
+
+    public EmpResponse setSkills(List<SkillDto> skills) {
+        this.skills = skills;
+        return this;
+    }
+
+    public List<WorkExperienceDto> getExperiences() {
+        return experiences;
+    }
+
+    public EmpResponse setExperiences(List<WorkExperienceDto> experiences) {
+        this.experiences = experiences;
+        return this;
+    }
+
+    public List<String> getPostCodes() {
+        return postCodes;
+    }
+
+    public EmpResponse setPostCodes(List<String> postCodes) {
+        this.postCodes = postCodes;
+        return this;
+    }
 }

@@ -23,7 +23,7 @@ public class RebuiltEmp extends Emp {
     }
 
     RebuiltEmp resetNum(String num) {
-        this.num = num;
+        this.empNum = num;
         return this;
     }
 

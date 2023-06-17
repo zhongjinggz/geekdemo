@@ -14,7 +14,7 @@ public class Emp extends AggregateRoot {
     protected Long tenantId;
     protected Long orgId;
 
-    protected String num;
+    protected String empNum;
     protected String idNum;
 
     protected String name;
@@ -29,9 +29,10 @@ public class Emp extends AggregateRoot {
     protected List<EmpPost> empPosts = new ArrayList<>();
 
     // 用于新建员工
-    public Emp(Long tenantId, Long createdBy) {
+    public Emp(Long tenantId, EmpStatus status, Long createdBy) {
         super(LocalDateTime.now(), createdBy);
         this.tenantId = tenantId;
+        this.status = status;
     }
 
     //用于从数据库重建员工
@@ -58,12 +59,12 @@ public class Emp extends AggregateRoot {
         return this;
     }
 
-    public String getNum() {
-        return num;
+    public String getEmpNum() {
+        return empNum;
     }
 
-    public Emp setNum(String num) {
-        this.num = num;
+    public Emp setEmpNum(String empNum) {
+        this.empNum = empNum;
         return this;
     }
 
@@ -81,8 +82,9 @@ public class Emp extends AggregateRoot {
         return name;
     }
 
-    public void setName(String name) {
+    public Emp setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Gender getGender() {

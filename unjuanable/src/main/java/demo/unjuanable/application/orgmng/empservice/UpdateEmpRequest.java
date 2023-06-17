@@ -1,23 +1,21 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.domain.orgmng.emp.Skill;
+
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-public class CreateEmpRequest {
+public class UpdateEmpRequest {
     private Long tenantId;
-    private Long orgId;
+    private String num;
     private String idNum;
 
     private String name;
     private String genderCode;
     private LocalDate dob;
 
-    private String statusCode;
-
-    private List<SkillDto> skills = new ArrayList<>();
-    private List<WorkExperienceDto> experiences = new ArrayList<>();
-    private List<String> postCodes = new ArrayList<>();
+    private List<SkillDto> skills;
+    private List<WorkExperienceDto> experiences;
 
     public Long getTenantId() {
         return tenantId;
@@ -25,14 +23,6 @@ public class CreateEmpRequest {
 
     public void setTenantId(Long tenantId) {
         this.tenantId = tenantId;
-    }
-
-    public Long getOrgId() {
-        return orgId;
-    }
-
-    public void setOrgId(Long orgId) {
-        this.orgId = orgId;
     }
 
     public String getIdNum() {
@@ -67,14 +57,6 @@ public class CreateEmpRequest {
         this.dob = dob;
     }
 
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    public void setStatusCode(String statusCode) {
-        this.statusCode = statusCode;
-    }
-
     public List<SkillDto> getSkills() {
         return skills;
     }
@@ -91,11 +73,16 @@ public class CreateEmpRequest {
         this.experiences = experiences;
     }
 
-    public List<String> getPostCodes() {
-        return postCodes;
+    public String getNum() {
+        return null;
     }
 
-    public void setPostCodes(List<String> postCodes) {
-        this.postCodes = postCodes;
+    public void setNum(String num) {
+        this.num = num;
+    }
+
+    boolean isSkillAbsent(Skill otherSkill) {
+        return skills.stream()
+                .noneMatch(skill -> skill.getSkillTypeId().equals(otherSkill.getSkillTypeId()));
     }
 }
