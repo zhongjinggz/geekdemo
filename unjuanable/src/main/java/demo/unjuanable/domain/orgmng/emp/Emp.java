@@ -154,7 +154,9 @@ public class Emp extends AggregateRoot {
     }
 
     public Emp deleteSkill(Long skillTypeId) {
-        this.getSkill(skillTypeId).orElseThrow(() -> new IllegalArgumentException("Skills中不存在要删除的skillTypeId!")).toDelete();
+        this.getSkill(skillTypeId)
+                .orElseThrow(() -> new IllegalArgumentException("Skills中不存在要删除的skillTypeId!"))
+                .toDelete();
         return this;
     }
 

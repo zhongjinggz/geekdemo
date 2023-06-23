@@ -69,20 +69,22 @@ class EmpServiceIT {
 
         assertThat(savedEmp.getSkills()).extracting("skillTypeId", "level", "duration")
                 .containsExactlyInAnyOrder(
-                        tuple(DEFAULT_TENANT_ID, SkillLevel.MEDIUM, JAVA_DURATION),
+                        tuple(JAVA_TYPE_ID, SkillLevel.MEDIUM, JAVA_DURATION),
                         tuple(PYTHON_TYPE_ID, SkillLevel.ADVANCED, PYTHON_DURATION)
                 );
 
     }
 
     @Test
-    void updateEmp_shouldUpdateEmpWithoutSubsidiaries() {
+    void updateEmp_shouldSuccess_WhenUpdateEmpNameAndRemovePythonSkill() {
         // given
         CreateEmpRequest request = buildCreateEmpRequest();
         EmpResponse response = empService.addEmp(request, DEFAULT_TENANT_ID);
 
         // when
-        UpdateEmpRequest updateRequest = buildUpdateEmpRequest(response).setName("Dunne");
+        UpdateEmpRequest updateRequest = buildUpdateEmpRequest(response)
+                .setName("Dunne")
+                .removeSkill(PYTHON_TYPE_ID);
 
         empService.updateEmp(response.getId(), updateRequest, DEFAULT_TENANT_ID);
 
@@ -105,6 +107,10 @@ class EmpServiceIT {
                         )
                 );
 
+        assertThat(updatedEmp.getSkills()).extracting("skillTypeId", "level", "duration")
+                .containsExactlyInAnyOrder(
+                        tuple(JAVA_TYPE_ID, SkillLevel.MEDIUM, JAVA_DURATION)
+                );
 
     }
 

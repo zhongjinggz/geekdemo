@@ -1,5 +1,6 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.common.validator.CommonOrgValidator;
 import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.emp.*;
@@ -31,7 +32,7 @@ public class EmpAssembler {
 
         Emp result = new Emp(request.getTenantId()
                 , EmpStatus.ofCode(request.getStatusCode())
-                ,userId);
+                , userId);
         result.setEmpNum(empNum)
                 .setIdNum(request.getIdNum())
                 .setDob(request.getDob())
@@ -65,11 +66,13 @@ public class EmpAssembler {
         EmpResponse result = new EmpResponse();
 
         List<SkillDto> skills = new ArrayList<>();
-        emp.getSkills().forEach(s ->
-                skills.add(new SkillDto(s.getId()
-                        , s.getSkillTypeId()
-                        , s.getLevel().code()
-                        , s.getDuration())));
+        emp.getSkills().stream()
+                .filter(s -> !s.getChangingStatus().equals(ChangingStatus.DELETED))
+                .forEach(s ->
+                        skills.add(new SkillDto(s.getId()
+                                , s.getSkillTypeId()
+                                , s.getLevel().code()
+                                , s.getDuration())));
 
         List<WorkExperienceDto> experiences = new ArrayList<>();
         emp.getExperiences().forEach(e ->

@@ -91,4 +91,9 @@ public class UpdateEmpRequest {
         return skills.stream()
                 .noneMatch(skill -> skill.getSkillTypeId().equals(otherSkill.getSkillTypeId()));
     }
+
+    public UpdateEmpRequest removeSkill(long skillTypeId) {
+        skills.removeIf(skill -> skill.getSkillTypeId().equals(skillTypeId));
+        return this;
+    }
 }
