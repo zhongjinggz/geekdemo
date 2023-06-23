@@ -21,58 +21,68 @@ public class UpdateEmpRequest {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public UpdateEmpRequest setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+        return this;
     }
 
     public String getIdNum() {
         return idNum;
     }
 
-    public void setIdNum(String idNum) {
+    public UpdateEmpRequest setIdNum(String idNum) {
         this.idNum = idNum;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public UpdateEmpRequest setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getGenderCode() {
         return genderCode;
     }
 
-    public void setGenderCode(String genderCode) {
+    public UpdateEmpRequest setGenderCode(String genderCode) {
         this.genderCode = genderCode;
+        return this;
     }
 
     public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public UpdateEmpRequest setDob(LocalDate dob) {
         this.dob = dob;
+        return this;
     }
-
     public List<SkillDto> getSkills() {
         return skills;
     }
 
-    public void setSkills(List<SkillDto> skills) {
+    public UpdateEmpRequest setSkills(List<SkillDto> skills) {
         this.skills = skills;
+        return this;
+    }
+
+    public UpdateEmpRequest addSkill(Long skillTypeId, String levelCode, Integer duration) {
+        this.skills.add(new SkillDto(skillTypeId, levelCode, duration));
+        return this;
     }
 
     public List<WorkExperienceDto> getExperiences() {
         return experiences;
     }
 
-    public void setExperiences(List<WorkExperienceDto> experiences) {
+    public UpdateEmpRequest setExperiences(List<WorkExperienceDto> experiences) {
         this.experiences = experiences;
+        return this;
     }
-
     public String getEmpNum() {
         return null;
     }

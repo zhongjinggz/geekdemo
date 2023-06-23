@@ -23,56 +23,64 @@ public class CreateEmpRequest {
         return tenantId;
     }
 
-    public void setTenantId(Long tenantId) {
+    public CreateEmpRequest setTenantId(Long tenantId) {
         this.tenantId = tenantId;
+        return this;
     }
 
     public Long getOrgId() {
         return orgId;
     }
 
-    public void setOrgId(Long orgId) {
+    public CreateEmpRequest setOrgId(Long orgId) {
         this.orgId = orgId;
+        return this;
     }
 
     public String getIdNum() {
         return idNum;
     }
 
-    public void setIdNum(String idNum) {
+    public CreateEmpRequest setIdNum(String idNum) {
         this.idNum = idNum;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public CreateEmpRequest setName(String name) {
         this.name = name;
+        return this;
     }
 
     public String getGenderCode() {
         return genderCode;
     }
 
-    public void setGenderCode(String genderCode) {
+    public CreateEmpRequest setGenderCode(String genderCode) {
         this.genderCode = genderCode;
+        return this;
     }
+
 
     public LocalDate getDob() {
         return dob;
     }
 
-    public void setDob(LocalDate dob) {
+    public CreateEmpRequest setDob(LocalDate dob) {
         this.dob = dob;
+        return this;
     }
 
     public String getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(String statusCode) {
+    public CreateEmpRequest setStatusCode(String statusCode) {
         this.statusCode = statusCode;
+        return this;
     }
 
     public List<SkillDto> getSkills() {
