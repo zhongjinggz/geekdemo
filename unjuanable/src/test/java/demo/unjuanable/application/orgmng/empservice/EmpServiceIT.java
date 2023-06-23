@@ -32,8 +32,17 @@ class EmpServiceIT {
     public static final int JAVA_DURATION = 3;
 
     public static final long PYTHON_TYPE_ID = 2L;
-    public static final String PYTHON_TYPE_CODE = "ADV";
-    public static final int PYTHON_DURATION = 5;
+    public static final String PYTHON_LEVEL_CODE = "ADV";
+    public static final int PYTHON_DURATION = 10;
+
+    public static final long CPP_TYPE_ID = 3L;
+    public static final String CPP_LEVEL_CODE = "BEG";
+    public static final int CPP_DURATION = 1;
+
+    public static final long GOLANG_TYPE_ID = 4L;
+    public static final String GOLANG_LEVEL_CODE = "MED";
+    public static final int GOLANG_DURATION = 4;
+
 
     @Autowired
     private EmpService empService;
@@ -70,13 +79,14 @@ class EmpServiceIT {
         assertThat(savedEmp.getSkills()).extracting("skillTypeId", "level", "duration")
                 .containsExactlyInAnyOrder(
                         tuple(JAVA_TYPE_ID, SkillLevel.MEDIUM, JAVA_DURATION),
-                        tuple(PYTHON_TYPE_ID, SkillLevel.ADVANCED, PYTHON_DURATION)
+                        tuple(PYTHON_TYPE_ID, SkillLevel.ADVANCED, PYTHON_DURATION),
+                        tuple(CPP_TYPE_ID, SkillLevel.BEGINNER, CPP_DURATION)
                 );
 
     }
 
     @Test
-    void updateEmp_shouldSuccess_WhenUpdateEmpNameAndRemovePythonSkill() {
+    void updateEmp_shouldSuccess_WhenUpdateEmpName_AndRemovePythonSkill_AndAddGolangSkill_AndUpdateCppSkill() {
         // given
         CreateEmpRequest request = buildCreateEmpRequest();
         EmpResponse response = empService.addEmp(request, DEFAULT_TENANT_ID);
@@ -84,7 +94,9 @@ class EmpServiceIT {
         // when
         UpdateEmpRequest updateRequest = buildUpdateEmpRequest(response)
                 .setName("Dunne")
-                .removeSkill(PYTHON_TYPE_ID);
+                .removeSkill(PYTHON_TYPE_ID)
+                .addSkill(GOLANG_TYPE_ID, GOLANG_LEVEL_CODE, GOLANG_DURATION)
+                .updateSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION + 1);
 
         empService.updateEmp(response.getId(), updateRequest, DEFAULT_TENANT_ID);
 
@@ -109,7 +121,9 @@ class EmpServiceIT {
 
         assertThat(updatedEmp.getSkills()).extracting("skillTypeId", "level", "duration")
                 .containsExactlyInAnyOrder(
-                        tuple(JAVA_TYPE_ID, SkillLevel.MEDIUM, JAVA_DURATION)
+                        tuple(JAVA_TYPE_ID, SkillLevel.ofCode(JAVA_LEVEL_CODE), JAVA_DURATION)
+                        , tuple(CPP_TYPE_ID, SkillLevel.ofCode(CPP_LEVEL_CODE), CPP_DURATION + 1)
+                        , tuple(GOLANG_TYPE_ID, SkillLevel.ofCode(GOLANG_LEVEL_CODE), GOLANG_DURATION)
                 );
 
     }
@@ -124,7 +138,8 @@ class EmpServiceIT {
                 .setIdNum(DEFAULT_ID_NUM)
                 .setStatusCode(DEFAULT_EMP_STATUS_CODE)
                 .addSkill(JAVA_TYPE_ID, JAVA_LEVEL_CODE, JAVA_DURATION)
-                .addSkill(PYTHON_TYPE_ID, PYTHON_TYPE_CODE, PYTHON_DURATION);
+                .addSkill(PYTHON_TYPE_ID, PYTHON_LEVEL_CODE, PYTHON_DURATION)
+                .addSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION);
     }
 
     private UpdateEmpRequest buildUpdateEmpRequest(EmpResponse response) {
@@ -135,7 +150,8 @@ class EmpServiceIT {
                 .setGenderCode(response.getGenderCode())
                 .setDob(response.getDob())
                 .addSkill(JAVA_TYPE_ID, JAVA_LEVEL_CODE, JAVA_DURATION)
-                .addSkill(PYTHON_TYPE_ID, PYTHON_TYPE_CODE, PYTHON_DURATION);
+                .addSkill(PYTHON_TYPE_ID, PYTHON_LEVEL_CODE, PYTHON_DURATION)
+                .addSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION);
     }
 
 

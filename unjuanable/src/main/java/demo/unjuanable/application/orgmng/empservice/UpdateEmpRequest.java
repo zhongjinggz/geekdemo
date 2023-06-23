@@ -96,4 +96,15 @@ public class UpdateEmpRequest {
         skills.removeIf(skill -> skill.getSkillTypeId().equals(skillTypeId));
         return this;
     }
+
+    public UpdateEmpRequest updateSkill(long typeId, String levelCode, int duration) {
+        skills.stream()
+                .filter(skill -> skill.getSkillTypeId().equals(typeId))
+                .findFirst()
+                .ifPresent(skill -> {
+                    skill.setLevelCode(levelCode);
+                    skill.setDuration(duration);
+                });
+        return this;
+    }
 }

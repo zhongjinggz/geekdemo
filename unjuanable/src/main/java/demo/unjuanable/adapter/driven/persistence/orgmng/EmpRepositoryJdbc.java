@@ -170,7 +170,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
                 + " where tenant_id = ? and id = ? ";
 
         this.jdbc.update(sql
-                , skill.getSkillTypeId()
+                , skill.getLevel().code()
                 , skill.getDuration()
                 , skill.getLastUpdatedAt()
                 , skill.getLastUpdatedBy()
