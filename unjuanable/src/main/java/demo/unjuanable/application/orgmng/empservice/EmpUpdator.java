@@ -11,6 +11,7 @@ public class EmpUpdator {
     public void update(Emp emp, UpdateEmpRequest request, Long userId) {
 
         emp.setIdNum(request.getIdNum())
+                .setName(request.getName())
                 .setDob(request.getDob())
                 .setGender(Gender.ofCode(request.getGenderCode()))
                 .setLastUpdatedAt(LocalDateTime.now())

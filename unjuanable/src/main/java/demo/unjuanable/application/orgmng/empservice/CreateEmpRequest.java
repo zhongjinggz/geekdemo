@@ -4,27 +4,13 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateEmpRequest {
-    private Long tenantId;
+public class CreateEmpRequest extends BaseEmpRequest {
     private Long orgId;
-    private String idNum;
-
-    private String name;
-    private String genderCode;
-    private LocalDate dob;
-
     private String statusCode;
 
-    private List<SkillDto> skills = new ArrayList<>();
-    private List<WorkExperienceDto> experiences = new ArrayList<>();
-    private List<String> postCodes = new ArrayList<>();
-
-    public Long getTenantId() {
-        return tenantId;
-    }
 
     public CreateEmpRequest setTenantId(Long tenantId) {
-        this.tenantId = tenantId;
+        super.setTenantId(tenantId);
         return this;
     }
 
@@ -37,40 +23,23 @@ public class CreateEmpRequest {
         return this;
     }
 
-    public String getIdNum() {
-        return idNum;
-    }
-
     public CreateEmpRequest setIdNum(String idNum) {
-        this.idNum = idNum;
+        super.setIdNum(idNum);
         return this;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public CreateEmpRequest setName(String name) {
-        this.name = name;
+        super.setName(name);
         return this;
-    }
-
-    public String getGenderCode() {
-        return genderCode;
     }
 
     public CreateEmpRequest setGenderCode(String genderCode) {
-        this.genderCode = genderCode;
+        super.setGenderCode(genderCode);
         return this;
     }
 
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
     public CreateEmpRequest setDob(LocalDate dob) {
-        this.dob = dob;
+        super.setDob(dob);
         return this;
     }
 
@@ -83,32 +52,23 @@ public class CreateEmpRequest {
         return this;
     }
 
-    public List<SkillDto> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<SkillDto> skills) {
-        this.skills = skills;
-    }
-
-    public CreateEmpRequest addSkill(Long skillTypeId, String levelCode, Integer duration) {
-        this.skills.add(new SkillDto(skillTypeId, levelCode, duration));
+    public CreateEmpRequest setSkills(List<SkillDto> skills) {
+        super.setSkills(skills);
         return this;
     }
 
-    public List<WorkExperienceDto> getExperiences() {
-        return experiences;
+    public CreateEmpRequest addSkill(Long skillTypeId, String levelCode, Integer duration) {
+        super.addSkill(skillTypeId, levelCode, duration);
+        return this;
     }
 
-    public void setExperiences(List<WorkExperienceDto> experiences) {
-        this.experiences = experiences;
+    public CreateEmpRequest setExperiences(List<WorkExperienceDto> experiences) {
+        super.setExperiences(experiences);
+        return this;
     }
 
-    public List<String> getPostCodes() {
-        return postCodes;
-    }
-
-    public void setPostCodes(List<String> postCodes) {
-        this.postCodes = postCodes;
+    public CreateEmpRequest setPostCodes(List<String> postCodes) {
+        super.setPostCodes(postCodes);
+        return this;
     }
 }

@@ -1,11 +1,9 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.domain.orgmng.emp;
 
 import demo.unjuanable.common.framework.domain.ChangingStatus;
-import demo.unjuanable.domain.orgmng.emp.Skill;
-import demo.unjuanable.domain.orgmng.emp.SkillLevel;
 
 public class RebuiltSkill extends Skill {
-    RebuiltSkill(Long tenantId, Long id, Long skillTypeId, Long createdBy) {
+    public RebuiltSkill(Long tenantId, Long id, Long skillTypeId, Long createdBy) {
         super(tenantId, skillTypeId, createdBy);
         this.id = id;
         this.changingStatus = ChangingStatus.UNCHANGED;

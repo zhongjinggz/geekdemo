@@ -282,7 +282,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
                     newEmp.resetVersion(rs.getLong("version"))
                             .resetOrgId(rs.getLong("org_id"))
-                            .resetNum(rs.getString("emp_num"))
+                            .resetEmpNum(rs.getString("emp_num"))
                             .resetIdNum(rs.getString("id_num"))
                             .resetName(rs.getString("name"))
                             .resetGender(Gender.ofCode(rs.getString("gender_code")))

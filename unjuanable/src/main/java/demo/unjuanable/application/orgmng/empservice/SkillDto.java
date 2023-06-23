@@ -19,7 +19,9 @@ public class SkillDto {
         this.duration = duration;
     }
 
-
+    public Long getId() {
+        return id;
+    }
 
     public Long getSkillTypeId() {
         return skillTypeId;

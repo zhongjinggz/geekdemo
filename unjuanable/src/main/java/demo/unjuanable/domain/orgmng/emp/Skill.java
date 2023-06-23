@@ -12,7 +12,7 @@ public class Skill extends AuditableEntity {
     protected SkillLevel level;
     protected Integer duration;
 
-    protected Skill(Long tenantId, Long skillTypeId, Long createdBy) {
+    public Skill(Long tenantId, Long skillTypeId, Long createdBy) {
         super(LocalDateTime.now(), createdBy);
         this.tenantId = tenantId;
         this.skillTypeId = skillTypeId;
