@@ -2,7 +2,6 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.orgmng.emp.EmpRepository;
 import demo.unjuanable.domain.orgmng.emp.EmpStatus;
-import demo.unjuanable.domain.orgmng.org.Org;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ class EmpRepositoryIT {
     @Test
     public void existsByIdAndStatus_shouldBeTrue_whenExists() {
 
-        boolean found = empRepository.existsByIdAndStatus( 1L ,1L ,EmpStatus.REGULAR);
+        boolean found = empRepository.existByIdAndStatus( 1L ,1L ,EmpStatus.REGULAR);
 
         assertTrue(found);
     }
@@ -31,7 +30,7 @@ class EmpRepositoryIT {
     @Test
     public void existsByIdAndStatus_shouldBeFalse_whenNotExists() {
 
-        boolean found = empRepository.existsByIdAndStatus( 1L ,1L ,EmpStatus.TERMINATED);
+        boolean found = empRepository.existByIdAndStatus( 1L ,1L ,EmpStatus.TERMINATED);
 
         assertFalse(found);
     }

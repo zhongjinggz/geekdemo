@@ -19,7 +19,7 @@ public class CancelOrgValidator {
 
     // 要被撤销的组织不能有下属员工
     public void shouldNotHasEmp(Long tenant, Long id) {
-        if (empRepository.existsByIdAndStatus(tenant, id, EmpStatus.PROBATION, EmpStatus.REGULAR)) {
+        if (empRepository.existByIdAndStatus(tenant, id, EmpStatus.PROBATION, EmpStatus.REGULAR)) {
             throw new BusinessException("该组织中仍然有员工，不能撤销！");
         }
     }
