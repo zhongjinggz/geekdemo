@@ -126,9 +126,6 @@ public class Emp extends AggregateRoot {
     }
 
     public Optional<Skill> getSkill(Long skillTypeId) {
-        // return skills.stream()
-        //         .filter(s -> s.getSkillTypeId().equals(skillTypeId))
-        //         .findAny();
         return Optional.ofNullable(skills.get(skillTypeId));
     }
 

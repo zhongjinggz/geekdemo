@@ -51,6 +51,10 @@ public class UpdateEmpRequest extends BaseEmpRequest {
         super.addSkill(skillTypeId, levelCode, duration);
         return this;
     }
+    public UpdateEmpRequest addSkill(Long id, Long skillTypeId, String levelCode, Integer duration) {
+        super.addSkill(id, skillTypeId, levelCode, duration);
+        return this;
+    }
 
     public UpdateEmpRequest setExperiences(List<WorkExperienceDto> experiences) {
         super.setExperiences(experiences);

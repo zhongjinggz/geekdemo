@@ -75,6 +75,11 @@ public abstract class BaseEmpRequest {
         return this;
     }
 
+    public BaseEmpRequest addSkill(Long id, Long skillTypeId, String levelCode, Integer duration) {
+        this.skills.add(new SkillDto(id, skillTypeId, levelCode, duration));
+        return this;
+    }
+
     public List<WorkExperienceDto> getExperiences() {
         return experiences;
     }

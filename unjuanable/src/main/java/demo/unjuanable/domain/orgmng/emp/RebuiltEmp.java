@@ -62,6 +62,15 @@ public class RebuiltEmp extends Emp {
         return this;
     }
 
+    public RebuiltEmp reUpdateSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
+        this.getSkill(skillTypeId)
+                .orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!")).setLevel(level)
+                .setDuration(duration).setLastUpdatedBy(userId)
+                .setLastUpdatedBy(userId)
+                .setLastUpdatedAt(LocalDateTime.now());
+        return this;
+    }
+
     public RebuiltEmp reAddExperience(LocalDate startDate, LocalDate endDate, String company, Long userId) {
         //TODO
         return this;
@@ -77,6 +86,11 @@ public class RebuiltEmp extends Emp {
         for (Skill skill : skills) {
             this.skills.put(skill.getSkillTypeId(), skill);
         }
+        return this;
+    }
+
+    public RebuiltEmp deleteSkillCompletely(Long skillTypeId) {
+        this.skills.remove(skillTypeId);
         return this;
     }
 }
