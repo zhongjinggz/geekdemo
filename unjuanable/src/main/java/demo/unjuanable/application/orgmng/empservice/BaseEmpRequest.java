@@ -11,8 +11,8 @@ public abstract class BaseEmpRequest {
     private String genderCode;
     private LocalDate dob;
     protected List<SkillDto> skills = new ArrayList<>();
-    private List<WorkExperienceDto> experiences = new ArrayList<>();
-    private List<String> postCodes = new ArrayList<>();
+    protected List<WorkExperienceDto> experiences = new ArrayList<>();
+    protected List<String> postCodes = new ArrayList<>();
 
 
 
@@ -82,6 +82,11 @@ public abstract class BaseEmpRequest {
 
     public List<WorkExperienceDto> getExperiences() {
         return experiences;
+    }
+
+    public BaseEmpRequest addExperience(LocalDate startDate, LocalDate endDate, String company) {
+        this.experiences.add(new WorkExperienceDto(startDate, endDate, company));
+        return this;
     }
 
     public BaseEmpRequest setExperiences(List<WorkExperienceDto> experiences) {

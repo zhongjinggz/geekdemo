@@ -7,7 +7,6 @@ import demo.unjuanable.domain.orgmng.org.validator.OrgNameValidator;
 import demo.unjuanable.domain.orgmng.org.validator.OrgTypeValidator;
 import demo.unjuanable.domain.orgmng.org.validator.SuperiorValidator;
 import demo.unjuanable.domain.orgmng.orgtype.OrgType;
-
 import java.time.LocalDateTime;
 
 public class OrgBuilder {

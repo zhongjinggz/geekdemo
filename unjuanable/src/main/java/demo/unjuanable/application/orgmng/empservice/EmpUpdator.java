@@ -28,7 +28,20 @@ public class EmpUpdator {
     }
 
     private void updateExperiences(Emp emp, UpdateEmpRequest request, Long userId) {
-        //TODO
+        deleteAbsentExperiences(emp, request);
+        operatePresentExperiences(emp, request, userId);
+    }
+
+    private void operatePresentExperiences(Emp emp, UpdateEmpRequest request, Long userId) {
+
+    }
+
+    private void deleteAbsentExperiences(Emp emp, UpdateEmpRequest request) {
+        emp.getExperiences().forEach(presentExperience -> {
+            if (request.isExperienceAbsent(presentExperience)) {
+                emp.deleteExperience(presentExperience.getPeriod());
+            }
+        });
     }
 
     private void deleteAbsentSkills(Emp emp, UpdateEmpRequest request) {

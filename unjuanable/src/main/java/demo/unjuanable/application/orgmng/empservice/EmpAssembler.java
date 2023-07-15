@@ -76,8 +76,8 @@ public class EmpAssembler {
 
         List<WorkExperienceDto> experiences = new ArrayList<>();
         emp.getExperiences().forEach(e ->
-                experiences.add(new WorkExperienceDto(e.getId()
-                        , e.getPeriod().getStart()
+                experiences.add(new WorkExperienceDto(
+                         e.getPeriod().getStart()
                         , e.getPeriod().getEnd()
                         , e.getCompany())));
 

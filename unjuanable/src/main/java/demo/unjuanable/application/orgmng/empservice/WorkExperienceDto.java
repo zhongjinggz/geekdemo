@@ -8,8 +8,7 @@ public class WorkExperienceDto {
     private LocalDate endDate;
     private String company;
 
-    public WorkExperienceDto(Long id, LocalDate startDate, LocalDate endDate, String company) {
-        this.id = id;
+    public WorkExperienceDto(LocalDate startDate, LocalDate endDate, String company) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.company = company;
@@ -37,5 +36,9 @@ public class WorkExperienceDto {
 
     public void setCompany(String company) {
         this.company = company;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 }

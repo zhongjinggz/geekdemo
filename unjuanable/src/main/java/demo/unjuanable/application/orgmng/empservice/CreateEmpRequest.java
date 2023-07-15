@@ -67,6 +67,11 @@ public class CreateEmpRequest extends BaseEmpRequest {
         return this;
     }
 
+    public CreateEmpRequest addExperience(LocalDate startDate, LocalDate endDate, String company) {
+        super.addExperience( startDate, endDate, company);
+        return this;
+    }
+
     public CreateEmpRequest setPostCodes(List<String> postCodes) {
         super.setPostCodes(postCodes);
         return this;

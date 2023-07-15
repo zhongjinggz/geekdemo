@@ -1,5 +1,7 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.domain.common.valueobject.Period;
+import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,6 +9,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
@@ -39,5 +42,32 @@ public class WorkExperienceDao {
         Number createdId = insertWorkExperience.executeAndReturnKey(params);
 
         forceSet(experience, "id", createdId.longValue());
+    }
+
+    void update(WorkExperience experience) {
+        String sql = "update work_experience "
+                + "set company = ?"
+                + ", last_updated_at = ?"
+                + ", last_updated_by = ?"
+                + " where tenant_id = ? and id = ? ";
+
+        jdbc.update(sql
+                , experience.getCompany()
+                , experience.getLastUpdatedAt()
+                , experience.getLastUpdatedBy()
+                , experience.getTenantId()
+                , experience.getId());
+    }
+
+    void delete(WorkExperience experience) {
+        String sql = "delete from work_experience where tenant_id = ? and id = ?";
+        jdbc.update(sql, experience.getTenantId(), experience.getId());
+    }
+
+    public List<Map<String, Object>> selectByEmpId(RebuiltEmp emp) {
+        String sql = "select id, start_date, end_date, company " +
+                "from work_experience where emp_id = ? and tenant_id = ?";
+
+        return jdbc.queryForList(sql, emp.getId(), emp.getTenantId());
     }
 }

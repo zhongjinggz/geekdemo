@@ -6,11 +6,13 @@ import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 import java.time.LocalDateTime;
 
 public class RebuiltWorkExperience extends WorkExperience {
-    RebuiltWorkExperience(Long tenantId, Period period, LocalDateTime createdAt, Long createdBy) {
-        super(tenantId, period, createdAt, createdBy) ;
+    public RebuiltWorkExperience(Long tenantId , Long id
+            , Period period, LocalDateTime createdAt, Long createdBy) {
+
+        super(tenantId, id, period, createdAt, createdBy) ;
     }
 
-    RebuiltWorkExperience resetCompany(String level) {
+    public RebuiltWorkExperience resetCompany(String level) {
         this.company = level;
         return this;
     }

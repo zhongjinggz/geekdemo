@@ -3,12 +3,13 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static demo.unjuanable.common.util.SqlUtil.*;
 
 @Repository
 public class EmpRepositoryJdbc implements EmpRepository {
@@ -74,7 +75,17 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
     private void saveWorkExperience(Emp emp, WorkExperience e) {
         // TODO update as saveSkill()
-        workExperienceDao.insert(e, emp.getId());
+        switch (e.getChangingStatus()) {
+            case NEW:
+                workExperienceDao.insert(e, emp.getId());
+                break;
+            case UPDATED:
+                workExperienceDao.update(e);
+                break;
+            case DELETED:
+                workExperienceDao.delete(e);
+                break;
+        }
     }
 
     private void saveEmpPost(Emp emp, EmpPost p) {
@@ -116,7 +127,14 @@ public class EmpRepositoryJdbc implements EmpRepository {
     }
 
     private void attachExperiences(RebuiltEmp emp) {
-        //TODO
+        List<Map<String, Object>> experiences = workExperienceDao.selectByEmpId(emp);
+        experiences.forEach(experience -> emp.reAddExperience(
+                (Long) experience.get("id")
+                , toLocalDate(experience, "start_date")
+                , toLocalDate(experience, "end_date")
+                , (String) experience.get("company")
+                , (Long) experience.get("created_by")
+        ));
     }
 
     private void attachPosts(RebuiltEmp emp) {

@@ -1,6 +1,8 @@
 package demo.unjuanable.domain.orgmng.emp;
 
+import demo.unjuanable.adapter.driven.persistence.orgmng.RebuiltWorkExperience;
 import demo.unjuanable.common.framework.domain.ChangingStatus;
+import demo.unjuanable.domain.common.valueobject.Period;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -71,10 +73,26 @@ public class RebuiltEmp extends Emp {
         return this;
     }
 
-    public RebuiltEmp reAddExperience(LocalDate startDate, LocalDate endDate, String company, Long userId) {
-        //TODO
+    public RebuiltEmp reAddExperience(Long experienceId, LocalDate startDate, LocalDate endDate, String company, Long userId) {
+        RebuiltWorkExperience newExperience = new RebuiltWorkExperience(tenantId
+                , experienceId
+                , Period.of(startDate, endDate)
+                , LocalDateTime.now()
+                , userId)
+                .resetCompany(company);
+        experiences.put(Period.of(startDate, endDate), newExperience);
         return this;
 
+    }
+
+    public RebuiltEmp reUpdateExperience(LocalDate startDate, LocalDate endDate
+            , String company, Long userId) {
+        this.getExperience(Period.of(startDate, endDate))
+                .orElseThrow(() -> new IllegalArgumentException("不存在要修改的experience!"))
+                .setCompany(company)
+                .setLastUpdatedBy(userId)
+                .setLastUpdatedAt(LocalDateTime.now());
+        return this;
     }
 
     public RebuiltEmp reAddEmpPost(String postCode, Long userId) {
@@ -91,6 +109,11 @@ public class RebuiltEmp extends Emp {
 
     public RebuiltEmp deleteSkillCompletely(Long skillTypeId) {
         this.skills.remove(skillTypeId);
+        return this;
+    }
+
+    public RebuiltEmp deleteExperienceCompletely(Period period) {
+        this.experiences.remove(period);
         return this;
     }
 }

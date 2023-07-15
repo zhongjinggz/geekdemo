@@ -172,6 +172,10 @@ public class Emp extends AggregateRoot {
         return Collections.unmodifiableCollection(experiences.values());
     }
 
+    public Optional<WorkExperience> getExperience(Period period) {
+        return Optional.ofNullable(experiences.get(period));
+    }
+
     public void addExperience(Period period, String company, Long userId) {
         durationShouldNotOverlap(period);
 
@@ -190,8 +194,10 @@ public class Emp extends AggregateRoot {
         return this;
     }
 
-    public Emp deleteExperience(LocalDate startDate, LocalDate endDate) {
-        // TODO ...
+    public Emp deleteExperience(Period period) {
+        this.getExperience(period)
+                .orElseThrow(() -> new IllegalArgumentException("Experiences中不存在要删除的period!"))
+                .toDelete();
         return this;
     }
 

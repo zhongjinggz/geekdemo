@@ -1,5 +1,6 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,12 +22,16 @@ class EmpServiceIT {
     private static final long DEFAULT_USER_ID = 1L;
     private static final long DEFAULT_TENANT_ID = 1L;
     private static final long DEFAULT_ORG_ID = 1L;
+
+    // Default values for emp - begin
     private static final String DEFAULT_EMP_STATUS_CODE = EmpStatus.REGULAR.code();
     private static final String DEFAULT_EMP_NAME = "Kline";
     private static final LocalDate DEFAULT_DOB = LocalDate.of(1980, 1, 1);
     private static final String DEFAULT_GENDER_CODE = Gender.MALE.code();
     private static final String DEFAULT_ID_NUM = "123456789012345678";
+    // Default values for emp - end
 
+    // Default values for skill - begin
     private static final long JAVA_TYPE_ID = 1L;
     public static final String JAVA_LEVEL_CODE = "MED";
     public static final int JAVA_DURATION = 3;
@@ -42,6 +47,23 @@ class EmpServiceIT {
     public static final long GOLANG_TYPE_ID = 4L;
     public static final String GOLANG_LEVEL_CODE = "MED";
     public static final int GOLANG_DURATION = 4;
+    // Default values for skill - end
+
+    // Default values for experience - begin
+    private static final LocalDate CMB_START_DATE = LocalDate.of(2001, 1, 1);
+    private static final LocalDate CMB_END_DATE = LocalDate.of(2003, 1, 1);
+    private static final String CMB_NAME = "CMB";
+    private static final LocalDate PICC_START_DATE = LocalDate.of(2003, 1, 1);
+    private static final LocalDate PICC_END_DATE = LocalDate.of(2005, 1, 1);
+    private static final String PICC_NAME = "PICC";
+    private static final LocalDate AIA_START_DATE = LocalDate.of(2005, 1, 1);
+    private static final LocalDate AIA_END_DATE = LocalDate.of(2007, 1, 1);
+    private static final String AIA_NAME = "AIA";
+    private static final LocalDate ANXIN_START_DATE = LocalDate.of(2007, 1, 1);
+    private static final LocalDate ANXIN_END_DATE = LocalDate.of(2009, 1, 1);
+    private static final String ANXIN_NAME = "ANXIN";
+    // Default values for experience - end
+
 
     @Autowired
     private EmpService empService;
@@ -50,7 +72,7 @@ class EmpServiceIT {
     private EmpRepository empRepository;
 
     @Test
-    void addEmp_shouldAddEmpWithSkills() {
+    void addEmp_shouldAddEmpWithSkillsAndExperiences() {
         // given
         CreateEmpRequest request = buildCreateEmpRequest();
 
@@ -67,7 +89,7 @@ class EmpServiceIT {
     }
 
     @Test
-    void updateEmp_shouldSuccess_WhenUpdateEmpName_AndRemovePythonSkill_AndAddGolangSkill_AndUpdateCppSkill() {
+    void updateEmp_shouldUpdateEmpName_RemoveAddUpdateSkillsAndExperiences() {
         // given
         Emp origionEmp = prepareEmpInDb();
 
@@ -95,16 +117,28 @@ class EmpServiceIT {
                 .setStatusCode(DEFAULT_EMP_STATUS_CODE)
                 .addSkill(JAVA_TYPE_ID, JAVA_LEVEL_CODE, JAVA_DURATION)
                 .addSkill(PYTHON_TYPE_ID, PYTHON_LEVEL_CODE, PYTHON_DURATION)
-                .addSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION);
+                .addSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION)
+                .addExperience(CMB_START_DATE, CMB_END_DATE, CMB_NAME)
+                .addExperience(PICC_START_DATE, PICC_END_DATE, PICC_NAME)
+                .addExperience(AIA_START_DATE, AIA_END_DATE, AIA_NAME);
     }
 
     private UpdateEmpRequest buildUpdateEmpRequest(Emp origin) {
+        UpdateEmpRequest result = emp2UpdateRequest(origin);
+        //return emp2UpdateRequest(origin)
+        result.setName("Dunne");
 
-        return emp2UpdateRequest(origin)
-                .setName("Dunne")
-                .removeSkill(PYTHON_TYPE_ID)
+        result.removeSkill(PYTHON_TYPE_ID)
                 .addSkill(GOLANG_TYPE_ID, GOLANG_LEVEL_CODE, GOLANG_DURATION)
                 .updateSkill(CPP_TYPE_ID, CPP_LEVEL_CODE, CPP_DURATION + 1);
+
+        result.removeExperience(PICC_START_DATE, PICC_END_DATE)
+                .addExperience(ANXIN_START_DATE, ANXIN_END_DATE, ANXIN_NAME)
+                .updateExperience(CMB_START_DATE, CMB_END_DATE, CMB_NAME + "1");
+
+        return result;
+
+
     }
 
     private Emp buildExpectedCreatedEmp(CreateEmpRequest request, Long id) {
@@ -126,6 +160,16 @@ class EmpServiceIT {
                         , skill.getSkillTypeId()
                         , SkillLevel.ofCode(skill.getLevelCode())
                         , skill.getDuration()
+                        , DEFAULT_USER_ID
+                )
+        );
+
+        request.getExperiences().forEach(
+                experience -> result.reAddExperience(
+                        experience.getId()
+                        , experience.getStartDate()
+                        , experience.getEndDate()
+                        , experience.getCompany()
                         , DEFAULT_USER_ID
                 )
         );
@@ -151,12 +195,24 @@ class EmpServiceIT {
                         , CPP_DURATION + 1
                         , DEFAULT_USER_ID)
                 .deleteSkillCompletely(PYTHON_TYPE_ID);
+
+        expected.reAddExperience(null
+                        , ANXIN_START_DATE
+                        , ANXIN_END_DATE
+                        , ANXIN_NAME
+                        , DEFAULT_USER_ID)
+                .reUpdateExperience(CMB_START_DATE
+                        , CMB_END_DATE
+                        , CMB_NAME + "1"
+                        , DEFAULT_USER_ID)
+                .deleteExperienceCompletely(Period.of(PICC_START_DATE, PICC_END_DATE));
         return expected;
     }
 
     private void assertEmp(Emp actual, Emp expected) {
         assertThat(actual).usingRecursiveComparison()
                 .ignoringFields("skills"
+                        , "experiences"
                         , "empNum"
                         , "createdAt"
                         , "createdBy"
@@ -170,6 +226,13 @@ class EmpServiceIT {
                 .ignoringExpectedNullFields() // this is because if of the new skill is null in request
                 .comparingOnlyFields("id", "tenantId", "empId", "skillTypeId", "level", "duration")
                 .isEqualTo(expected.getSkills());
+
+        assertThat(actual.getExperiences()).usingRecursiveComparison()
+                .ignoringCollectionOrder()
+                .ignoringExpectedNullFields() // this is because if of the new experience is null in request
+                //.comparingOnlyFields("id", "tenantId", "period", "company")
+                .comparingOnlyFields("id", "tenantId", "period", "company")
+                .isEqualTo(expected.getExperiences());
     }
 
     private Emp prepareEmpInDb() {

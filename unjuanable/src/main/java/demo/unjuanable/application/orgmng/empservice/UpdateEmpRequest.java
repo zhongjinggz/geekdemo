@@ -1,6 +1,8 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.emp.Skill;
+import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -51,19 +53,21 @@ public class UpdateEmpRequest extends BaseEmpRequest {
         super.addSkill(skillTypeId, levelCode, duration);
         return this;
     }
+
     public UpdateEmpRequest addSkill(Long id, Long skillTypeId, String levelCode, Integer duration) {
         super.addSkill(id, skillTypeId, levelCode, duration);
-        return this;
-    }
-
-    public UpdateEmpRequest setExperiences(List<WorkExperienceDto> experiences) {
-        super.setExperiences(experiences);
         return this;
     }
 
     boolean isSkillAbsent(Skill otherSkill) {
         return skills.stream()
                 .noneMatch(skill -> skill.getSkillTypeId().equals(otherSkill.getSkillTypeId()));
+    }
+
+    boolean isExperienceAbsent(WorkExperience otherExperience) {
+        return experiences.stream()
+                .noneMatch(experience -> Period.of(experience.getStartDate() , experience.getEndDate())
+                        .equals(otherExperience.getPeriod()));
     }
 
     public UpdateEmpRequest removeSkill(long skillTypeId) {
@@ -79,6 +83,32 @@ public class UpdateEmpRequest extends BaseEmpRequest {
                     skill.setLevelCode(levelCode);
                     skill.setDuration(duration);
                 });
+        return this;
+    }
+
+    public UpdateEmpRequest setExperiences(List<WorkExperienceDto> experiences) {
+        super.setExperiences(experiences);
+        return this;
+    }
+
+    public UpdateEmpRequest addExperience(LocalDate startDate, LocalDate endDate, String company) {
+        super.addExperience(startDate, endDate, company);
+        return this;
+    }
+
+    public UpdateEmpRequest removeExperience(LocalDate startDate, LocalDate endDate) {
+        experiences.removeIf(experience ->
+                experience.getStartDate().equals(startDate)
+                        && experience.getEndDate().equals(endDate));
+        return this;
+    }
+
+    public UpdateEmpRequest updateExperience(LocalDate startDate, LocalDate endDate, String company) {
+        experiences.stream()
+                .filter(experience -> experience.getStartDate().equals(startDate)
+                        && experience.getEndDate().equals(endDate))
+                .findFirst()
+                .ifPresent(experience -> experience.setCompany(company));
         return this;
     }
 }

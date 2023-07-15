@@ -20,6 +20,13 @@ public class WorkExperience extends AuditableEntity {
         this.period = period;
     }
 
+    protected WorkExperience(Long tenantId, Long id, Period period
+            , LocalDateTime createdAt, Long createdBy) {
+
+        this(tenantId, period, createdAt, createdBy);
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
