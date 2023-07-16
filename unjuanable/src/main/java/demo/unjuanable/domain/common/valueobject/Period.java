@@ -32,6 +32,10 @@ public class Period {
         return new Period(start, end);
     }
 
+    public static Period of(int startYear, int startMonth, int startDay, int endYear, int endMonth, int endDay){
+        return new Period(LocalDate.of(startYear, startMonth, startDay), LocalDate.of(endYear, endMonth, endDay));
+    }
+
     public boolean overlap(Period other) {
         if (other == null) {
             throw new IllegalArgumentException("入参不能为空！");
@@ -50,5 +54,10 @@ public class Period {
 
     public LocalDate getEnd() {
         return end;
+    }
+
+    @Override
+    public String toString() {
+        return start + " ~ " + end ;
     }
 }
