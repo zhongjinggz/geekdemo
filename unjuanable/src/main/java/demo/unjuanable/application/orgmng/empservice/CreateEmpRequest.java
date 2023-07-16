@@ -1,7 +1,6 @@
 package demo.unjuanable.application.orgmng.empservice;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 public class CreateEmpRequest extends BaseEmpRequest {

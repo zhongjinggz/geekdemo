@@ -55,11 +55,6 @@ public abstract class AuditableEntity {
         return this;
     }
 
-//    public void setLastUpdatedInfo(LocalDateTime lastUpdatedAt, Long lastUpdatedBy){
-//        this.lastUpdatedAt = lastUpdatedAt;
-//        this.lastUpdatedBy = lastUpdatedBy;
-//    }
-
     public Long getLastUpdatedBy() {
         return lastUpdatedBy;
     }

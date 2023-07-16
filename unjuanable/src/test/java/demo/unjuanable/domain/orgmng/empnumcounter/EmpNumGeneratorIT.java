@@ -47,9 +47,8 @@ class EmpNumGeneratorIT {
    // test case : generateEmpNumByYear will throw SystemException when counter not exists
     @Test
     void generateEmpNumByYear_throwSystemException_whenCounterNotExists() {
-        Exception e = assertThrows(SystemException.class, () -> {
-            empNumGenerator.generateEmpNumByYear(1L, 9999);
-        });
+        Exception e = assertThrows(SystemException.class
+                , () -> empNumGenerator.generateEmpNumByYear(1L, 9999));
 
         assertEquals("租户ID为'1'的年份为'9999'的员工编号计数器不存在！", e.getMessage());
     }

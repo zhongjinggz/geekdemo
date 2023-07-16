@@ -1,7 +1,6 @@
 package demo.unjuanable.domain.tenantmng;
 
 import demo.unjuanable.common.framework.domain.AuditableEntity;
-import demo.unjuanable.domain.orgmng.org.OrgStatus;
 
 import java.time.LocalDateTime;
 

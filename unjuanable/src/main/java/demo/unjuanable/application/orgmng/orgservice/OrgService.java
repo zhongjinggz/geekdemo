@@ -1,6 +1,7 @@
 package demo.unjuanable.application.orgmng.orgservice;
 
 import demo.unjuanable.common.framework.exception.BusinessException;
+import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,9 +44,9 @@ public class OrgService {
     @Transactional
     public OrgResponse updateOrgBasic(Long id, UpdateOrgBasicRequest request, Long userId) {
         Org org = orgRepository.findById(request.getTenantId(), id)
-                .orElseThrow(() -> {
-                    throw new BusinessException("要修改的组织(id =" + id + "  )不存在！");
-                });
+                .orElseThrow(() ->
+                    new BusinessException("要修改的组织(id =" + id + "  )不存在！")
+                );
 
         orgHandler.updateBasic(org, request.getName() , request.getLeaderId(), userId);
         orgRepository.update(org);
@@ -56,9 +57,8 @@ public class OrgService {
     @Transactional
     public Long cancelOrg(Long tenant, Long id, Long userId) {
         Org org = orgRepository.findById(tenant, id)
-                .orElseThrow(() -> {
-                    throw new BusinessException("要取消的组织(id =" + id + "  )不存在！");
-                });
+                .orElseThrow(() -> new BusinessException("要取消的组织(id =" + id + "  )不存在！")
+                );
 
         orgHandler.cancel(org, userId);
         orgRepository.update(org);

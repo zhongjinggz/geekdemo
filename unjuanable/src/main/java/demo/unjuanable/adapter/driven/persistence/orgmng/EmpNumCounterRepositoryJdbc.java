@@ -47,12 +47,10 @@ public class EmpNumCounterRepositoryJdbc implements EmpNumCounterRepository {
 
         try {
             return jdbc.queryForObject(sql
-                    , (rs, rowNum) -> {
-                        return new EmpNumCounter(
-                                rs.getLong("tenant_id")
-                                , rs.getInt("year_num")
-                                , rs.getInt("max_emp_num"));
-                    }
+                    , (rs, rowNum) -> new EmpNumCounter(
+                            rs.getLong("tenant_id")
+                            , rs.getInt("year_num")
+                            , rs.getInt("max_emp_num"))
                     , tenantId
                     , yearNum);
         } catch (IncorrectResultSizeDataAccessException e) {

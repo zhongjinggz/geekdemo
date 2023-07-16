@@ -1,6 +1,5 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
-import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 import org.springframework.beans.factory.annotation.Autowired;

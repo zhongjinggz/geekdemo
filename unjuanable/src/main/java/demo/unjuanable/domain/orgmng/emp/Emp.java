@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Emp extends AggregateRoot {
     protected Long id;
-    protected Long tenantId;
+    final protected Long tenantId;
     protected Long orgId;
 
     protected String empNum;
@@ -22,11 +22,11 @@ public class Emp extends AggregateRoot {
     protected LocalDate dob;
     protected EmpStatus status;
     // protected List<Skill> skills;
-    protected Map<Long, Skill> skills = new HashMap<>();
+    final protected Map<Long, Skill> skills = new HashMap<>();
     // protected List<WorkExperience> experiences;
-    protected Map<Period, WorkExperience> experiences = new HashMap<>();
+    final protected Map<Period, WorkExperience> experiences = new HashMap<>();
 
-    protected List<EmpPost> empPosts = new ArrayList<>();
+    final protected List<EmpPost> empPosts = new ArrayList<>();
 
     // 用于新建员工
     public Emp(Long tenantId, EmpStatus status, Long createdBy) {

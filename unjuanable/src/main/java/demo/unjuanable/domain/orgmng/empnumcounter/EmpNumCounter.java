@@ -2,7 +2,7 @@ package demo.unjuanable.domain.orgmng.empnumcounter;
 
 
 public class EmpNumCounter {
-    private long tenantId;
+    final private long tenantId;
     private int yearNum;
     private int maxEmpNum;
 

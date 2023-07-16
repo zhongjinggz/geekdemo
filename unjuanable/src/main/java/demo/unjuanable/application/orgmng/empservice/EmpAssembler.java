@@ -14,9 +14,9 @@ import java.util.List;
 @Component
 public class EmpAssembler {
 
-    EmpNumGenerator empNumGenerator;
+    final EmpNumGenerator empNumGenerator;
 
-    CommonOrgValidator assertOrg;
+    final CommonOrgValidator assertOrg;
 
     @Autowired
     public EmpAssembler(CommonOrgValidator assertOrg, EmpNumGenerator empNumGenerator) {

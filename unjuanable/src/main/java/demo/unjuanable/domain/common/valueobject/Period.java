@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class Period {
-    private LocalDate start;
-    private LocalDate end;
+    final private LocalDate start;
+    final private LocalDate end;
 
     private Period(LocalDate start, LocalDate end) {
         if (start == null || end == null || start.isAfter(end)) {

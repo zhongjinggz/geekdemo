@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 
 public class Skill extends AuditableEntity {
     protected Long id;
-    private Long tenantId;
-    private Long skillTypeId;
+    final private Long tenantId;
+    final private Long skillTypeId;
     protected SkillLevel level;
     protected Integer duration;
 

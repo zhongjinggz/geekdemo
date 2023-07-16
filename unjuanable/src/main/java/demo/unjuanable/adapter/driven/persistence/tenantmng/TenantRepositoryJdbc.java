@@ -1,6 +1,5 @@
 package demo.unjuanable.adapter.driven.persistence.tenantmng;
 
-import demo.unjuanable.domain.orgmng.org.Org;
 import demo.unjuanable.domain.tenantmng.Tenant;
 import demo.unjuanable.domain.tenantmng.TenantRepository;
 import demo.unjuanable.domain.tenantmng.TenantStatus;

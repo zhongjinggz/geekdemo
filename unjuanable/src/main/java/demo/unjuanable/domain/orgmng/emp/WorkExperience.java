@@ -8,8 +8,8 @@ import demo.unjuanable.domain.common.valueobject.Period;
 
 public class WorkExperience extends AuditableEntity {
     private Long id;
-    private Long tenantId;
-    private Period period;
+    final private Long tenantId;
+    final private Period period;
     protected String company;
 
     protected WorkExperience(Long tenantId, Period period
