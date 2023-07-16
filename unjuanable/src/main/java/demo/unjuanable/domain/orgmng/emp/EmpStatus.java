@@ -39,3 +39,32 @@ public enum EmpStatus {
         return TERMINATED;
     }
 }
+
+// unit test for above code with Junit5
+//package demo.unjuanable.domain.orgmng.emp;
+//
+//@Test
+//public class EmpStatusTest {
+//
+//    @Test
+//    public void testOfCode() {
+//        assertEquals(EmpStatus.REGULAR, EmpStatus.ofCode("REG"));
+//        assertEquals(EmpStatus.PROBATION, EmpStatus.ofCode("PRO"));
+//        assertEquals(EmpStatus.TERMINATED, EmpStatus.ofCode("TER"));
+//    }
+//
+//    @Test
+//    public void testBecomeRegular() {
+//        assertEquals(EmpStatus.REGULAR, EmpStatus.PROBATION.becomeRegular());
+//        assertThrows(BusinessException.class, () -> EmpStatus.REGULAR.becomeRegular());
+//        assertThrows(BusinessException.class, () -> EmpStatus.TERMINATED.becomeRegular());
+//    }
+//
+//    @Test
+//    public void testTerminate() {
+//        assertEquals(EmpStatus.TERMINATED, EmpStatus.REGULAR.terminate());
+//        assertEquals(EmpStatus.TERMINATED, EmpStatus.PROBATION.terminate());
+//        assertThrows(BusinessException.class, () -> EmpStatus.TERMINATED.terminate());
+//    }
+//}
+
