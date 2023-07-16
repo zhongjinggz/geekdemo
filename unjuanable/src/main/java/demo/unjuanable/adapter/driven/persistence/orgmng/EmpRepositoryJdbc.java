@@ -75,7 +75,6 @@ public class EmpRepositoryJdbc implements EmpRepository {
 
 
     private void saveWorkExperience(Emp emp, WorkExperience e) {
-        // TODO update as saveSkill()
         switch (e.getChangingStatus()) {
             case NEW:
                 workExperienceDao.insert(e, emp.getId());

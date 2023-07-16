@@ -141,11 +141,8 @@ public class Emp extends AggregateRoot {
         Skill theSkill = this.getSkill(skillTypeId)
                 .orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!"));
 
-        //TODO delete "!theSkill.getSkillTypeId().equals(skillTypeId)"?
-        if (!theSkill.getSkillTypeId().equals(skillTypeId)
-                || theSkill.getLevel() != level
+        if (theSkill.getLevel() != level
                 || !theSkill.getDuration().equals(duration)) {
-
             theSkill.setLevel(level)
                     .setDuration(duration)
                     .setLastUpdatedBy(userId)
