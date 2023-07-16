@@ -20,8 +20,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
     private final EmpPostDao empPostDao;
 
     @Autowired
-    public EmpRepositoryJdbc(JdbcTemplate jdbc
-            , EmpDao empDao
+    public EmpRepositoryJdbc(EmpDao empDao
             , SkillDao skillDao
             , WorkExperienceDao workExperienceDao
             , EmpPostDao empPostDao) {
