@@ -73,21 +73,20 @@ public class RebuiltEmp extends Emp {
         return this;
     }
 
-    public RebuiltEmp reAddExperience(Long experienceId, LocalDate startDate, LocalDate endDate, String company, Long userId) {
+    public RebuiltEmp reAddExperience(Long experienceId, Period period, String company, Long userId) {
         RebuiltWorkExperience newExperience = new RebuiltWorkExperience(tenantId
                 , experienceId
-                , Period.of(startDate, endDate)
+                , period
                 , LocalDateTime.now()
                 , userId)
                 .resetCompany(company);
-        experiences.put(Period.of(startDate, endDate), newExperience);
+        experiences.put(period, newExperience);
         return this;
 
     }
 
-    public RebuiltEmp reUpdateExperience(LocalDate startDate, LocalDate endDate
-            , String company, Long userId) {
-        this.getExperience(Period.of(startDate, endDate))
+    public RebuiltEmp reUpdateExperience(Period period, String company, Long userId) {
+        this.getExperience(period)
                 .orElseThrow(() -> new IllegalArgumentException("不存在要修改的experience!"))
                 .setCompany(company)
                 .setLastUpdatedBy(userId)

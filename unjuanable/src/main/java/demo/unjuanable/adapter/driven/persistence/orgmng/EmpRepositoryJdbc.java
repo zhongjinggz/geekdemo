@@ -1,5 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -130,8 +131,7 @@ public class EmpRepositoryJdbc implements EmpRepository {
         List<Map<String, Object>> experiences = workExperienceDao.selectByEmpId(emp);
         experiences.forEach(experience -> emp.reAddExperience(
                 (Long) experience.get("id")
-                , toLocalDate(experience, "start_date")
-                , toLocalDate(experience, "end_date")
+                , Period.of(toLocalDate(experience, "start_date"), toLocalDate(experience, "end_date"))
                 , (String) experience.get("company")
                 , (Long) experience.get("created_by")
         ));

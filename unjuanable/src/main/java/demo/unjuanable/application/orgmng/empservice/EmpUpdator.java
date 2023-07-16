@@ -33,6 +33,21 @@ public class EmpUpdator {
     }
 
     private void operatePresentExperiences(Emp emp, UpdateEmpRequest request, Long userId) {
+        for (WorkExperienceDto experienceDto : request.getExperiences()) {
+            Optional<WorkExperience> experienceMaybe = emp.getExperience(
+                    experienceDto.getPeriod()
+            );
+
+            if (experienceMaybe.isPresent()) {
+                emp.updateExperience(experienceDto.getPeriod()
+                        , experienceDto.getCompany()
+                        , userId);
+            } else {
+                emp.addExperience(experienceDto.getPeriod()
+                        , experienceDto.getCompany()
+                        , userId);
+            }
+        }
 
     }
 

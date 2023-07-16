@@ -1,5 +1,7 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.domain.common.valueobject.Period;
+
 import java.time.LocalDate;
 
 public class WorkExperienceDto {
@@ -40,5 +42,9 @@ public class WorkExperienceDto {
 
     public Long getId() {
         return this.id;
+    }
+
+    Period getPeriod() {
+        return Period.of(getStartDate(), getEndDate());
     }
 }

@@ -167,9 +167,8 @@ class EmpServiceIT {
         request.getExperiences().forEach(
                 experience -> result.reAddExperience(
                         experience.getId()
-                        , experience.getStartDate()
-                        , experience.getEndDate()
-                        , experience.getCompany()
+                        ,
+                        Period.of(experience.getStartDate(), experience.getEndDate()), experience.getCompany()
                         , DEFAULT_USER_ID
                 )
         );
@@ -197,13 +196,11 @@ class EmpServiceIT {
                 .deleteSkillCompletely(PYTHON_TYPE_ID);
 
         expected.reAddExperience(null
-                        , ANXIN_START_DATE
-                        , ANXIN_END_DATE
-                        , ANXIN_NAME
+                        ,
+                        Period.of(ANXIN_START_DATE, ANXIN_END_DATE), ANXIN_NAME
                         , DEFAULT_USER_ID)
-                .reUpdateExperience(CMB_START_DATE
-                        , CMB_END_DATE
-                        , CMB_NAME + "1"
+                .reUpdateExperience(
+                        Period.of(CMB_START_DATE, CMB_END_DATE), CMB_NAME + "1"
                         , DEFAULT_USER_ID)
                 .deleteExperienceCompletely(Period.of(PICC_START_DATE, PICC_END_DATE));
         return expected;
@@ -229,7 +226,7 @@ class EmpServiceIT {
 
         assertThat(actual.getExperiences()).usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .ignoringExpectedNullFields() // this is because if of the new experience is null in request
+                .ignoringExpectedNullFields() // this is because id of the new experience is null in request
                 //.comparingOnlyFields("id", "tenantId", "period", "company")
                 .comparingOnlyFields("id", "tenantId", "period", "company")
                 .isEqualTo(expected.getExperiences());
@@ -265,6 +262,14 @@ class EmpServiceIT {
                         , DEFAULT_USER_ID
                 )
         );
+
+        origionEmp.getExperiences().forEach(
+                experience -> expected.reAddExperience(
+                        experience.getId()
+                        , experience.getPeriod()
+                        , experience.getCompany()
+                        , DEFAULT_USER_ID
+                ));
         return expected;
     }
 
@@ -283,6 +288,13 @@ class EmpServiceIT {
                         , skill.getSkillTypeId()
                         , skill.getLevel().code()
                         , skill.getDuration()
+                )
+        );
+
+        origin.getExperiences().forEach(experience ->
+                result.addExperience(experience.getPeriod().getStart()
+                        , experience.getPeriod().getEnd()
+                        , experience.getCompany()
                 )
         );
         return result;

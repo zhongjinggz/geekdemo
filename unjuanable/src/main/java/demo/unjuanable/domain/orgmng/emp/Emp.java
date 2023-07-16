@@ -134,18 +134,22 @@ public class Emp extends AggregateRoot {
 
         Skill newSkill = new Skill(tenantId, skillTypeId, userId).setLevel(level).setDuration(duration);
 
-        //skills.add(newSkill);
         skills.put(skillTypeId, newSkill);
     }
 
     public Emp updateSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
-        Skill theSkill = this.getSkill(skillTypeId).orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!"));
+        Skill theSkill = this.getSkill(skillTypeId)
+                .orElseThrow(() -> new IllegalArgumentException("不存在要修改的skillTypeId!"));
 
+        //TODO delete "!theSkill.getSkillTypeId().equals(skillTypeId)"?
         if (!theSkill.getSkillTypeId().equals(skillTypeId)
                 || theSkill.getLevel() != level
                 || !theSkill.getDuration().equals(duration)) {
 
-            theSkill.setLevel(level).setDuration(duration).setLastUpdatedBy(userId).setLastUpdatedAt(LocalDateTime.now()).toUpdate();
+            theSkill.setLevel(level)
+                    .setDuration(duration)
+                    .setLastUpdatedBy(userId)
+                    .setLastUpdatedAt(LocalDateTime.now()).toUpdate();
         }
         return this;
     }
@@ -159,15 +163,11 @@ public class Emp extends AggregateRoot {
 
 
     private void skillTypeShouldNotDuplicated(Long newSkillTypeId) {
-        // if (skills.stream().anyMatch(s -> s.getSkillTypeId().equals(newSkillTypeId))) {
         if (skills.get(newSkillTypeId) != null) {
             throw new BusinessException("同一技能不能录入两次！");
         }
     }
 
-    //    public List<WorkExperience> getExperiences() {
-    //        return Collections.unmodifiableList(experiences);
-    //    }
     public Collection<WorkExperience> getExperiences() {
         return Collections.unmodifiableCollection(experiences.values());
     }
@@ -185,12 +185,19 @@ public class Emp extends AggregateRoot {
                 , LocalDateTime.now()
                 , userId)
                 .setCompany(company);
-        //experiences.add(newExperience);
         experiences.put(period, newExperience);
     }
 
-    public Emp updateExperience(LocalDate startDate, LocalDate endDate, String company, Long userId) {
-        // TODO ...
+    public Emp updateExperience(Period period, String company, Long userId) {
+        WorkExperience theExperience = this.getExperience(period)
+                .orElseThrow(() -> new IllegalArgumentException("不存在要修改的 WorkExperience!"));
+        if (!theExperience.getCompany().equals(company)) {
+            theExperience.setCompany(company)
+                    .setLastUpdatedBy(userId)
+                    .setLastUpdatedAt(LocalDateTime.now())
+                    .toUpdate();
+        }
+
         return this;
     }
 
