@@ -9,7 +9,8 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 logging:
   level:
+    root: ERROR
     org:
       springframework:
         jdbc:
-          core: TRACE
+          core: DEBUG
