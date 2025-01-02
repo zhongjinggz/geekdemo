@@ -1,8 +1,8 @@
 - Basic
   - DONE: create database
   - DONE: run tests
-  - run tests with Maven
-  - merge to main branch 
+  - DONE:run tests with Maven
+  - DONE:merge to main branch 
   - use writeField with apache common lang
   - use isBlank() in JDK 
 
