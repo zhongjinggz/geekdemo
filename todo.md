@@ -3,8 +3,8 @@
   - DONE: run tests
   - DONE:run tests with Maven
   - DONE:merge to main branch 
-  - use writeField with apache common lang
-  - use isBlank() in JDK 
+  - DONE writeField with apache common lang
+  - DONE isBlank() in JDK 
 
 - improve till lesson 21
   - install TonyiLingma
