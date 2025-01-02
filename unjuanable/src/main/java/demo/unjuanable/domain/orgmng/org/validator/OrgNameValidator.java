@@ -2,7 +2,6 @@ package demo.unjuanable.domain.orgmng.org.validator;
 
 import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.org.OrgRepository;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
