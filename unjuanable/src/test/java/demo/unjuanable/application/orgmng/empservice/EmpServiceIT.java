@@ -221,7 +221,7 @@ class EmpServiceIT {
         assertThat(actual.getSkills()).usingRecursiveComparison()
                 .ignoringCollectionOrder()
                 .ignoringExpectedNullFields() // this is because if of the new skill is null in request
-                .comparingOnlyFields("id", "tenantId", "empId", "skillTypeId", "level", "duration")
+                .comparingOnlyFields("id", "tenantId", "skillTypeId", "level", "duration")
                 .isEqualTo(expected.getSkills());
 
         assertThat(actual.getExperiences()).usingRecursiveComparison()

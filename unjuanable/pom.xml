@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.4</version>
+        <version>3.4.1</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>demo</groupId>
@@ -14,21 +14,26 @@
     <name>unjuanable</name>
     <description>unjuanable</description>
     <properties>
-        <java.version>11</java.version>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
+        <!--
+        java.version 是 springboot 内置属性。设置该属性后，springboot将自动设置
+        maven.compiler.source 和 maven.compiler.target 这两个 maven 属性
+        -->
+        <java.version>21</java.version>
+        <!-- springboot 3.4.1 中默认的 logback1.5.12 有安全漏洞，通过以下属性可以使用新版本 -->
+        <logback.version>1.5.15</logback.version>
+        <!-- 初始化 argLine(命令行参数）以便后面 surefire plugin 的 @{argLine} 使用  -->
+        <argLine/>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
@@ -40,9 +45,11 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- mysql-connector-j 已经取代了原来的 mysql-connector-java -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.1.0</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -51,14 +58,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-boot-starter</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>3.0.0</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.7.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -70,6 +72,48 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!--
+                            为每一个Maven依赖设置一个 property，key是坐标，例如 ${org.mockito:mockito-core:jar}，
+                            值是依赖包所在的实际路径。目前这时为了后面解决 Mockito 问题准备的。
+                            -->
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 如过不使用@{argLine}，则会完全替换掉原来的命令参数，使用了，则是在原来的参数后面添加 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!--
+                    JDK21 默认不使用动态加载代理（https://openjdk.org/jeps/451）。
+                    因此使用 Mockito 时会报警： WARNING: A Java agent has been loaded dynamically ...
+                    有两种解决方法：
+                    方法一：适用于 Mockito 5.14.0 之前的版本(Springboot3.4.0 之后才会引入这个版本)。
+                    如下所示，增加命令行参数以便启动动态大道理加载。这个方案并不彻底，因为将来可能某个JDK版本会彻底禁止动态加载大道理。
+                    <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
+
+                    方法二：适用于 Mockito 5.14.0 及之后的版本 （即 Springboot版本大于等于 3.4.0）(https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3)
+                           这时如果不使用下面的方法，则会得到警告： Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+                    -->
+                    <!--suppress UnresolvedMavenProperty -->
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+                    <!-- 补充说明：
+                    1. 如果不使用 @{argLine}, 则 <argLine> 中的内容会覆盖掉其他plugin 可能已经产生的命令行参数。
+                    2. ${org.mockito:mockito-core:jar} 是由前面的 maven-dependency-plugin 动态产生的，因此IDE无法解析，会报警。
+                      使用 “suppress UnresolvedMavenProperty" 会消除这个警告。
+                    3. 无论哪种方法，都只解决了用Maven运行时的警告，但用IDEA直接运行时仍然会警告，
+                       解决方法是在 run configuration 中也增加参数 -ea -XX:+EnableDynamicAgentLoading
+                    -->
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
@@ -77,6 +121,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.5.2</version>
+                <configuration>
+                    <!-- 与 surefire 中的配置同理 -->
+                    <!--suppress UnresolvedMavenProperty -->
+                    <argLine>@{argLine} -javaagent:${org.mockito:mockito-core:jar}</argLine>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

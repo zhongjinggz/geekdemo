@@ -4,12 +4,15 @@ spring:
     username: unjuanable
     password: unjuanable
     driver-class-name: com.mysql.cj.jdbc.Driver
-  mvc:
-    pathmatch:
-      matching-strategy: ANT_PATH_MATCHER
+#springdoc:
+#  api-docs:
+#    path: /api-docs
+#  swagger-ui:
+#    path: /swagger-ui.html
+#    enabled: true
 logging:
   level:
-    root: ERROR
+    root: INFO
     org:
       springframework:
         jdbc:
