@@ -114,7 +114,7 @@ class OrgServiceIT {
     }
 
     private Org prepareOrgTobeUpdated() {
-        OrgReBuilder orgReBuilder = orgReBuilderFactory.build();
+        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
         Org org = orgReBuilder
                 .tenantId(DEFAULT_TENANT_ID)
                 .superiorId(DEFAULT_ORG_ID)

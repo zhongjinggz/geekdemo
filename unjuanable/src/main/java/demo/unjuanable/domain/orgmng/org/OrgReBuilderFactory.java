@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrgReBuilderFactory {
 
-    public OrgReBuilder build() {
+    public OrgReBuilder newBuilder() {
         return new OrgReBuilder();
     }
 

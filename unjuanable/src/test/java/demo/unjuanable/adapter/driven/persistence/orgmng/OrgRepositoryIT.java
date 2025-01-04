@@ -43,13 +43,46 @@ class OrgRepositoryIT {
     }
 
     @Test
-    void findById_notfound() {
+    void findById_exists() {
+        Optional<Org> actualOpt = orgRepository.findById(DEFAULT_TENANT_ID, DEFAULT_ORG_ID);
+
+        assertTrue(actualOpt.isPresent());
+
+        Org actual = actualOpt.get();
+        assertEquals(DEFAULT_TENANT_ID, actual.getTenantId());
+        assertEquals(DEFAULT_ORG_ID, actual.getId());
+        assertEquals(OrgStatus.EFFECTIVE, actual.getStatus());
+        assertEquals("ENTP", actual.getOrgTypeCode());
+    }
+    @Test
+    void findById_notFound() {
         Optional<Org> org = orgRepository.findById(1L, -1L);
         assertTrue(org.isEmpty());
     }
 
     @Test
-    public void existsBySuperiorIdAndName_shouldBeTrue_whenExists() {
+    void findByIdAndStatus_exists() {
+        Optional<Org> actualOpt = orgRepository.findByIdAndStatus(DEFAULT_TENANT_ID, DEFAULT_ORG_ID, OrgStatus.EFFECTIVE);
+
+        assertTrue(actualOpt.isPresent());
+
+        Org actual = actualOpt.get();
+        assertEquals(DEFAULT_TENANT_ID, actual.getTenantId());
+        assertEquals(DEFAULT_ORG_ID, actual.getId());
+        assertEquals(OrgStatus.EFFECTIVE, actual.getStatus());
+        assertEquals("ENTP", actual.getOrgTypeCode());
+    }
+
+    @Test
+    void findByIdAndStatus_notFound() {
+        Optional<Org> actualOpt = orgRepository.findByIdAndStatus(-1L, -1L, OrgStatus.EFFECTIVE);
+        assertTrue(actualOpt.isEmpty());
+    }
+
+
+
+    @Test
+    void existsBySuperiorIdAndName_shouldBeTrue_whenExists() {
         //given
         Org org = prepareOrg();
 
@@ -63,7 +96,7 @@ class OrgRepositoryIT {
     }
 
     @Test
-    public void existsBySuperiorIdAndName_shouldBeFalse_whenExists() {
+    void existsBySuperiorIdAndName_shouldBeFalse_whenExists() {
 
         boolean found = orgRepository.existsBySuperiorIdAndName(
                 DEFAULT_TENANT_ID
@@ -74,7 +107,7 @@ class OrgRepositoryIT {
     }
 
     @Test
-    public void existsByIdAndStatus_shouldBeTrue_whenExists() {
+    void existsByIdAndStatus_shouldBeTrue_whenExists() {
         //given
         Org org = prepareOrg();
 
@@ -88,7 +121,7 @@ class OrgRepositoryIT {
     }
 
     @Test
-    public void existsByIdAndStatus_shouldBeFalse_whenNotExists() {
+    void existsByIdAndStatus_shouldBeFalse_whenNotExists() {
         //given
         Org org = prepareOrg();
 
@@ -103,7 +136,7 @@ class OrgRepositoryIT {
 
 
     private Org prepareOrg() {
-        OrgReBuilder orgReBuilder = orgReBuilderFactory.build();
+        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
         Org org = orgReBuilder
                 .tenantId(DEFAULT_TENANT_ID)
                 .superiorId(DEFAULT_ORG_ID)

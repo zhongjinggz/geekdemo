@@ -1,31 +1,24 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.orgmng.org.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
-import static demo.unjuanable.common.util.SqlUtil.toLocalDateTime;
 
 @Repository
 public class OrgRepositoryJdbc implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
     private final OrgReBuilderFactory orgReBuilderFactory;
-    private final RowMapper<Org> orgRowMapper = new OrgRowMapper();
 
-    @Autowired
     public OrgRepositoryJdbc(JdbcTemplate jdbc, OrgReBuilderFactory orgReBuilderFactory) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
@@ -33,32 +26,8 @@ public class OrgRepositoryJdbc implements OrgRepository {
                 .usingGeneratedKeyColumns("id");
 
         this.orgReBuilderFactory = orgReBuilderFactory;
-
     }
 
-    @Override
-    public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
-        final String sql = " select id"
-                + ", tenant_id"
-                + ", superior_id"
-                + ", org_type_code"
-                + ", leader_id"
-                + ", name"
-                + ", status_code"
-                + ", created_at"
-                + ", created_by"
-                + ", last_updated_at"
-                + ", last_updated_by "
-                + " from org "
-                + " where tenant_id = ?  and id = ? and status_code = ? ";
-
-        return Optional.ofNullable(
-                jdbc.queryForObject(sql
-                        , orgRowMapper
-                        , tenantId
-                        , id
-                        , status.code()));
-    }
 
     @Override
     public Org save(Org org) {
@@ -79,60 +48,6 @@ public class OrgRepositoryJdbc implements OrgRepository {
 
         return org;
     }
-
-    @Override
-    public Optional<Org> findById(Long tenantId, Long id) {
-        final String sql = " select id"
-                + ", tenant_id"
-                + ", superior_id"
-                + ", org_type_code"
-                + ", leader_id"
-                + ", name"
-                + ", status_code"
-                + ", created_at"
-                + ", created_by"
-                + ", last_updated_at"
-                + ", last_updated_by "
-                + " from org "
-                + " where tenant_id = ?  and id = ? ";
-
-        try {
-            return Optional.ofNullable(jdbc.queryForObject(sql
-                    , orgRowMapper
-                    , tenantId
-                    , id));
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return Optional.empty();
-        }
-
-    }
-
-    @Override
-    public boolean existsBySuperiorIdAndName(Long tenantId, Long superiorId, String name) {
-        final String sql = " select 1 from org "
-                + " where tenant_id = ?  and superior_id = ? and name = ?"
-                + " limit 1 ";
-
-        try {
-            return jdbc.queryForObject(sql, Integer.class, tenantId, superiorId, name) != null;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public boolean existsByIdAndStatus(Long tenantId, Long orgId, OrgStatus status) {
-        String sql = " select 1 from org "
-                + " where tenant_id = ?  and id = ? and status_code = ?"
-                + " limit 1 ";
-
-        List<Map<String, Object>> rows = jdbc.queryForList(
-                sql, tenantId, orgId, status.code());
-
-        return rows.size() > 0;
-    }
-
-
 
     @Override
     public int update(Org org) {
@@ -159,23 +74,87 @@ public class OrgRepositoryJdbc implements OrgRepository {
         );
     }
 
+    @Override
+    public Optional<Org> findById(Long tenantId, Long id) {
+        final String sql = " select id"
+                + ", tenant_id"
+                + ", superior_id"
+                + ", org_type_code"
+                + ", leader_id"
+                + ", name"
+                + ", status_code"
+                + ", created_at"
+                + ", created_by"
+                + ", last_updated_at"
+                + ", last_updated_by "
+                + " from org "
+                + " where tenant_id = ?  and id = ? ";
+        return selectOneOrg(sql, tenantId, id);
 
-    class OrgRowMapper implements RowMapper<Org> {
-        @Override
-        public Org mapRow(ResultSet rs, int rowNum) throws SQLException {
-            OrgReBuilder orgReBuilder = orgReBuilderFactory.build();
-            return orgReBuilder.id(rs.getLong("id"))
-                    .tenantId(rs.getLong("tenant_id"))
-                    .superiorId(rs.getLong("superior_id"))
-                    .orgTypeCode(rs.getString("org_type_code"))
-                    .leaderId(rs.getLong("leader_id"))
-                    .name(rs.getString("name"))
-                    .statusCode(rs.getString("status_code"))
-                    .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
-                    .createdBy(rs.getLong("created_by"))
-                    .lastCreatedAt(toLocalDateTime(rs, "last_updated_at"))
-                    .lastUpdatedBy(rs.getLong("last_updated_by"))
-                    .build();
-        }
+    }
+
+    @Override
+    public Optional<Org> findByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
+        final String sql = " select id"
+                + ", tenant_id"
+                + ", superior_id"
+                + ", org_type_code"
+                + ", leader_id"
+                + ", name"
+                + ", status_code"
+                + ", created_at"
+                + ", created_by"
+                + ", last_updated_at"
+                + ", last_updated_by "
+                + " from org "
+                + " where tenant_id = ?  and id = ? and status_code = ? ";
+        return selectOneOrg(sql, tenantId, id, status.code());
+    }
+
+    private Optional<Org> selectOneOrg(String sql, Object... args) {
+        List<Org> orgList = selectOrgs(sql, args);
+        return orgList.isEmpty() ? Optional.empty() : Optional.of(orgList.getFirst());
+    }
+
+    private List<Org> selectOrgs(String sql, Object... args) {
+        List<Map<String, Object>> orgMaps = jdbc.queryForList(sql, args);
+
+        return orgMaps.stream().map(org ->
+                orgReBuilderFactory.newBuilder()
+                        .id((Long) org.get("id"))
+                        .tenantId((Long) org.get("tenant_id"))
+                        .superiorId((Long) org.get("superior_id"))
+                        .orgTypeCode((String) org.get("org_type_code"))
+                        .leaderId((Long) org.get("leader_id"))
+                        .name((String) org.get("name"))
+                        .statusCode((String) org.get("status_code"))
+                        .createdAt((LocalDateTime) org.get("created_at"))
+                        .createdBy((Long) org.get("created_by"))
+                        .lastCreatedAt((LocalDateTime) org.get("last_updated_at"))
+                        .lastUpdatedBy((Long) org.get("last_updated_by"))
+                        .build()).toList();
+    }
+
+    @Override
+    public boolean existsBySuperiorIdAndName(Long tenantId, Long superiorId, String name) {
+        final String sql = " select 1 from org "
+                + " where tenant_id = ?  and superior_id = ? and name = ?"
+                + " limit 1 ";
+
+        return selectExists(sql, tenantId, superiorId, name);
+    }
+
+    @Override
+    public boolean existsByIdAndStatus(Long tenantId, Long id, OrgStatus status) {
+        String sql = " select 1 from org "
+                + " where tenant_id = ?  and id = ? and status_code = ?"
+                + " limit 1 ";
+        return selectExists(sql, tenantId, id, status.code());
+    }
+
+    private boolean selectExists(String sql, Object... args) {
+        return !jdbc
+                .queryForList(sql, args)
+                .isEmpty();
     }
 }

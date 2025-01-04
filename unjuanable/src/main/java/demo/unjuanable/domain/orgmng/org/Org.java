@@ -20,6 +20,30 @@ public class Org extends AuditableEntity {
         status = OrgStatus.EFFECTIVE;
     }
 
+    Org(Long tenantId
+            , Long id
+            , Long superiorId
+            , String orgTypeCode
+            , Long leaderId
+            , String name
+            , String statusCode
+            , LocalDateTime createdAt
+            , Long createdBy
+            , LocalDateTime lastUpdatedAt
+            , Long lastUpdatedBy
+    ) {
+        super(createdAt, createdBy);
+        this.tenantId = tenantId;
+        this.id = id;
+        this.superiorId = superiorId;
+        this.orgTypeCode = orgTypeCode;
+        this.leaderId = leaderId;
+        this.name = name;
+        this.status = OrgStatus.ofCode(statusCode);
+        this.lastUpdatedAt = lastUpdatedAt;
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
     public Long getId() {
         return id;
     }
