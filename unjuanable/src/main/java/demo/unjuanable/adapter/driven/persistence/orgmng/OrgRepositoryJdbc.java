@@ -17,32 +17,28 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 public class OrgRepositoryJdbc implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
-    private final OrgReBuilderFactory orgReBuilderFactory;
 
-    public OrgRepositoryJdbc(JdbcTemplate jdbc, OrgReBuilderFactory orgReBuilderFactory) {
+    public OrgRepositoryJdbc(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.insertOrg = new SimpleJdbcInsert(jdbc)
                 .withTableName("org")
                 .usingGeneratedKeyColumns("id");
-
-        this.orgReBuilderFactory = orgReBuilderFactory;
     }
-
 
     @Override
     public Org save(Org org) {
-        Map<String, Object> parms = new HashMap<>(8);
+        Map<String, Object> args = new HashMap<>(8);
 
-        parms.put("created_at", org.getCreatedAt());
-        parms.put("created_by", org.getCreatedBy());
-        parms.put("leader_id", org.getLeaderId());
-        parms.put("name", org.getName());
-        parms.put("org_type_code", org.getOrgTypeCode());
-        parms.put("status_code", org.getStatus().code());
-        parms.put("superior_id", org.getSuperiorId());
-        parms.put("tenant_id", org.getTenantId());
+        args.put("created_at", org.getCreatedAt());
+        args.put("created_by", org.getCreatedBy());
+        args.put("leader_id", org.getLeaderId());
+        args.put("name", org.getName());
+        args.put("org_type_code", org.getOrgTypeCode());
+        args.put("status_code", org.getStatus().code());
+        args.put("superior_id", org.getSuperiorId());
+        args.put("tenant_id", org.getTenantId());
 
-        Number createdId = insertOrg.executeAndReturnKey(parms);
+        Number createdId = insertOrg.executeAndReturnKey(args);
 
         forceSet(org, "id", createdId.longValue());
 
@@ -119,10 +115,9 @@ public class OrgRepositoryJdbc implements OrgRepository {
     private List<Org> selectOrgs(String sql, Object... args) {
         List<Map<String, Object>> orgMaps = jdbc.queryForList(sql, args);
 
-        return orgMaps.stream().map(org ->
-                orgReBuilderFactory.newBuilder()
-                        .id((Long) org.get("id"))
+        return orgMaps.stream().map(org -> Org.loader()
                         .tenantId((Long) org.get("tenant_id"))
+                        .id((Long) org.get("id"))
                         .superiorId((Long) org.get("superior_id"))
                         .orgTypeCode((String) org.get("org_type_code"))
                         .leaderId((Long) org.get("leader_id"))
@@ -130,9 +125,10 @@ public class OrgRepositoryJdbc implements OrgRepository {
                         .statusCode((String) org.get("status_code"))
                         .createdAt((LocalDateTime) org.get("created_at"))
                         .createdBy((Long) org.get("created_by"))
-                        .lastCreatedAt((LocalDateTime) org.get("last_updated_at"))
+                        .lastUpdatedAt((LocalDateTime) org.get("last_updated_at"))
                         .lastUpdatedBy((Long) org.get("last_updated_by"))
-                        .build()).toList();
+                        .load())
+                .toList();
     }
 
     @Override

@@ -20,28 +20,17 @@ public class Org extends AuditableEntity {
         status = OrgStatus.EFFECTIVE;
     }
 
-    Org(Long tenantId
-            , Long id
-            , Long superiorId
-            , String orgTypeCode
-            , Long leaderId
-            , String name
-            , String statusCode
-            , LocalDateTime createdAt
-            , Long createdBy
-            , LocalDateTime lastUpdatedAt
-            , Long lastUpdatedBy
-    ) {
-        super(createdAt, createdBy);
-        this.tenantId = tenantId;
-        this.id = id;
-        this.superiorId = superiorId;
-        this.orgTypeCode = orgTypeCode;
-        this.leaderId = leaderId;
-        this.name = name;
-        this.status = OrgStatus.ofCode(statusCode);
-        this.lastUpdatedAt = lastUpdatedAt;
-        this.lastUpdatedBy = lastUpdatedBy;
+    private Org(Loader loader) {
+        super(loader.createdAt, loader.createdBy);
+        this.tenantId = loader.tenantId;
+        this.id = loader.id;
+        this.superiorId = loader.superiorId;
+        this.orgTypeCode = loader.orgTypeCode;
+        this.leaderId = loader.leaderId;
+        this.name = loader.name;
+        this.status = OrgStatus.ofCode(loader.statusCode);
+        this.lastUpdatedAt = loader.lastUpdatedAt;
+        this.lastUpdatedBy = loader.lastUpdatedBy;
     }
 
     public Long getId() {
@@ -102,5 +91,83 @@ public class Org extends AuditableEntity {
 
     void setId(Long id) {
         this.id = id;
+    }
+
+    public static Loader loader() {
+        return new Loader();
+    }
+
+    // Loader 本质上是 Builder, 这里只用于从数据库加载对象，所以取名 Loader
+    public static class Loader {
+        private Long tenantId;
+        private Long id;
+        private Long superiorId;
+        private String orgTypeCode;
+        private Long leaderId;
+        private String name;
+        private String statusCode;
+        private LocalDateTime createdAt;
+        private Long createdBy;
+        private LocalDateTime lastUpdatedAt;
+        private Long lastUpdatedBy;
+
+        public Loader tenantId(Long tenantId) {
+            this.tenantId = tenantId;
+            return this;
+        }
+
+        public Loader id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Loader superiorId(Long superiorId) {
+            this.superiorId = superiorId;
+            return this;
+        }
+
+        public Loader orgTypeCode(String orgTypeCode) {
+            this.orgTypeCode = orgTypeCode;
+            return this;
+        }
+
+        public Loader leaderId(Long leaderId) {
+            this.leaderId = leaderId;
+            return this;
+        }
+
+        public Loader name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Loader statusCode(String statusCode) {
+            this.statusCode = statusCode;
+            return this;
+        }
+
+        public Loader createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Loader createdBy(Long createdBy) {
+            this.createdBy = createdBy;
+            return this;
+        }
+
+        public Loader lastUpdatedAt(LocalDateTime lastUpdatedAt) {
+            this.lastUpdatedAt = lastUpdatedAt;
+            return this;
+        }
+
+        public Loader lastUpdatedBy(Long lastUpdatedBy) {
+            this.lastUpdatedBy = lastUpdatedBy;
+            return this;
+        }
+
+        public Org load() {
+            return new Org(this);
+        }
     }
 }

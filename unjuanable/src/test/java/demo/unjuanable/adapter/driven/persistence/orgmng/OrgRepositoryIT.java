@@ -22,12 +22,10 @@ class OrgRepositoryIT {
     static final long DEFAULT_TENANT_ID = 1L;
     static final long DEFAULT_EMP_ID = 1L;
     final private OrgRepository orgRepository;
-    final private OrgReBuilderFactory orgReBuilderFactory;
 
     @Autowired
-    OrgRepositoryIT(OrgRepository orgRepository, OrgReBuilderFactory orgReBuilderFactory) {
+    OrgRepositoryIT(OrgRepository orgRepository) {
         this.orgRepository = orgRepository;
-        this.orgReBuilderFactory = orgReBuilderFactory;
     }
 
     @Test
@@ -134,19 +132,17 @@ class OrgRepositoryIT {
         assertFalse(found);
     }
 
-
     private Org prepareOrg() {
-        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
-        Org org = orgReBuilder
-                .tenantId(DEFAULT_TENANT_ID)
-                .superiorId(DEFAULT_ORG_ID)
-                .orgTypeCode("DEVCENT")
-                .leaderId(DEFAULT_EMP_ID)
-                .name("忠义堂")
-                .statusCode(OrgStatus.EFFECTIVE.code())
-                .createdAt(LocalDateTime.now())
-                .createdBy(DEFAULT_USER_ID)
-                .build();
+        Org org = Org.loader()
+                        .tenantId(DEFAULT_TENANT_ID)
+                        .superiorId(DEFAULT_ORG_ID)
+                        .orgTypeCode("DEVCENT")
+                        .leaderId(DEFAULT_EMP_ID)
+                        .name("忠义堂")
+                        .statusCode(OrgStatus.EFFECTIVE.code())
+                        .createdAt(LocalDateTime.now())
+                        .createdBy(DEFAULT_USER_ID)
+                        .load();
         orgRepository.save(org);
         return org;
     }

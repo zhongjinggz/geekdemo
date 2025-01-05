@@ -26,9 +26,6 @@ class OrgServiceIT {
     @Autowired
     private OrgRepository orgRepository;
 
-    @Autowired
-    private OrgReBuilderFactory orgReBuilderFactory;
-
     @Test
     void addOrg_should_create_org_when_validation_passed() {
         // Given
@@ -114,8 +111,18 @@ class OrgServiceIT {
     }
 
     private Org prepareOrgTobeUpdated() {
-        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
-        Org org = orgReBuilder
+//        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
+//        Org org = orgReBuilder
+//                .tenantId(DEFAULT_TENANT_ID)
+//                .superiorId(DEFAULT_ORG_ID)
+//                .orgTypeCode("DEVCENT")
+//                .leaderId(DEFAULT_EMP_ID)
+//                .name("忠义堂")
+//                .statusCode(OrgStatus.EFFECTIVE.code())
+//                .createdAt(LocalDateTime.now())
+//                .createdBy(DEFAULT_USER_ID)
+//                .build();
+        Org org = Org.loader()
                 .tenantId(DEFAULT_TENANT_ID)
                 .superiorId(DEFAULT_ORG_ID)
                 .orgTypeCode("DEVCENT")
@@ -124,7 +131,7 @@ class OrgServiceIT {
                 .statusCode(OrgStatus.EFFECTIVE.code())
                 .createdAt(LocalDateTime.now())
                 .createdBy(DEFAULT_USER_ID)
-                .build();
+                .load();
         orgRepository.save(org);
         return org;
     }
