@@ -38,9 +38,7 @@ public class EmpService {
 
         updator.update(emp, request, userId);
 
-        if(!empRepository.save(emp)) {
-            throw new BusinessException("这个员工已被其他人同时修改了，请重新修改！");
-        }
+        empRepository.save(emp);
         return assembler.toResponse(emp);
     }
 

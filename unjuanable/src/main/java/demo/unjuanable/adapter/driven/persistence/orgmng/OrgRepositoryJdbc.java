@@ -15,7 +15,7 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
 public class OrgRepositoryJdbc
-        extends Persister<Org> implements OrgRepository {
+        extends RootPersister<Org> implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
 
@@ -28,18 +28,18 @@ public class OrgRepositoryJdbc
 
     @Override
     protected void insert(Org org) {
-        Map<String, Object> args = new HashMap<>(8);
+        Map<String, Object> params = new HashMap<>(8);
 
-        args.put("created_at", org.getCreatedAt());
-        args.put("created_by", org.getCreatedBy());
-        args.put("leader_id", org.getLeaderId());
-        args.put("name", org.getName());
-        args.put("org_type_code", org.getOrgTypeCode());
-        args.put("status_code", org.getStatus().code());
-        args.put("superior_id", org.getSuperiorId());
-        args.put("tenant_id", org.getTenantId());
+        params.put("created_at", org.getCreatedAt());
+        params.put("created_by", org.getCreatedBy());
+        params.put("leader_id", org.getLeaderId());
+        params.put("name", org.getName());
+        params.put("org_type_code", org.getOrgTypeCode());
+        params.put("status_code", org.getStatus().code());
+        params.put("superior_id", org.getSuperiorId());
+        params.put("tenant_id", org.getTenantId());
 
-        Number createdId = insertOrg.executeAndReturnKey(args);
+        Number createdId = insertOrg.executeAndReturnKey(params);
 
         forceSet(org, "id", createdId.longValue());
     }
