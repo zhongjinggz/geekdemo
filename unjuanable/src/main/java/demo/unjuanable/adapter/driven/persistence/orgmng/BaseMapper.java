@@ -2,11 +2,11 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.common.framework.domain.Persistent;
 
-public abstract class RootPersister<T extends Persistent> extends Persister<T>  {
-    public T save(T theObject) {
+public class BaseMapper<B extends Persistent, P extends Persistent> {
+    public B save(B theObject, P parent) {
         switch (theObject.getChangingStatus()) {
             case NEW:
-                insert(theObject);
+                insert(theObject, parent);
                 saveSubsidiaries(theObject);
                 break;
             case UPDATED:
@@ -22,23 +22,30 @@ public abstract class RootPersister<T extends Persistent> extends Persister<T>  
         return theObject;
     }
 
-    public void remove(T theObject) {
+    public void remove(B theObject) {
         removeSubsidiaries(theObject);
         delete(theObject);
     }
 
-    abstract void insert(T theObject);
+    protected void insert(B theObject, P parent) {
+        insert(theObject);
+    }
 
-    abstract void update(T theObject);
+    protected void insert(B theObject) {
+    }
 
-    protected void delete(T theObject) {
+    protected void update(B theObject) {
 
     }
 
-    protected void saveSubsidiaries(T theObject) {
+    protected void delete(B theObject) {
+
     }
 
-    protected void removeSubsidiaries(T theObject) {
+    protected void saveSubsidiaries(B theObject) {
+    }
+
+    protected void removeSubsidiaries(B theObject) {
 
     }
 }

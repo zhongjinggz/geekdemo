@@ -15,7 +15,7 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
 public class OrgRepositoryJdbc
-        extends RootPersister<Org> implements OrgRepository {
+        extends RootMapper<Org> implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
 

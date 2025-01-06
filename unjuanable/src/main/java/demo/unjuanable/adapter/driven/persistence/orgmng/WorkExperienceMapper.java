@@ -16,11 +16,11 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
 
 @Component
-public class WorkExperiencePersister extends BranchPersister<WorkExperience, Emp> {
+public class WorkExperienceMapper extends BaseMapper<WorkExperience, Emp> {
     final JdbcTemplate jdbc;
     final SimpleJdbcInsert insertWorkExperience;
 
-    public WorkExperiencePersister(JdbcTemplate jdbc) {
+    public WorkExperienceMapper(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.insertWorkExperience = new SimpleJdbcInsert(jdbc)
                 .withTableName("work_experience")

@@ -15,12 +15,12 @@ import java.util.Map;
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Component
-public class SkillPersister extends BranchPersister<Skill, Emp> {
+public class SkillMapper extends BaseMapper<Skill, Emp> {
 
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert skillInsert;
 
-    public SkillPersister(JdbcTemplate jdbc) {
+    public SkillMapper(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
 
         this.skillInsert = new SimpleJdbcInsert(jdbc)

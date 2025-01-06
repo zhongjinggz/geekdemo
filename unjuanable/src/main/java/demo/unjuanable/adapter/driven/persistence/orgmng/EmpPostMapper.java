@@ -11,11 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class EmpPostPersister extends BranchPersister<EmpPost, Emp> {
+public class EmpPostMapper extends BaseMapper<EmpPost, Emp> {
     final JdbcTemplate jdbc;
     final SimpleJdbcInsert empPostInsert;
 
-    public EmpPostPersister(JdbcTemplate jdbc) {
+    public EmpPostMapper(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
         this.empPostInsert = new SimpleJdbcInsert(jdbc)
                 .withTableName("emp_post");

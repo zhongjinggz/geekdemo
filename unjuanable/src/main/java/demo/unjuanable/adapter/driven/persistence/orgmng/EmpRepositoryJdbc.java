@@ -16,26 +16,26 @@ import java.util.Optional;
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
-public class EmpRepositoryJdbc extends RootPersister<Emp> implements EmpRepository {
+public class EmpRepositoryJdbc extends RootMapper<Emp> implements EmpRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert empInsert;
-    private final SkillPersister skillPersister;
-    private final WorkExperiencePersister workExperiencePersister;
-    private final EmpPostPersister empPostPersister;
+    private final SkillMapper skillMapper;
+    private final WorkExperienceMapper workExperienceMapper;
+    private final EmpPostMapper empPostMapper;
 
     @Autowired
     public EmpRepositoryJdbc(JdbcTemplate jdbc
-            , SkillPersister skillPersister
-            , WorkExperiencePersister workExperiencePersister
-            , EmpPostPersister empPostPersister) {
+            , SkillMapper skillMapper
+            , WorkExperienceMapper workExperienceMapper
+            , EmpPostMapper empPostMapper) {
 
         this.jdbc = jdbc;
         this.empInsert = new SimpleJdbcInsert(jdbc)
                 .withTableName("emp")
                 .usingGeneratedKeyColumns("id");
-        this.skillPersister = skillPersister;
-        this.workExperiencePersister = workExperiencePersister;
-        this.empPostPersister = empPostPersister;
+        this.skillMapper = skillMapper;
+        this.workExperienceMapper = workExperienceMapper;
+        this.empPostMapper = empPostMapper;
     }
 
 
@@ -92,9 +92,9 @@ public class EmpRepositoryJdbc extends RootPersister<Emp> implements EmpReposito
 
     @Override
     protected void saveSubsidiaries(Emp emp) {
-        emp.getSkills().forEach(s -> skillPersister.save(s, emp));
-        emp.getExperiences().forEach(e -> workExperiencePersister.save(e, emp));
-        emp.getEmpPosts().forEach(p -> empPostPersister.save(p, emp));
+        emp.getSkills().forEach(s -> skillMapper.save(s, emp));
+        emp.getExperiences().forEach(e -> workExperienceMapper.save(e, emp));
+        emp.getEmpPosts().forEach(p -> empPostMapper.save(p, emp));
     }
 
     @Override
@@ -152,9 +152,9 @@ public class EmpRepositoryJdbc extends RootPersister<Emp> implements EmpReposito
                     .resetGender(Gender.ofCode((String) empMap.get("gender_code")))
                     .resetDob(((Date) empMap.get("dob")).toLocalDate())
                     .resetStatus(EmpStatus.ofCode((String) empMap.get("status_code")));
-            skillPersister.attachTo(emp);
-            workExperiencePersister.attachTo(emp);
-            empPostPersister.attachTo(emp);
+            skillMapper.attachTo(emp);
+            workExperienceMapper.attachTo(emp);
+            empPostMapper.attachTo(emp);
             return Optional.of(emp);
         }
     }
