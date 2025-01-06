@@ -26,6 +26,7 @@ public class OrgHandler {
         updateName(org, newName);
         updateLeader(org, newLeader);
         updateAuditInfo(org, userId);
+        org.toUpdate();
     }
 
     public void cancel(Org org, Long userId) {
@@ -33,6 +34,7 @@ public class OrgHandler {
         assertOrgToBeCanceled.shouldEffective(org);
         org.cancel();
         updateAuditInfo(org, userId);
+        org.toUpdate();
     }
 
     private void updateLeader(Org org, Long newLeader) {

@@ -1,5 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,6 +53,7 @@ class OrgRepositoryIT {
         assertEquals(OrgStatus.EFFECTIVE, actual.getStatus());
         assertEquals("ENTP", actual.getOrgTypeCode());
     }
+
     @Test
     void findById_notFound() {
         Optional<Org> org = orgRepository.findById(1L, -1L);
@@ -76,7 +78,6 @@ class OrgRepositoryIT {
         Optional<Org> actualOpt = orgRepository.findByIdAndStatus(-1L, -1L, OrgStatus.EFFECTIVE);
         assertTrue(actualOpt.isEmpty());
     }
-
 
 
     @Test
@@ -134,15 +135,16 @@ class OrgRepositoryIT {
 
     private Org prepareOrg() {
         Org org = Org.loader()
-                        .tenantId(DEFAULT_TENANT_ID)
-                        .superiorId(DEFAULT_ORG_ID)
-                        .orgTypeCode("DEVCENT")
-                        .leaderId(DEFAULT_EMP_ID)
-                        .name("忠义堂")
-                        .statusCode(OrgStatus.EFFECTIVE.code())
-                        .createdAt(LocalDateTime.now())
-                        .createdBy(DEFAULT_USER_ID)
-                        .load();
+                .tenantId(DEFAULT_TENANT_ID)
+                .superiorId(DEFAULT_ORG_ID)
+                .orgTypeCode("DEVCENT")
+                .leaderId(DEFAULT_EMP_ID)
+                .name("忠义堂")
+                .statusCode(OrgStatus.EFFECTIVE.code())
+                .createdAt(LocalDateTime.now())
+                .createdBy(DEFAULT_USER_ID)
+                .changingStatus(ChangingStatus.NEW)
+                .load();
         orgRepository.save(org);
         return org;
     }

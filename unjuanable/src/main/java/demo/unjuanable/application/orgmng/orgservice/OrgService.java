@@ -49,7 +49,7 @@ public class OrgService {
                 );
 
         orgHandler.updateBasic(org, request.getName() , request.getLeaderId(), userId);
-        orgRepository.update(org);
+        orgRepository.save(org);
 
         return buildOrgDto(org);
     }
@@ -61,7 +61,7 @@ public class OrgService {
                 );
 
         orgHandler.cancel(org, userId);
-        orgRepository.update(org);
+        orgRepository.save(org);
 
         return org.getId();
     }

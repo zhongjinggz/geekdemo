@@ -1,6 +1,7 @@
 package demo.unjuanable.domain.orgmng.org;
 
 import demo.unjuanable.common.framework.domain.AuditableEntity;
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,8 @@ public class Org extends AuditableEntity {
 
     private Org(Loader loader) {
         super(loader.createdAt, loader.createdBy);
+        this.changingStatus = loader.changingStatus;
+
         this.tenantId = loader.tenantId;
         this.id = loader.id;
         this.superiorId = loader.superiorId;
@@ -99,6 +102,10 @@ public class Org extends AuditableEntity {
 
     // Loader 本质上是 Builder, 这里只用于从数据库加载对象，所以取名 Loader
     public static class Loader {
+        // 默认用于从数据库中加载数据，所以状态是 UNCHANGED
+        // 但是在特殊情况下，例如测试用例借用Loader准备数据，则可通过 changingStatus() 设置为其他状态
+        private ChangingStatus changingStatus = ChangingStatus.UNCHANGED;
+
         private Long tenantId;
         private Long id;
         private Long superiorId;
@@ -110,6 +117,12 @@ public class Org extends AuditableEntity {
         private Long createdBy;
         private LocalDateTime lastUpdatedAt;
         private Long lastUpdatedBy;
+
+        // 只在测试程序借用 Loader 创建测试数据时使用
+        public Loader changingStatus(ChangingStatus changingStatus) {
+            this.changingStatus = changingStatus;
+            return this;
+        }
 
         public Loader tenantId(Long tenantId) {
             this.tenantId = tenantId;

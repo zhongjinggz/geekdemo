@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import static demo.unjuanable.common.framework.domain.ChangingStatus.*;
 
 
-public abstract class AuditableEntity {
+public abstract class AuditableEntity<T extends AuditableEntity<T>>  implements Persistent, Auditable<T> {
     protected ChangingStatus changingStatus = NEW;
     protected LocalDateTime createdAt;
     protected Long createdBy;
@@ -17,44 +17,51 @@ public abstract class AuditableEntity {
         this.createdBy = createdBy;
     }
 
+    @Override
     public ChangingStatus getChangingStatus() {
         return changingStatus;
     }
 
+    @Override
     public void toUpdate() {
-        this.changingStatus = UPDATED;
+        if (this.changingStatus == UNCHANGED) {
+            this.changingStatus = UPDATED;
+        }
     }
 
+    @Override
     public void toDelete() {
         this.changingStatus = DELETED;
     }
 
-    public void toUnChange() {
-        this.changingStatus = UNCHANGED;
-    }
-
+    @Override
     public Long getCreatedBy() {
         return createdBy;
     }
 
+    @Override
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public AuditableEntity setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
+    @Override
+    public T setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
         this.lastUpdatedAt = lastUpdatedAt;
-        return this;
+        return (T)this;
     }
 
+    @Override
     public LocalDateTime getLastUpdatedAt() {
         return lastUpdatedAt;
     }
 
-    public AuditableEntity setLastUpdatedBy(Long lastUpdatedBy) {
+    @Override
+    public T setLastUpdatedBy(Long lastUpdatedBy) {
         this.lastUpdatedBy = lastUpdatedBy;
-        return this;
+        return (T)this;
     }
 
+    @Override
     public Long getLastUpdatedBy() {
         return lastUpdatedBy;
     }

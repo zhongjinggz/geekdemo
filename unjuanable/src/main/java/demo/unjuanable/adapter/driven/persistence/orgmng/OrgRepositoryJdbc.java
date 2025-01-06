@@ -14,7 +14,8 @@ import java.util.Optional;
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
-public class OrgRepositoryJdbc implements OrgRepository {
+public class OrgRepositoryJdbc
+        extends Persister<Org> implements OrgRepository {
     private final JdbcTemplate jdbc;
     private final SimpleJdbcInsert insertOrg;
 
@@ -26,7 +27,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
     }
 
     @Override
-    public Org save(Org org) {
+    protected void insert(Org org) {
         Map<String, Object> args = new HashMap<>(8);
 
         args.put("created_at", org.getCreatedAt());
@@ -41,12 +42,10 @@ public class OrgRepositoryJdbc implements OrgRepository {
         Number createdId = insertOrg.executeAndReturnKey(args);
 
         forceSet(org, "id", createdId.longValue());
-
-        return org;
     }
 
     @Override
-    public int update(Org org) {
+    protected void update(Org org) {
         String sql = "update org "
                 + " set superior_id = ? "
                 + ", org_type_code =? "
@@ -57,7 +56,7 @@ public class OrgRepositoryJdbc implements OrgRepository {
                 + ", last_updated_by = ? "
                 + " where tenant_id = ? and id = ? ";
 
-        return this.jdbc.update(sql
+        this.jdbc.update(sql
                 , org.getSuperiorId()
                 , org.getOrgTypeCode()
                 , org.getLeaderId()

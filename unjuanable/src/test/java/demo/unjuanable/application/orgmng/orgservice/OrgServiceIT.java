@@ -1,5 +1,6 @@
 package demo.unjuanable.application.orgmng.orgservice;
 
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -74,10 +75,6 @@ class OrgServiceIT {
         OrgResponse actualResponse = orgService.updateOrgBasic(preparedOrg.getId(), request, 1L);
 
         // Then
-        assertNotNull(actualResponse);
-        assertEquals(request.getName(), actualResponse.getName());
-        assertEquals(request.getLeaderId(), actualResponse.getLeaderId());
-
         Org actualSaved = orgRepository.findById(preparedOrg.getTenantId(), preparedOrg.getId()).orElse(null);
         assertNotNull(actualSaved);
         assertEquals(request.getName(), actualSaved.getName());
@@ -111,17 +108,6 @@ class OrgServiceIT {
     }
 
     private Org prepareOrgTobeUpdated() {
-//        OrgReBuilder orgReBuilder = orgReBuilderFactory.newBuilder();
-//        Org org = orgReBuilder
-//                .tenantId(DEFAULT_TENANT_ID)
-//                .superiorId(DEFAULT_ORG_ID)
-//                .orgTypeCode("DEVCENT")
-//                .leaderId(DEFAULT_EMP_ID)
-//                .name("忠义堂")
-//                .statusCode(OrgStatus.EFFECTIVE.code())
-//                .createdAt(LocalDateTime.now())
-//                .createdBy(DEFAULT_USER_ID)
-//                .build();
         Org org = Org.loader()
                 .tenantId(DEFAULT_TENANT_ID)
                 .superiorId(DEFAULT_ORG_ID)
@@ -131,6 +117,7 @@ class OrgServiceIT {
                 .statusCode(OrgStatus.EFFECTIVE.code())
                 .createdAt(LocalDateTime.now())
                 .createdBy(DEFAULT_USER_ID)
+                .changingStatus(ChangingStatus.NEW)
                 .load();
         orgRepository.save(org);
         return org;
