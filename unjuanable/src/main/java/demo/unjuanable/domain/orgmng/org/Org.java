@@ -5,7 +5,7 @@ import demo.unjuanable.common.framework.domain.ChangingStatus;
 
 import java.time.LocalDateTime;
 
-public class Org extends AuditableEntity {
+public class Org extends AuditableEntity<Org> {
     private final Long tenantId;
     private Long id;
     private Long superiorId;
