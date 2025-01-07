@@ -65,14 +65,14 @@ public class Mapper<T extends Persistent> {
         return !(jdbc.queryForList(sql, args).isEmpty());
     }
 
-    protected <T2> Optional<T2> selectOne(String sql, Function<Map<String, Object>, T2> toObj, Object... args) {
+    protected Optional<T> selectOne(String sql, Function<Map<String, Object>, T> toObj, Object... args) {
 
-        List<T2> objList = selectList(sql, toObj, args);
+        List<T> objList = selectList(sql, toObj, args);
         return objList.isEmpty() ? Optional.empty() : Optional.of(objList.getFirst());
     }
 
-    protected <T2> List<T2> selectList(String sql
-            , Function<Map<String, Object>, T2> toObj, Object... args) {
+    protected List<T> selectList(String sql
+            , Function<Map<String, Object>, T> toObj, Object... args) {
 
         List<Map<String, Object>> maps = jdbc.queryForList(sql, args);
         return maps.stream().map(toObj).toList();
