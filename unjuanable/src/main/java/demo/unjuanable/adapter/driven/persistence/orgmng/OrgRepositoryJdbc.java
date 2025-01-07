@@ -1,5 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.common.framework.adapter.driven.persistence.Mapper;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

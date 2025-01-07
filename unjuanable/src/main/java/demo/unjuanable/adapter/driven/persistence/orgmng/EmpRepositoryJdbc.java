@@ -1,5 +1,6 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
+import demo.unjuanable.common.framework.adapter.driven.persistence.Mapper;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

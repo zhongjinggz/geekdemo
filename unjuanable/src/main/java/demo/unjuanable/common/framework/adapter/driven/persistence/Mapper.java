@@ -1,4 +1,4 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.common.framework.adapter.driven.persistence;
 
 import demo.unjuanable.common.framework.domain.Persistent;
 import org.springframework.jdbc.core.JdbcTemplate;
