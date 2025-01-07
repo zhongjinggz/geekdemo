@@ -51,9 +51,9 @@ public class Emp extends AggregateRoot {
             , Long createdBy
             , LocalDateTime lastUpdatedAt
             , Long lastUpdatedBy
-            , List<Map<String, Object>> skillMaps
-            , List<Map<String, Object>> experienceMaps
-            , List<Map<String, Object>> empPostMaps
+            , List<Skill> skillList
+            , List<WorkExperience> experienceList
+            , List<EmpPost> empPostList
     ) {
 
         super(createdAt, createdBy);
@@ -73,58 +73,29 @@ public class Emp extends AggregateRoot {
         this.lastUpdatedAt = lastUpdatedAt;
         this.lastUpdatedBy = lastUpdatedBy;
 
-        loadSkills(skillMaps);
-        loadExperiences(experienceMaps);
-        loadEmpPosts(empPostMaps);
+        loadSkills(skillList);
+        loadExperiences(experienceList);
+        loadEmpPosts(empPostList);
     }
 
-    private void loadEmpPosts(List<Map<String, Object>> empPostMaps) {
-        for (Map<String, Object> postMap : empPostMaps) {
-            this.empPosts.add(
-                    new EmpPost(this
-                            , (String) postMap.get("post_code")
-                            , (LocalDateTime) postMap.get("created_at")
-                            , (Long) postMap.get("created_by")
-                            , (LocalDateTime) postMap.get("last_updated_at")
-                            , (Long) postMap.get("last_updated_by"))
-            );
+    private void loadEmpPosts(List<EmpPost> empPostList) {
+        for (var post : empPostList) {
+            post.setEmp(this);
+            this.empPosts.add(post);
         }
     }
 
-    private void loadExperiences(List<Map<String, Object>> experienceMaps) {
-        for (Map<String, Object> expMap : experienceMaps) {
-            Period period = Period.of(toLocalDate(expMap, "start_date"), toLocalDate(expMap, "end_date"));
-            this.experiences.put(
-                    period,
-                    new WorkExperience(this
-                            , (Long) expMap.get("tenant_id")
-                            , (Long) expMap.get("id")
-                            , period
-                            , (String) expMap.get("company")
-                            , (LocalDateTime) expMap.get("created_at")
-                            , (Long) expMap.get("created_by")
-                            , (LocalDateTime) expMap.get("last_updated_at")
-                            , (Long) expMap.get("last_updated_by"))
-            );
+    private void loadExperiences(List<WorkExperience> experienceList) {
+        for (var exp : experienceList) {
+            exp.setEmp(this);
+            this.experiences.put(exp.getPeriod(), exp);
         }
     }
 
-    private void loadSkills(List<Map<String, Object>> skillMaps) {
-        for (Map<String, Object> skillMap : skillMaps) {
-            this.skills.put(
-                    (Long) skillMap.get("skill_type_id"),
-                    new Skill(this
-                            , (Long) skillMap.get("id")
-                            , (Long) skillMap.get("tenant_id")
-                            , (Long) skillMap.get("skill_type_id")
-                            , (String) skillMap.get("level_code")
-                            , (Integer) skillMap.get("duration")
-                            , (Long) skillMap.get("created_by")
-                            , (LocalDateTime) skillMap.get("created_at")
-                            , (Long) skillMap.get("last_updated_by")
-                            , (LocalDateTime) skillMap.get("last_updated_at")
-                    )
-            );
+    private void loadSkills(List<Skill> skillList) {
+        for (var skill : skillList) {
+            skill.setEmp(this);
+            this.skills.put(skill.getSkillTypeId(), skill);
         }
     }
 

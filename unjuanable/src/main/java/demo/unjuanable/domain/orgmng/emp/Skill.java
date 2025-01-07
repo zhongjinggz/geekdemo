@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import static demo.unjuanable.common.framework.domain.ChangingStatus.UNCHANGED;
 
 public class Skill extends AuditableEntity {
-    private final Emp emp;
+    private Emp emp;
     protected Long id;
     final private Long tenantId;
     final private Long skillTypeId;
@@ -25,8 +25,7 @@ public class Skill extends AuditableEntity {
     }
 
     // 用于从数据库中加载
-    Skill(Emp emp
-            , Long id
+    public Skill(Long id
             , Long tenantId
             , Long skillTypeId
             , String levelCode
@@ -81,6 +80,11 @@ public class Skill extends AuditableEntity {
 
     Skill setDuration(Integer duration) {
         this.duration = duration;
+        return this;
+    }
+
+    Skill setEmp(Emp emp) {
+        this.emp = emp;
         return this;
     }
 }

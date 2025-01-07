@@ -7,13 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -177,63 +175,46 @@ class EmpServiceIT {
         return result;
     }
 
-    private RebuiltEmp buildExpectedUpdatedEmp(Emp origionEmp, UpdateEmpRequest updateRequest) {
-        RebuiltEmp expected = cloneEmp(origionEmp);
-
-        expected.resetDob(updateRequest.getDob())
-                .resetEmpNum(updateRequest.getEmpNum())
-                .resetGender(Gender.ofCode(updateRequest.getGenderCode()))
-                .resetName(updateRequest.getName())
-                .resetIdNum(updateRequest.getIdNum());
-
-        expected.reAddSkill(null
-                        , GOLANG_TYPE_ID
-                        , SkillLevel.ofCode(GOLANG_LEVEL_CODE)
-                        , GOLANG_DURATION
-                        , DEFAULT_USER_ID)
-                .reUpdateSkill(CPP_TYPE_ID
-                        , SkillLevel.ofCode(CPP_LEVEL_CODE)
-                        , CPP_DURATION + 1
-                        , DEFAULT_USER_ID)
-                .deleteSkillCompletely(PYTHON_TYPE_ID);
-
-        expected.reAddExperience(null
-                        ,
-                        Period.of(ANXIN_START_DATE, ANXIN_END_DATE), ANXIN_NAME
-                        , DEFAULT_USER_ID)
-                .reUpdateExperience(
-                        Period.of(CMB_START_DATE, CMB_END_DATE), CMB_NAME + "1"
-                        , DEFAULT_USER_ID)
-                .deleteExperienceCompletely(Period.of(PICC_START_DATE, PICC_END_DATE));
-        return expected;
-    }
-    private Emp buildExpectedUpdatedEmp2(Emp origionEmp, UpdateEmpRequest updateRequest) {
-        List<Map<String, Object>> skillMaps = new ArrayList<>();
+    private Emp buildExpectedUpdatedEmp(Emp origionEmp, UpdateEmpRequest updateRequest) {
+        List<Skill> skillList = new ArrayList<>();
         for (SkillDto dto : updateRequest.getSkills()) {
-            skillMaps.add(Map.of(
-                    "tenant_id", origionEmp.getTenantId(),
-                    "skill_type_id", dto.getSkillTypeId(),
-                    "level_code", dto.getLevelCode(),
-                    "duration", dto.getDuration()
-            ));
+            skillList.add(new Skill(dto.getId()
+                            , origionEmp.getTenantId()
+                            , dto.getSkillTypeId()
+                            , dto.getLevelCode()
+                            , dto.getDuration()
+                            , origionEmp.getCreatedBy()
+                            , origionEmp.getCreatedAt()
+                            , origionEmp.getLastUpdatedBy()
+                            , origionEmp.getLastUpdatedAt()
+                    )
+            );
         }
 
-        List<Map<String, Object>> experienceMaps = new ArrayList<>();
+        List<WorkExperience> experienceMaps = new ArrayList<>();
         for (WorkExperienceDto dto : updateRequest.getExperiences()) {
-            experienceMaps.add(Map.of(
-                    "tenant_id", origionEmp.getTenantId(),
-                    "start_date", dto.getStartDate(),
-                    "end_date", dto.getEndDate(),
-                    "company", dto.getCompany()
-            ));
+            experienceMaps.add(new WorkExperience(
+                    origionEmp.getTenantId()
+                    , dto.getId()
+                    , dto.getStartDate()
+                    , dto.getEndDate()
+                    , dto.getCompany()
+                    , origionEmp.getCreatedAt()
+                    , origionEmp.getCreatedBy()
+                    , origionEmp.getLastUpdatedAt()
+                    , origionEmp.getLastUpdatedBy())
+            );
         }
 
-        List<Map<String, Object>> empPostMaps = new ArrayList<>();
+        List<EmpPost> empPostMaps = new ArrayList<>();
         for (String postCode : updateRequest.getPostCodes()) {
-            empPostMaps.add(Map.of(
-                    "tenant_id", origionEmp.getTenantId(),
-                    "post_code", postCode
-            ));
+            empPostMaps.add(new EmpPost(
+                    postCode
+                    , origionEmp.getCreatedAt()
+                    , origionEmp.getCreatedBy()
+                    , origionEmp.getLastUpdatedAt()
+                    , origionEmp.getLastUpdatedBy())
+            );
         }
 
         return new Emp(
@@ -251,7 +232,7 @@ class EmpServiceIT {
                 origionEmp.getCreatedBy(),
                 origionEmp.getLastUpdatedAt(),
                 origionEmp.getLastUpdatedBy(),
-                skillMaps,
+                skillList,
                 experienceMaps,
                 empPostMaps
         );
@@ -288,40 +269,6 @@ class EmpServiceIT {
         EmpResponse response = empService.addEmp(createRequest, DEFAULT_TENANT_ID);
         return empRepository.findById(response.getTenantId(), response.getId())
                 .orElseGet(() -> fail("找不到新增的员工！"));
-    }
-
-    private RebuiltEmp cloneEmp(Emp origionEmp) {
-        RebuiltEmp expected = new RebuiltEmp(origionEmp.getTenantId()
-                , origionEmp.getId()
-                , LocalDateTime.now()
-                , origionEmp.getCreatedBy()
-        )
-                .resetStatus(origionEmp.getStatus())
-                .resetOrgId(origionEmp.getOrgId())
-                .resetDob(origionEmp.getDob())
-                .resetEmpNum(origionEmp.getEmpNum())
-                .resetGender(origionEmp.getGender())
-                .resetName(origionEmp.getName())
-                .resetIdNum(origionEmp.getIdNum());
-
-        origionEmp.getSkills().forEach(
-                skill -> expected.reAddSkill(
-                        skill.getId()
-                        , skill.getSkillTypeId()
-                        , skill.getLevel()
-                        , skill.getDuration()
-                        , DEFAULT_USER_ID
-                )
-        );
-
-        origionEmp.getExperiences().forEach(
-                experience -> expected.reAddExperience(
-                        experience.getId()
-                        , experience.getPeriod()
-                        , experience.getCompany()
-                        , DEFAULT_USER_ID
-                ));
-        return expected;
     }
 
     private UpdateEmpRequest emp2UpdateRequest(Emp origin) {

@@ -1,15 +1,15 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng.emp;
 
 import demo.unjuanable.common.framework.adapter.driven.persistence.Mapper;
-import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.Skill;
-import demo.unjuanable.domain.orgmng.emp.SkillLevel;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
@@ -61,23 +61,7 @@ public class SkillMapper extends Mapper<Skill> {
         forceSet(skill, "id", createdId.longValue());
     }
 
-    void attachTo(RebuiltEmp emp) {
-        String sql = " select id, tenant_id, skill_type_id, level_code, duration "
-                + " from skill "
-                + " where tenant_id = ? and emp_id = ? ";
-
-        List<Map<String, Object>> skills = jdbc.queryForList(sql, emp.getTenantId(), emp.getId());
-
-        skills.forEach(skill -> emp.reAddSkill(
-                (Long) skill.get("id")
-                , (Long) skill.get("skill_type_id")
-                , SkillLevel.ofCode((String) skill.get("level_code"))
-                , (Integer) skill.get("duration")
-                , (Long) skill.get("created_by")
-        ));
-    }
-
-    List<Map<String, Object>> selectByEmpId(Long tenantId, Long empId) {
+    List<Skill> selectByEmpId(Long tenantId, Long empId) {
         String sql = " select id" +
                 ", tenant_id" +
                 ", skill_type_id" +
@@ -91,6 +75,21 @@ public class SkillMapper extends Mapper<Skill> {
                 " from skill " +
                 " where tenant_id = ? and emp_id = ? ";
 
-        return selectMaps(sql, tenantId, empId);
+        return selectList(sql, mapToSkill(), tenantId, empId);
+    }
+
+    private Function<Map<String, Object>, Skill> mapToSkill() {
+        return skillMap -> {
+            return new Skill((Long) skillMap.get("id")
+                    , (Long) skillMap.get("tenant_id")
+                    , (Long) skillMap.get("skill_type_id")
+                    , (String) skillMap.get("level_code")
+                    , (Integer) skillMap.get("duration")
+                    , (Long) skillMap.get("created_by")
+                    , (LocalDateTime) skillMap.get("created_at")
+                    , (Long) skillMap.get("last_updated_by")
+                    , (LocalDateTime) skillMap.get("last_updated_at")
+            );
+        };
     }
 }

@@ -3,6 +3,7 @@ package demo.unjuanable.domain.orgmng.emp;
 
 import demo.unjuanable.common.framework.domain.AuditableEntity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import demo.unjuanable.common.framework.domain.ChangingStatus;
@@ -12,7 +13,7 @@ import static demo.unjuanable.common.framework.domain.ChangingStatus.UNCHANGED;
 
 public class WorkExperience extends AuditableEntity {
     private Long id;
-    final private Emp emp;
+    private Emp emp;
     final private Long tenantId;
     final private Period period;
     protected String company;
@@ -35,10 +36,10 @@ public class WorkExperience extends AuditableEntity {
     }
 
     // 用于从数据库加载
-    WorkExperience(Emp emp
-            , Long tenantId
+    public WorkExperience(Long tenantId
             , Long id
-            , Period period
+            , LocalDate startDate
+            , LocalDate endDate
             , String company
             , LocalDateTime createdAt
             , Long createdBy
@@ -51,7 +52,7 @@ public class WorkExperience extends AuditableEntity {
 
         this.tenantId = tenantId;
         this.id = id;
-        this.period = period;
+        this.period = Period.of(startDate, endDate);
         this.company = company;
         this.lastUpdatedAt = lastUpdatedAt;
         this.lastUpdatedBy = lastUpdatedBy;
@@ -82,4 +83,7 @@ public class WorkExperience extends AuditableEntity {
         return this;
     }
 
+    public void setEmp(Emp emp) {
+        this.emp = emp;
+    }
 }

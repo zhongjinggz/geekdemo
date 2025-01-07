@@ -1,15 +1,15 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng.emp;
 
 import demo.unjuanable.common.framework.adapter.driven.persistence.Mapper;
-import demo.unjuanable.domain.common.valueobject.Period;
-import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
@@ -59,20 +59,7 @@ public class WorkExperienceMapper extends Mapper<WorkExperience> {
         forceSet(workExperience, "id", createdId.longValue());
     }
 
-    void attachTo(RebuiltEmp emp) {
-        String sql = "select id, start_date, end_date, company " +
-                "from work_experience where emp_id = ? and tenant_id = ?";
-
-        List<Map<String, Object>> experiences = jdbc.queryForList(sql, emp.getId(), emp.getTenantId());
-        experiences.forEach(experience -> emp.reAddExperience(
-                (Long) experience.get("id")
-                , Period.of(toLocalDate(experience, "start_date"), toLocalDate(experience, "end_date"))
-                , (String) experience.get("company")
-                , (Long) experience.get("created_by")
-        ));
-    }
-
-    public List<Map<String, Object>> selectByEmpId(Long tenantId, Long empId) {
+    public List<WorkExperience> selectByEmpId(Long tenantId, Long empId) {
         String sql = "select id" +
                 ", tenant_id" +
                 ", emp_id" +
@@ -86,6 +73,20 @@ public class WorkExperienceMapper extends Mapper<WorkExperience> {
                 "from work_experience " +
                 "where emp_id = ? and tenant_id = ?";
 
-        return selectMaps(sql, empId, tenantId);
+        return selectList(sql, mapToWorkExperience(),empId, tenantId);
+    }
+
+    private Function<Map<String, Object>, WorkExperience> mapToWorkExperience() {
+        return expMap -> {
+            return new WorkExperience((Long) expMap.get("tenant_id")
+                    , (Long) expMap.get("id")
+                    , toLocalDate(expMap, "start_date")
+                    , toLocalDate(expMap, "end_date")
+                    , (String) expMap.get("company")
+                    , (LocalDateTime) expMap.get("created_at")
+                    , (Long) expMap.get("created_by")
+                    , (LocalDateTime) expMap.get("last_updated_at")
+                    , (Long) expMap.get("last_updated_by"));
+        };
     }
 }

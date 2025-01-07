@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import static demo.unjuanable.common.framework.domain.ChangingStatus.UNCHANGED;
 
 public class EmpPost extends AuditableEntity {
-    final private Emp emp;
+    private Emp emp;
     private String postCode;
 
     //用于新建
@@ -19,15 +19,13 @@ public class EmpPost extends AuditableEntity {
     }
 
     // 用于从数据库加载
-    EmpPost(Emp emp
-            , String postCode
+    public EmpPost(String postCode
             , LocalDateTime createdAt
             , Long createdBy
             , LocalDateTime lastUpdatedAt
-            , Long lastUpdatedBy ) {
+            , Long lastUpdatedBy) {
         super(createdAt, createdBy);
         this.changingStatus = UNCHANGED;
-        this.emp = emp;
         this.postCode = postCode;
         this.lastUpdatedAt = lastUpdatedAt;
         this.lastUpdatedBy = lastUpdatedBy;
@@ -37,11 +35,17 @@ public class EmpPost extends AuditableEntity {
         return postCode;
     }
 
-    public void setPostCode(String postCode) {
+    public EmpPost setPostCode(String postCode) {
         this.postCode = postCode;
+        return this;
     }
 
     public Long getEmpId() {
         return emp.getId();
+    }
+
+    EmpPost setEmp(Emp emp) {
+        this.emp = emp;
+        return this;
     }
 }
