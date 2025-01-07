@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
@@ -79,7 +79,9 @@ public class OrgRepositoryJdbc
                 + ", last_updated_by "
                 + " from org "
                 + " where tenant_id = ?  and id = ? ";
-        return selectOneOrg(sql, tenantId, id);
+        return selectOne(sql
+                , mapToOrg()
+                , tenantId, id);
 
     }
 
@@ -98,31 +100,25 @@ public class OrgRepositoryJdbc
                 + ", last_updated_by "
                 + " from org "
                 + " where tenant_id = ?  and id = ? and status_code = ? ";
-        return selectOneOrg(sql, tenantId, id, status.code());
+        return selectOne(sql
+                , mapToOrg()
+                , tenantId, id, status.code());
     }
 
-    private Optional<Org> selectOneOrg(String sql, Object... args) {
-        List<Org> orgList = selectOrgs(sql, args);
-        return orgList.isEmpty() ? Optional.empty() : Optional.of(orgList.getFirst());
-    }
-
-    private List<Org> selectOrgs(String sql, Object... args) {
-        List<Map<String, Object>> orgMaps = jdbc.queryForList(sql, args);
-
-        return orgMaps.stream().map(org -> Org.loader()
-                        .tenantId((Long) org.get("tenant_id"))
-                        .id((Long) org.get("id"))
-                        .superiorId((Long) org.get("superior_id"))
-                        .orgTypeCode((String) org.get("org_type_code"))
-                        .leaderId((Long) org.get("leader_id"))
-                        .name((String) org.get("name"))
-                        .statusCode((String) org.get("status_code"))
-                        .createdAt((LocalDateTime) org.get("created_at"))
-                        .createdBy((Long) org.get("created_by"))
-                        .lastUpdatedAt((LocalDateTime) org.get("last_updated_at"))
-                        .lastUpdatedBy((Long) org.get("last_updated_by"))
-                        .load())
-                .toList();
+    private Function<Map<String, Object>, Org> mapToOrg() {
+        return orgMap -> Org.loader()
+                .tenantId((Long) orgMap.get("tenant_id"))
+                .id((Long) orgMap.get("id"))
+                .superiorId((Long) orgMap.get("superior_id"))
+                .orgTypeCode((String) orgMap.get("org_type_code"))
+                .leaderId((Long) orgMap.get("leader_id"))
+                .name((String) orgMap.get("name"))
+                .statusCode((String) orgMap.get("status_code"))
+                .createdAt((LocalDateTime) orgMap.get("created_at"))
+                .createdBy((Long) orgMap.get("created_by"))
+                .lastUpdatedAt((LocalDateTime) orgMap.get("last_updated_at"))
+                .lastUpdatedBy((Long) orgMap.get("last_updated_by"))
+                .load();
     }
 
     @Override
@@ -142,7 +138,4 @@ public class OrgRepositoryJdbc
         return selectExists(sql, tenantId, id, status.code());
     }
 
-    private boolean selectExists(String sql, Object... args) {
-        return !(jdbc.queryForList(sql, args).isEmpty());
-    }
 }

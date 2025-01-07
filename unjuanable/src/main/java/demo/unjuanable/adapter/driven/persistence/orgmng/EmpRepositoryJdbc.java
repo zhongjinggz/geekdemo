@@ -108,7 +108,7 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
 
         sql += " limit 1 ";
 
-        return !jdbc.queryForList(sql, Integer.class, tenantId, id).isEmpty();
+        return selectExists(sql, tenantId, id);
     }
 
     @Override
