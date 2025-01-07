@@ -4,7 +4,11 @@ package demo.unjuanable.domain.orgmng.emp;
 import demo.unjuanable.common.framework.domain.AuditableEntity;
 
 import java.time.LocalDateTime;
+
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.common.valueobject.Period;
+
+import static demo.unjuanable.common.framework.domain.ChangingStatus.UNCHANGED;
 
 public class WorkExperience extends AuditableEntity {
     private Long id;
@@ -22,11 +26,35 @@ public class WorkExperience extends AuditableEntity {
         this.period = period;
     }
 
+    // to be deleted
     protected WorkExperience(Emp emp, Long tenantId, Long id, Period period
             , LocalDateTime createdAt, Long createdBy) {
 
         this(emp, tenantId, period, createdAt, createdBy);
         this.id = id;
+    }
+
+    // 用于从数据库加载
+    WorkExperience(Emp emp
+            , Long tenantId
+            , Long id
+            , Period period
+            , String company
+            , LocalDateTime createdAt
+            , Long createdBy
+            , LocalDateTime lastUpdatedAt
+            , Long lastUpdatedBy
+    ) {
+        super(createdAt, createdBy);
+        this.changingStatus = UNCHANGED;
+        this.emp = emp;
+
+        this.tenantId = tenantId;
+        this.id = id;
+        this.period = period;
+        this.company = company;
+        this.lastUpdatedAt = lastUpdatedAt;
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 
     public Long getId() {

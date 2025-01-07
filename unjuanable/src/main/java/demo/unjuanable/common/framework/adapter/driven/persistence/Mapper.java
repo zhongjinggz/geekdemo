@@ -74,7 +74,11 @@ public class Mapper<T extends Persistent> {
     protected List<T> selectList(String sql
             , Function<Map<String, Object>, T> toObj, Object... args) {
 
-        List<Map<String, Object>> maps = jdbc.queryForList(sql, args);
+        List<Map<String, Object>> maps = selectMaps(sql, args);
         return maps.stream().map(toObj).toList();
+    }
+
+    protected List<Map<String, Object>> selectMaps(String sql, Object... args) {
+        return jdbc.queryForList(sql, args);
     }
 }

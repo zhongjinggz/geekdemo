@@ -7,13 +7,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
+import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
 
 @Repository
 public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
@@ -115,22 +118,23 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
     @Override
     public Optional<Emp> findById(Long tenantId, Long id) {
         Optional<RebuiltEmp> empMaybe;
-        String sql = " select version" +
-                ", tenant_id" +
-                ", id" +
-                ", org_id" +
-                ", emp_num" +
-                ", id_num" +
-                ", name" +
-                ", gender_code" +
-                ", dob" +
-                ", status_code" +
-                ", created_at" +
-                ", created_by"
+        String sql = " select version"
+                + ", tenant_id"
+                + ", id"
+                + ", org_id"
+                + ", emp_num"
+                + ", id_num"
+                + ", name"
+                + ", gender_code"
+                + ", dob"
+                + ", status_code"
+                + ", version"
+                + ", created_at"
+                + ", created_by"
                 + " from emp "
                 + " where id = ? and tenant_id = ? ";
 
-        return selectOne(sql, mapToEmp(), id, tenantId);
+        return selectOne(sql, mapToEmp2(), id, tenantId);
     }
 
     private Function<Map<String, Object>, Emp> mapToEmp() {
@@ -153,6 +157,40 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
             workExperienceMapper.attachTo(emp);
             empPostMapper.attachTo(emp);
             return emp;
+        };
+    }
+
+
+    private Function<Map<String, Object>, Emp> mapToEmp2() {
+        return empMap -> {
+            Long tenantId = (Long) empMap.get("tenant_id");
+            Long empId = (Long) empMap.get("id");
+
+            List<Map<String, Object>> skillMaps = skillMapper.selectByEmpId(tenantId, empId);
+            List<Map<String, Object>> experienceMaps = workExperienceMapper.selectByEmpId(tenantId, empId);
+            List<Map<String, Object>> empPostMaps = empPostMapper.selectByEmpId(tenantId, empId);
+
+
+            return new Emp(
+                    tenantId
+                    , (Long) empMap.get("id")
+                    , (Long) empMap.get("org_id")
+                    , (String) empMap.get("emp_num")
+                    , (String) empMap.get("id_num")
+                    , (String) empMap.get("name")
+                    , (String) empMap.get("gender_code")
+                    , toLocalDate(empMap,"dob")
+                    , (String) empMap.get("status_code")
+                    , (Long) empMap.get("version")
+                    , (LocalDateTime) empMap.get("created_at")
+                    , (Long) empMap.get("created_by")
+                    , (LocalDateTime) empMap.get("last_updated_at")
+                    , (Long) empMap.get("last_updated_by")
+
+                    , skillMaps
+                    , experienceMaps
+                    , empPostMaps
+            );
         };
     }
 

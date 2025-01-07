@@ -11,13 +11,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Transactional
+//@Transactional
 class EmpServiceIT {
     private static final long DEFAULT_USER_ID = 1L;
     private static final long DEFAULT_TENANT_ID = 1L;
@@ -100,7 +103,7 @@ class EmpServiceIT {
         // then
         Emp actual = empRepository.findById(origionEmp.getTenantId(), origionEmp.getId())
                 .orElseGet(() -> fail("找不到刚刚修改的员工！"));
-        RebuiltEmp expected = buildExpectedUpdatedEmp(origionEmp, updateRequest);
+        Emp expected = buildExpectedUpdatedEmp(origionEmp, updateRequest);
 
         assertEmp(actual, expected);
     }
@@ -125,7 +128,6 @@ class EmpServiceIT {
 
     private UpdateEmpRequest buildUpdateEmpRequest(Emp origin) {
         UpdateEmpRequest result = emp2UpdateRequest(origin);
-        //return emp2UpdateRequest(origin)
         result.setName("Dunne");
 
         result.removeSkill(PYTHON_TYPE_ID)
@@ -205,6 +207,55 @@ class EmpServiceIT {
                 .deleteExperienceCompletely(Period.of(PICC_START_DATE, PICC_END_DATE));
         return expected;
     }
+    private Emp buildExpectedUpdatedEmp2(Emp origionEmp, UpdateEmpRequest updateRequest) {
+        List<Map<String, Object>> skillMaps = new ArrayList<>();
+        for (SkillDto dto : updateRequest.getSkills()) {
+            skillMaps.add(Map.of(
+                    "tenant_id", origionEmp.getTenantId(),
+                    "skill_type_id", dto.getSkillTypeId(),
+                    "level_code", dto.getLevelCode(),
+                    "duration", dto.getDuration()
+            ));
+        }
+
+        List<Map<String, Object>> experienceMaps = new ArrayList<>();
+        for (WorkExperienceDto dto : updateRequest.getExperiences()) {
+            experienceMaps.add(Map.of(
+                    "tenant_id", origionEmp.getTenantId(),
+                    "start_date", dto.getStartDate(),
+                    "end_date", dto.getEndDate(),
+                    "company", dto.getCompany()
+            ));
+        }
+
+        List<Map<String, Object>> empPostMaps = new ArrayList<>();
+        for (String postCode : updateRequest.getPostCodes()) {
+            empPostMaps.add(Map.of(
+                    "tenant_id", origionEmp.getTenantId(),
+                    "post_code", postCode
+            ));
+        }
+
+        return new Emp(
+                origionEmp.getTenantId(),
+                origionEmp.getId(),
+                origionEmp.getOrgId(),
+                updateRequest.getEmpNum(),
+                updateRequest.getIdNum(),
+                updateRequest.getName(),
+                updateRequest.getGenderCode(),
+                updateRequest.getDob(),
+                origionEmp.getStatus().code(),
+                origionEmp.getVersion(),
+                origionEmp.getCreatedAt(),
+                origionEmp.getCreatedBy(),
+                origionEmp.getLastUpdatedAt(),
+                origionEmp.getLastUpdatedBy(),
+                skillMaps,
+                experienceMaps,
+                empPostMaps
+        );
+    }
 
     private void assertEmp(Emp actual, Emp expected) {
         assertThat(actual).usingRecursiveComparison()
@@ -220,7 +271,7 @@ class EmpServiceIT {
 
         assertThat(actual.getSkills()).usingRecursiveComparison()
                 .ignoringCollectionOrder()
-                .ignoringExpectedNullFields() // this is because if of the new skill is null in request
+                .ignoringExpectedNullFields() // this is because id of the new skill is null in request
                 .comparingOnlyFields("id", "tenantId", "skillTypeId", "level", "duration")
                 .isEqualTo(expected.getSkills());
 

@@ -69,11 +69,28 @@ public class SkillMapper extends Mapper<Skill> {
         List<Map<String, Object>> skills = jdbc.queryForList(sql, emp.getTenantId(), emp.getId());
 
         skills.forEach(skill -> emp.reAddSkill(
-                 (Long) skill.get("id")
+                (Long) skill.get("id")
                 , (Long) skill.get("skill_type_id")
                 , SkillLevel.ofCode((String) skill.get("level_code"))
                 , (Integer) skill.get("duration")
                 , (Long) skill.get("created_by")
         ));
+    }
+
+    List<Map<String, Object>> selectByEmpId(Long tenantId, Long empId) {
+        String sql = " select id" +
+                ", tenant_id" +
+                ", skill_type_id" +
+                ", emp_id" +
+                ", level_code" +
+                ", duration " +
+                ", created_at" +
+                ", created_by" +
+                ", last_updated_at" +
+                ", last_updated_by" +
+                " from skill " +
+                " where tenant_id = ? and emp_id = ? ";
+
+        return selectMaps(sql, tenantId, empId);
     }
 }

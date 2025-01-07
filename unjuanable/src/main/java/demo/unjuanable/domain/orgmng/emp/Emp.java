@@ -1,12 +1,15 @@
 package demo.unjuanable.domain.orgmng.emp;
 
 import demo.unjuanable.common.framework.domain.AggregateRoot;
+import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.common.valueobject.Period;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+
+import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
 
 
 public class Emp extends AggregateRoot {
@@ -21,11 +24,9 @@ public class Emp extends AggregateRoot {
     protected Gender gender;
     protected LocalDate dob;
     protected EmpStatus status;
-    // protected List<Skill> skills;
-    final protected Map<Long, Skill> skills = new HashMap<>();
-    // protected List<WorkExperience> experiences;
-    final protected Map<Period, WorkExperience> experiences = new HashMap<>();
 
+    final protected Map<Long, Skill> skills = new HashMap<>();
+    final protected Map<Period, WorkExperience> experiences = new HashMap<>();
     final protected List<EmpPost> empPosts = new ArrayList<>();
 
     // 用于新建员工
@@ -36,6 +37,98 @@ public class Emp extends AggregateRoot {
     }
 
     //用于从数据库重建员工
+    public Emp(Long tenantId
+            , Long id
+            , Long orgId
+            , String empNum
+            , String idNum
+            , String name
+            , String genderCode
+            , LocalDate dob
+            , String statusCode
+            , Long version
+            , LocalDateTime createdAt
+            , Long createdBy
+            , LocalDateTime lastUpdatedAt
+            , Long lastUpdatedBy
+            , List<Map<String, Object>> skillMaps
+            , List<Map<String, Object>> experienceMaps
+            , List<Map<String, Object>> empPostMaps
+    ) {
+
+        super(createdAt, createdBy);
+        this.changingStatus = ChangingStatus.UNCHANGED;
+
+        this.tenantId = tenantId;
+        this.id = id;
+        this.orgId = orgId;
+        this.empNum = empNum;
+        this.idNum = idNum;
+        this.name = name;
+        this.gender = Gender.ofCode(genderCode);
+        this.dob = dob;
+        this.status = EmpStatus.ofCode(statusCode);
+        this.version = version;
+
+        this.lastUpdatedAt = lastUpdatedAt;
+        this.lastUpdatedBy = lastUpdatedBy;
+
+        loadSkills(skillMaps);
+        loadExperiences(experienceMaps);
+        loadEmpPosts(empPostMaps);
+    }
+
+    private void loadEmpPosts(List<Map<String, Object>> empPostMaps) {
+        for (Map<String, Object> postMap : empPostMaps) {
+            this.empPosts.add(
+                    new EmpPost(this
+                            , (String) postMap.get("post_code")
+                            , (LocalDateTime) postMap.get("created_at")
+                            , (Long) postMap.get("created_by")
+                            , (LocalDateTime) postMap.get("last_updated_at")
+                            , (Long) postMap.get("last_updated_by"))
+            );
+        }
+    }
+
+    private void loadExperiences(List<Map<String, Object>> experienceMaps) {
+        for (Map<String, Object> expMap : experienceMaps) {
+            Period period = Period.of(toLocalDate(expMap, "start_date"), toLocalDate(expMap, "end_date"));
+            this.experiences.put(
+                    period,
+                    new WorkExperience(this
+                            , (Long) expMap.get("tenant_id")
+                            , (Long) expMap.get("id")
+                            , period
+                            , (String) expMap.get("company")
+                            , (LocalDateTime) expMap.get("created_at")
+                            , (Long) expMap.get("created_by")
+                            , (LocalDateTime) expMap.get("last_updated_at")
+                            , (Long) expMap.get("last_updated_by"))
+            );
+        }
+    }
+
+    private void loadSkills(List<Map<String, Object>> skillMaps) {
+        for (Map<String, Object> skillMap : skillMaps) {
+            this.skills.put(
+                    (Long) skillMap.get("skill_type_id"),
+                    new Skill(this
+                            , (Long) skillMap.get("id")
+                            , (Long) skillMap.get("tenant_id")
+                            , (Long) skillMap.get("skill_type_id")
+                            , (String) skillMap.get("level_code")
+                            , (Integer) skillMap.get("duration")
+                            , (Long) skillMap.get("created_by")
+                            , (LocalDateTime) skillMap.get("created_at")
+                            , (Long) skillMap.get("last_updated_by")
+                            , (LocalDateTime) skillMap.get("last_updated_at")
+                    )
+            );
+        }
+    }
+
+    //用于从数据库重建员工  tobe deleted
     public Emp(Long tenantId, Long id, LocalDateTime createdAt, Long createdBy) {
         super(createdAt, createdBy);
         this.id = id;
@@ -120,7 +213,6 @@ public class Emp extends AggregateRoot {
     }
 
     public Collection<Skill> getSkills() {
-        // return Collections.unmodifiableList(skills);
         return Collections.unmodifiableCollection(skills.values());
 
     }
@@ -132,7 +224,7 @@ public class Emp extends AggregateRoot {
     public void addSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
         skillTypeShouldNotDuplicated(skillTypeId);
 
-        Skill newSkill = new Skill(this,tenantId, skillTypeId, userId)
+        Skill newSkill = new Skill(this, tenantId, skillTypeId, userId)
                 .setLevel(level).setDuration(duration);
 
         skills.put(skillTypeId, newSkill);

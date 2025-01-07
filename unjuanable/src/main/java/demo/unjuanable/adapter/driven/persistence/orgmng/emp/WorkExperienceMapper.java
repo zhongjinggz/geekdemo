@@ -71,4 +71,21 @@ public class WorkExperienceMapper extends Mapper<WorkExperience> {
                 , (Long) experience.get("created_by")
         ));
     }
+
+    public List<Map<String, Object>> selectByEmpId(Long tenantId, Long empId) {
+        String sql = "select id" +
+                ", tenant_id" +
+                ", emp_id" +
+                ", company" +
+                ", start_date" +
+                ", end_date" +
+                ", created_at" +
+                ", created_by" +
+                ", last_updated_at" +
+                ", last_updated_by " +
+                "from work_experience " +
+                "where emp_id = ? and tenant_id = ?";
+
+        return selectMaps(sql, empId, tenantId);
+    }
 }
