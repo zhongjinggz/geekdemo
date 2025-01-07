@@ -132,7 +132,8 @@ public class Emp extends AggregateRoot {
     public void addSkill(Long skillTypeId, SkillLevel level, Integer duration, Long userId) {
         skillTypeShouldNotDuplicated(skillTypeId);
 
-        Skill newSkill = new Skill(tenantId, skillTypeId, userId).setLevel(level).setDuration(duration);
+        Skill newSkill = new Skill(this,tenantId, skillTypeId, userId)
+                .setLevel(level).setDuration(duration);
 
         skills.put(skillTypeId, newSkill);
     }
@@ -177,7 +178,8 @@ public class Emp extends AggregateRoot {
         durationShouldNotOverlap(period);
 
         WorkExperience newExperience = new WorkExperience(
-                tenantId
+                this
+                , tenantId
                 , period
                 , LocalDateTime.now()
                 , userId)
@@ -218,7 +220,7 @@ public class Emp extends AggregateRoot {
     }
 
     public Emp addEmpPost(String postCode, Long userId) {
-        EmpPost post = new EmpPost(LocalDateTime.now(), userId);
+        EmpPost post = new EmpPost(this, LocalDateTime.now(), userId);
         post.setPostCode(postCode);
         empPosts.add(post);
         return this;

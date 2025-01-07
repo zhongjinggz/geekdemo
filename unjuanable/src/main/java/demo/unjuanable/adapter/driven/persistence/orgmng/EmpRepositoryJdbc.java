@@ -3,7 +3,6 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
@@ -16,9 +15,7 @@ import java.util.Optional;
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
-public class EmpRepositoryJdbc extends RootMapper<Emp> implements EmpRepository {
-    private final JdbcTemplate jdbc;
-    private final SimpleJdbcInsert empInsert;
+public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
     private final SkillMapper skillMapper;
     private final WorkExperienceMapper workExperienceMapper;
     private final EmpPostMapper empPostMapper;
@@ -29,10 +26,7 @@ public class EmpRepositoryJdbc extends RootMapper<Emp> implements EmpRepository 
             , WorkExperienceMapper workExperienceMapper
             , EmpPostMapper empPostMapper) {
 
-        this.jdbc = jdbc;
-        this.empInsert = new SimpleJdbcInsert(jdbc)
-                .withTableName("emp")
-                .usingGeneratedKeyColumns("id");
+        super(jdbc, "emp", "id");
         this.skillMapper = skillMapper;
         this.workExperienceMapper = workExperienceMapper;
         this.empPostMapper = empPostMapper;
@@ -55,7 +49,7 @@ public class EmpRepositoryJdbc extends RootMapper<Emp> implements EmpRepository 
         params.put("created_by", emp.getCreatedBy());
         params.put("version", 0);
 
-        Number createdId = empInsert.executeAndReturnKey(params);
+        Number createdId = jdbcInsert.executeAndReturnKey(params);
 
         forceSet(emp, "id", createdId.longValue());
     }
@@ -92,9 +86,9 @@ public class EmpRepositoryJdbc extends RootMapper<Emp> implements EmpRepository 
 
     @Override
     protected void saveSubsidiaries(Emp emp) {
-        emp.getSkills().forEach(s -> skillMapper.save(s, emp));
-        emp.getExperiences().forEach(e -> workExperienceMapper.save(e, emp));
-        emp.getEmpPosts().forEach(p -> empPostMapper.save(p, emp));
+        emp.getSkills().forEach(skillMapper::save);
+        emp.getExperiences().forEach(workExperienceMapper::save);
+        emp.getEmpPosts().forEach(empPostMapper::save);
     }
 
     @Override

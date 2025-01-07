@@ -1,11 +1,9 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.common.valueobject.Period;
-import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.WorkExperience;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -16,15 +14,9 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
 
 @Component
-public class WorkExperienceMapper extends BaseMapper<WorkExperience, Emp> {
-    final JdbcTemplate jdbc;
-    final SimpleJdbcInsert insertWorkExperience;
-
+public class WorkExperienceMapper extends Mapper<WorkExperience> {
     public WorkExperienceMapper(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-        this.insertWorkExperience = new SimpleJdbcInsert(jdbc)
-                .withTableName("work_experience")
-                .usingGeneratedKeyColumns("id");
+        super(jdbc, "work_experience", "id");
     }
 
     @Override
@@ -50,11 +42,10 @@ public class WorkExperienceMapper extends BaseMapper<WorkExperience, Emp> {
     }
 
     @Override
-    protected void insert(WorkExperience workExperience, Emp emp) {
-        Long empId = emp.getId();
+    protected void insert(WorkExperience workExperience) {
         Map<String, Object> params = new HashMap<>();
 
-        params.put("emp_id", empId);
+        params.put("emp_id", workExperience.getEmpId());
         params.put("tenant_id", workExperience.getTenantId());
         params.put("start_date", workExperience.getPeriod().getStart());
         params.put("end_date", workExperience.getPeriod().getEnd());
@@ -62,7 +53,7 @@ public class WorkExperienceMapper extends BaseMapper<WorkExperience, Emp> {
         params.put("created_at", workExperience.getCreatedAt());
         params.put("created_by", workExperience.getCreatedBy());
 
-        Number createdId = insertWorkExperience.executeAndReturnKey(params);
+        Number createdId = jdbcInsert.executeAndReturnKey(params);
 
         forceSet(workExperience, "id", createdId.longValue());
     }

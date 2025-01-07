@@ -3,8 +3,8 @@ package demo.unjuanable.domain.orgmng.emp;
 import demo.unjuanable.common.framework.domain.ChangingStatus;
 
 public class RebuiltSkill extends Skill {
-    public RebuiltSkill(Long tenantId, Long id, Long skillTypeId, Long createdBy) {
-        super(tenantId, skillTypeId, createdBy);
+    public RebuiltSkill(Emp emp, Long tenantId, Long id, Long skillTypeId, Long createdBy) {
+        super(emp, tenantId, skillTypeId, createdBy);
         this.id = id;
         this.changingStatus = ChangingStatus.UNCHANGED;
     }

@@ -7,19 +7,25 @@ import java.time.LocalDateTime;
 
 public class Skill extends AuditableEntity {
     protected Long id;
+    private final Emp emp;
     final private Long tenantId;
     final private Long skillTypeId;
     protected SkillLevel level;
     protected Integer duration;
 
-    public Skill(Long tenantId, Long skillTypeId, Long createdBy) {
+    public Skill(Emp emp, Long tenantId, Long skillTypeId, Long createdBy) {
         super(LocalDateTime.now(), createdBy);
+        this.emp = emp;
         this.tenantId = tenantId;
         this.skillTypeId = skillTypeId;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getEmpId() {
+        return emp.getId();
     }
 
     public Long getTenantId() {

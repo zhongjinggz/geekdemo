@@ -6,10 +6,12 @@ import demo.unjuanable.common.framework.domain.AuditableEntity;
 import java.time.LocalDateTime;
 
 public class EmpPost extends AuditableEntity {
+    Emp emp;
     String postCode;
 
-    public EmpPost(LocalDateTime createdAt, Long createdBy) {
+    public EmpPost(Emp emp, LocalDateTime createdAt, Long createdBy) {
         super(createdAt, createdBy);
+        this.emp = emp;
     }
 
     public String getPostCode() {
@@ -18,5 +20,9 @@ public class EmpPost extends AuditableEntity {
 
     public void setPostCode(String postCode) {
         this.postCode = postCode;
+    }
+
+    public Long getEmpId() {
+        return emp.getId();
     }
 }

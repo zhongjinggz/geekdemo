@@ -2,7 +2,6 @@ package demo.unjuanable.adapter.driven.persistence.orgmng;
 
 import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -15,15 +14,11 @@ import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Repository
 public class OrgRepositoryJdbc
-        extends RootMapper<Org> implements OrgRepository {
-    private final JdbcTemplate jdbc;
-    private final SimpleJdbcInsert insertOrg;
+        extends Mapper<Org> implements OrgRepository {
+
 
     public OrgRepositoryJdbc(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-        this.insertOrg = new SimpleJdbcInsert(jdbc)
-                .withTableName("org")
-                .usingGeneratedKeyColumns("id");
+        super(jdbc, "org", "id");
     }
 
     @Override
@@ -39,7 +34,7 @@ public class OrgRepositoryJdbc
         params.put("superior_id", org.getSuperiorId());
         params.put("tenant_id", org.getTenantId());
 
-        Number createdId = insertOrg.executeAndReturnKey(params);
+        Number createdId = jdbcInsert.executeAndReturnKey(params);
 
         forceSet(org, "id", createdId.longValue());
     }
@@ -148,8 +143,6 @@ public class OrgRepositoryJdbc
     }
 
     private boolean selectExists(String sql, Object... args) {
-        return !jdbc
-                .queryForList(sql, args)
-                .isEmpty();
+        return !(jdbc.queryForList(sql, args).isEmpty());
     }
 }

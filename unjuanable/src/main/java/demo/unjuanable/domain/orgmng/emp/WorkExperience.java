@@ -8,27 +8,33 @@ import demo.unjuanable.domain.common.valueobject.Period;
 
 public class WorkExperience extends AuditableEntity {
     private Long id;
+    final private Emp emp;
     final private Long tenantId;
     final private Period period;
     protected String company;
 
-    protected WorkExperience(Long tenantId, Period period
+    protected WorkExperience(Emp emp, Long tenantId, Period period
             , LocalDateTime createdAt, Long createdBy) {
 
         super(createdAt, createdBy);
+        this.emp = emp;
         this.tenantId = tenantId;
         this.period = period;
     }
 
-    protected WorkExperience(Long tenantId, Long id, Period period
+    protected WorkExperience(Emp emp, Long tenantId, Long id, Period period
             , LocalDateTime createdAt, Long createdBy) {
 
-        this(tenantId, period, createdAt, createdBy);
+        this(emp, tenantId, period, createdAt, createdBy);
         this.id = id;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getEmpId() {
+        return emp.getId();
     }
 
     public Long getTenantId() {

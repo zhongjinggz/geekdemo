@@ -2,8 +2,8 @@ package demo.unjuanable.common.framework.domain;
 
 import java.time.LocalDateTime;
 
-public class AggregateRoot<T extends AuditableEntity<T>>
-        extends AuditableEntity<T> implements Versionable {
+public class AggregateRoot
+        extends AuditableEntity implements Versionable {
     protected Long version;
 
     public AggregateRoot(LocalDateTime createdAt, Long createdBy) {

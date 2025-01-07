@@ -1,11 +1,9 @@
 package demo.unjuanable.adapter.driven.persistence.orgmng;
 
-import demo.unjuanable.domain.orgmng.emp.Emp;
 import demo.unjuanable.domain.orgmng.emp.RebuiltEmp;
 import demo.unjuanable.domain.orgmng.emp.Skill;
 import demo.unjuanable.domain.orgmng.emp.SkillLevel;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -15,17 +13,10 @@ import java.util.Map;
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
 @Component
-public class SkillMapper extends BaseMapper<Skill, Emp> {
-
-    private final JdbcTemplate jdbc;
-    private final SimpleJdbcInsert skillInsert;
+public class SkillMapper extends Mapper<Skill> {
 
     public SkillMapper(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-
-        this.skillInsert = new SimpleJdbcInsert(jdbc)
-                .withTableName("skill")
-                .usingGeneratedKeyColumns("id");
+        super(jdbc, "skill", "id");
     }
 
     @Override
@@ -54,11 +45,9 @@ public class SkillMapper extends BaseMapper<Skill, Emp> {
     }
 
     @Override
-    protected void insert(Skill skill, Emp emp) {
-        Long empId = emp.getId();
-
+    protected void insert(Skill skill) {
         Map<String, Object> params = new HashMap<>();
-        params.put("emp_id", empId);
+        params.put("emp_id", skill.getEmpId());
         params.put("tenant_id", skill.getTenantId());
         params.put("skill_type_id", skill.getSkillTypeId());
         params.put("level_code", skill.getLevel().code());
@@ -66,7 +55,7 @@ public class SkillMapper extends BaseMapper<Skill, Emp> {
         params.put("created_at", skill.getCreatedAt());
         params.put("created_by", skill.getCreatedBy());
 
-        Number createdId = skillInsert.executeAndReturnKey(params);
+        Number createdId = jdbcInsert.executeAndReturnKey(params);
 
         forceSet(skill, "id", createdId.longValue());
     }
@@ -79,7 +68,7 @@ public class SkillMapper extends BaseMapper<Skill, Emp> {
         List<Map<String, Object>> skills = jdbc.queryForList(sql, emp.getTenantId(), emp.getId());
 
         skills.forEach(skill -> emp.reAddSkill(
-                (Long) skill.get("id")
+                 (Long) skill.get("id")
                 , (Long) skill.get("skill_type_id")
                 , SkillLevel.ofCode((String) skill.get("level_code"))
                 , (Integer) skill.get("duration")

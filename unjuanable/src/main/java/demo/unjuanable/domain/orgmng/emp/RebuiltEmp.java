@@ -56,7 +56,7 @@ public class RebuiltEmp extends Emp {
 
     public RebuiltEmp reAddSkill(Long id, Long skillTypeId, SkillLevel level, Integer duration, Long createdBy) {
 
-        RebuiltSkill newSkill = new RebuiltSkill(tenantId, id, skillTypeId, createdBy)
+        RebuiltSkill newSkill = new RebuiltSkill(this, tenantId, id, skillTypeId, createdBy)
                 .resetLevel(level)
                 .resetDuration(duration);
 
@@ -74,7 +74,9 @@ public class RebuiltEmp extends Emp {
     }
 
     public RebuiltEmp reAddExperience(Long experienceId, Period period, String company, Long userId) {
-        RebuiltWorkExperience newExperience = new RebuiltWorkExperience(tenantId
+        RebuiltWorkExperience newExperience = new RebuiltWorkExperience(
+                this
+                , tenantId
                 , experienceId
                 , period
                 , LocalDateTime.now()
