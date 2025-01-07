@@ -8,9 +8,9 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static demo.unjuanable.common.util.ReflectUtil.forceSet;
 
@@ -36,20 +36,20 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
     @Override
     protected void insert(Emp emp) {
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("tenant_id", emp.getTenantId());
-        params.put("org_id", emp.getOrgId());
-        params.put("emp_num", emp.getEmpNum());
-        params.put("id_num", emp.getIdNum());
-        params.put("name", emp.getName());
-        params.put("gender_code", emp.getGender().code());
-        params.put("dob", emp.getDob());
-        params.put("status_code", emp.getStatus().code());
-        params.put("created_at", emp.getCreatedAt());
-        params.put("created_by", emp.getCreatedBy());
-        params.put("version", 0);
+        Map<String, Object> args = new HashMap<>();
+        args.put("tenant_id", emp.getTenantId());
+        args.put("org_id", emp.getOrgId());
+        args.put("emp_num", emp.getEmpNum());
+        args.put("id_num", emp.getIdNum());
+        args.put("name", emp.getName());
+        args.put("gender_code", emp.getGender().code());
+        args.put("dob", emp.getDob());
+        args.put("status_code", emp.getStatus().code());
+        args.put("created_at", emp.getCreatedAt());
+        args.put("created_by", emp.getCreatedBy());
+        args.put("version", 0);
 
-        Number createdId = jdbcInsert.executeAndReturnKey(params);
+        Number createdId = jdbcInsert.executeAndReturnKey(args);
 
         forceSet(emp, "id", createdId.longValue());
     }
@@ -115,6 +115,8 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
     public Optional<Emp> findById(Long tenantId, Long id) {
         Optional<RebuiltEmp> empMaybe;
         String sql = " select version" +
+                ", tenant_id" +
+                ", id" +
                 ", org_id" +
                 ", emp_num" +
                 ", id_num" +
@@ -127,14 +129,14 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
                 + " from emp "
                 + " where id = ? and tenant_id = ? ";
 
-        List<Map<String, Object>> empMaps = jdbc.queryForList(sql, id, tenantId);
+        return selectOne(sql, mapToEmp(), id, tenantId);
+    }
 
-        if (empMaps.isEmpty()) {
-            return Optional.empty();
-        } else {
-            Map<String, Object> empMap = empMaps.getFirst();
-            RebuiltEmp emp = new RebuiltEmp(tenantId
-                    , id
+    private Function<Map<String, Object>, Emp> mapToEmp() {
+        return empMap -> {
+            RebuiltEmp emp = new RebuiltEmp(
+                    (Long) empMap.get("tenant_id")
+                    , (Long) empMap.get("id")
                     , (LocalDateTime) empMap.get("created_at")
                     , (Long) empMap.get("created_by")
             )
@@ -149,8 +151,8 @@ public class EmpRepositoryJdbc extends Mapper<Emp> implements EmpRepository {
             skillMapper.attachTo(emp);
             workExperienceMapper.attachTo(emp);
             empPostMapper.attachTo(emp);
-            return Optional.of(emp);
-        }
+            return emp;
+        };
     }
 
 }
