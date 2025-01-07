@@ -1,4 +1,4 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.adapter.driven.persistence.orgmng.org;
 
 import demo.unjuanable.common.framework.adapter.driven.persistence.Mapper;
 import demo.unjuanable.domain.orgmng.org.*;

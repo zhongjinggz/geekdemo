@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.emp;
 
-import demo.unjuanable.adapter.driven.persistence.orgmng.RebuiltWorkExperience;
+import demo.unjuanable.adapter.driven.persistence.orgmng.emp.RebuiltWorkExperience;
 import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.common.valueobject.Period;
 

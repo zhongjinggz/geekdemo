@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.empnumcounter;
 
-import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterRepositoryJdbc;
+import demo.unjuanable.adapter.driven.persistence.orgmng.empnumcounter.EmpNumCounterRepositoryJdbc;
 import demo.unjuanable.common.framework.exception.SystemException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

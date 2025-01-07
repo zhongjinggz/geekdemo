@@ -1,4 +1,4 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.adapter.driven.persistence.orgmng.emp;
 
 import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.common.valueobject.Period;

@@ -1,6 +1,6 @@
 package demo.unjuanable.domain.orgmng.emp;
 
-import demo.unjuanable.adapter.driven.persistence.orgmng.EmpNumCounterRepositoryJdbc;
+import demo.unjuanable.adapter.driven.persistence.orgmng.empnumcounter.EmpNumCounterRepositoryJdbc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

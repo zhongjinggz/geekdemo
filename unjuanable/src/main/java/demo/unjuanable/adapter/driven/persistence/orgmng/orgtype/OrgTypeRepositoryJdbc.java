@@ -1,4 +1,4 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.adapter.driven.persistence.orgmng.orgtype;
 
 import demo.unjuanable.common.util.SqlUtil;
 import demo.unjuanable.domain.orgmng.orgtype.OrgType;

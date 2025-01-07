@@ -1,4 +1,4 @@
-package demo.unjuanable.adapter.driven.persistence.orgmng;
+package demo.unjuanable.adapter.driven.persistence.orgmng.empnumcounter;
 
 import demo.unjuanable.common.framework.exception.SystemException;
 import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounter;
