@@ -142,37 +142,98 @@ class EmpServiceIT {
     }
 
     private Emp buildExpectedCreatedEmp(CreateEmpRequest request, Long id) {
-        RebuiltEmp result = new RebuiltEmp(request.getTenantId()
-                , id
-                , LocalDateTime.now()
-                , DEFAULT_USER_ID
-        )
-                .resetStatus(EmpStatus.ofCode(DEFAULT_EMP_STATUS_CODE))
-                .resetOrgId(request.getOrgId())
-                .resetDob(request.getDob())
-                .resetGender(Gender.ofCode(request.getGenderCode()))
-                .resetName(request.getName())
-                .resetIdNum(request.getIdNum());
+//        RebuiltEmp result = new RebuiltEmp(request.getTenantId()
+//                , id
+//                , LocalDateTime.now()
+//                , DEFAULT_USER_ID
+//        )
+//                .resetStatus(EmpStatus.ofCode(DEFAULT_EMP_STATUS_CODE))
+//                .resetOrgId(request.getOrgId())
+//                .resetDob(request.getDob())
+//                .resetGender(Gender.ofCode(request.getGenderCode()))
+//                .resetName(request.getName())
+//                .resetIdNum(request.getIdNum());
 
-        request.getSkills().forEach(
-                skill -> result.reAddSkill(
-                        skill.getId()
-                        , skill.getSkillTypeId()
-                        , SkillLevel.ofCode(skill.getLevelCode())
-                        , skill.getDuration()
-                        , DEFAULT_USER_ID
-                )
+//        request.getSkills().forEach(
+//                skill -> result.reAddSkill(
+//                        skill.getId()
+//                        , skill.getSkillTypeId()
+//                        , SkillLevel.ofCode(skill.getLevelCode())
+//                        , skill.getDuration()
+//                        , DEFAULT_USER_ID
+//                )
+//        );
+
+        List<Skill> skillList = new ArrayList<>();
+        for (var dto : request.getSkills()) {
+            skillList.add(new Skill(dto.getId()
+                            , request.getTenantId()
+                            , dto.getSkillTypeId()
+                            , dto.getLevelCode()
+                            , dto.getDuration()
+                            , DEFAULT_USER_ID
+                            , LocalDateTime.now()
+                            , null
+                            , null
+                    )
+            );
+        }
+
+//        request.getExperiences().forEach(
+//                experience -> result.reAddExperience(
+//                        experience.getId()
+//                        ,
+//                        Period.of(experience.getStartDate(), experience.getEndDate()), experience.getCompany()
+//                        , DEFAULT_USER_ID
+//                )
+//        );
+        List<WorkExperience> experienceMaps = new ArrayList<>();
+        for (var dto : request.getExperiences()) {
+            experienceMaps.add(new WorkExperience(
+                    request.getTenantId()
+                    , dto.getId()
+                    , dto.getStartDate()
+                    , dto.getEndDate()
+                    , dto.getCompany()
+                    , LocalDateTime.now()
+                    , DEFAULT_USER_ID
+                    , null
+                    , null)
+            );
+        }
+
+//        RebuiltEmp result = new RebuiltEmp(request.getTenantId()
+//                , id
+//                , LocalDateTime.now()
+//                , DEFAULT_USER_ID
+//        )
+//                .resetStatus(EmpStatus.ofCode(DEFAULT_EMP_STATUS_CODE))
+//                .resetOrgId(request.getOrgId())
+//                .resetDob(request.getDob())
+//                .resetGender(Gender.ofCode(request.getGenderCode()))
+//                .resetName(request.getName())
+//                .resetIdNum(request.getIdNum());
+
+        return new Emp(
+                request.getTenantId(),
+                id,
+                request.getOrgId(),
+                null,
+                request.getIdNum(),
+                request.getName(),
+                request.getGenderCode(),
+                request.getDob(),
+                EmpStatus.REGULAR.code(),
+                0L,
+                LocalDateTime.now(),
+                DEFAULT_USER_ID,
+                null,
+                null,
+                skillList,
+                experienceMaps,
+                new ArrayList<>()
         );
 
-        request.getExperiences().forEach(
-                experience -> result.reAddExperience(
-                        experience.getId()
-                        ,
-                        Period.of(experience.getStartDate(), experience.getEndDate()), experience.getCompany()
-                        , DEFAULT_USER_ID
-                )
-        );
-        return result;
     }
 
     private Emp buildExpectedUpdatedEmp(Emp origionEmp, UpdateEmpRequest updateRequest) {
