@@ -30,7 +30,7 @@ public class OrgBuilderFactory {
         this.orgLeaderValidator = orgLeaderValidator;
     }
 
-    public OrgBuilder create() {
+    public OrgBuilder builder() {
         return new OrgBuilder(commonTenantValidator
                 , orgTypeValidator
                 , superiorValidator

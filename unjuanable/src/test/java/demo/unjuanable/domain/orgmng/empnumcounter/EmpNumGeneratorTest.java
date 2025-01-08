@@ -24,9 +24,15 @@ class EmpNumGeneratorTest {
 
     @Test
     void generateEmpNum_shouldGenerateEmpNum() {
-        doReturn("YYYY00000001").when(spyEmpNumGenerator).generateEmpNumByYear(anyLong(), anyInt());
-        String empNum = spyEmpNumGenerator.generateEmpNum(1L);
-        verify(spyEmpNumGenerator).generateEmpNumByYear(1L, LocalDate.now().getYear());
+        EmpNumGenerator empNumGenerator1 = doReturn("YYYY00000001").when(spyEmpNumGenerator);
+        Long tenantId = anyLong();
+        int yearNum1 = anyInt();
+        int maxNum2 = empNumGenerator1.empNumCounterRepositoryJdbc.increaseMaxNumByYear(tenantId, yearNum1);
+        int yearNum = LocalDate.now().getYear();
+        int maxNum1 = spyEmpNumGenerator.empNumCounterRepositoryJdbc.increaseMaxNumByYear(1L, yearNum);
+        String empNum = (String.format("%04d%08d", yearNum, maxNum1));
+        EmpNumGenerator empNumGenerator = verify(spyEmpNumGenerator);
+        int maxNum = empNumGenerator.empNumCounterRepositoryJdbc.increaseMaxNumByYear(1L, LocalDate.now().getYear());
         assertEquals("YYYY00000001", empNum);
     }
 }

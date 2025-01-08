@@ -28,7 +28,7 @@ public class OrgService {
 
     @Transactional
     public OrgResponse addOrg(CreateOrgRequest request, Long userId) {
-        OrgBuilder builder = orgBuilderFactory.create();
+        OrgBuilder builder = orgBuilderFactory.builder();
 
         Org org = builder.tenantId(request.getTenantId())
                 .orgTypeCode(request.getOrgTypeCode())

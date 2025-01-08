@@ -12,22 +12,23 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EmpService {
     private final EmpRepository empRepository;
-    private final EmpAssembler assembler;
     private final EmpUpdator updator;
+    private final EmpBuilderFactory builderFactory;
 
 
     @Autowired
     public EmpService(EmpRepository empRepository
-            , EmpAssembler assembler
-            , EmpUpdator updator) {
+            , EmpUpdator updator
+    , EmpBuilderFactory builderFactory
+    ) {
         this.empRepository = empRepository;
-        this.assembler = assembler;
         this.updator = updator;
+        this.builderFactory = builderFactory;
     }
 
     @Transactional
     public EmpResponse addEmp(CreateEmpRequest request, Long userId) {
-        Emp emp = assembler.toEmp(request, userId);
+        Emp emp = builderFactory.builder().build(request, userId);
 
         empRepository.save(emp);
         return new EmpResponse(emp);

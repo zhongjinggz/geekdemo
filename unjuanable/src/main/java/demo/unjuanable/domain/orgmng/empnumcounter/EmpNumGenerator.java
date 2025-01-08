@@ -17,12 +17,14 @@ public class EmpNumGenerator {
     }
 
     public String generateEmpNum(Long tenantId) {
-        return(generateEmpNumByYear(tenantId, LocalDate.now().getYear()));
+        int yearNum = LocalDate.now().getYear();
+        int maxNum = empNumCounterRepositoryJdbc.increaseMaxNumByYear(tenantId, yearNum);
+        return String.format("%04d%08d", yearNum, maxNum);
     }
 
 
 
-    String generateEmpNumByYear(Long tenantId, int yearNum) {
+    public String generateEmpNumByYear(Long tenantId, int yearNum) {
         int maxNum = empNumCounterRepositoryJdbc.increaseMaxNumByYear(tenantId, yearNum);
         return String.format("%04d%08d", yearNum, maxNum);
     }
