@@ -18,7 +18,6 @@ public class OrgNameValidator {
 
     // 组织必须有名称
     public void shouldNotEmpty(String name) {
-        //        return str == null || str.trim().isEmpty();
         if (isBlank(name)) {
             throw new BusinessException("组织没有名称！");
         }

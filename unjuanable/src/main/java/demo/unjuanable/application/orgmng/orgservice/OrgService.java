@@ -37,7 +37,7 @@ public class OrgService {
 
         org = orgRepository.save(org);
 
-        return buildOrgDto(org);
+        return toResponse(org);
     }
 
     @Transactional
@@ -50,7 +50,7 @@ public class OrgService {
         orgHandler.updateBasic(org, request.getName() , request.getLeaderId(), userId);
         orgRepository.save(org);
 
-        return buildOrgDto(org);
+        return toResponse(org);
     }
 
     @Transactional
@@ -65,11 +65,11 @@ public class OrgService {
         return org.getId();
     }
 
-    public Optional<Org> findOrgById(Long tenantId, Long id) {
-        return orgRepository.findById(tenantId, id);
+    public Optional<OrgResponse> findOrgById(Long tenantId, Long id) {
+        return orgRepository.findById(tenantId, id).map(this::toResponse);
     }
 
-    private static OrgResponse buildOrgDto(Org org) {
+    private OrgResponse toResponse(Org org) {
         OrgResponse response = new OrgResponse();
         response.setId(org.getId());
         response.setTenantId(org.getTenantId());

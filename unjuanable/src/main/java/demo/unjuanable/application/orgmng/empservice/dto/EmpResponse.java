@@ -1,4 +1,7 @@
-package demo.unjuanable.application.orgmng.empservice;
+package demo.unjuanable.application.orgmng.empservice.dto;
+
+import demo.unjuanable.domain.orgmng.emp.Emp;
+import demo.unjuanable.domain.orgmng.emp.EmpPost;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -17,6 +20,33 @@ public class EmpResponse {
     private List<SkillDto> skills;
     private List<WorkExperienceDto> experiences;
     private List<String> postCodes;
+
+    public EmpResponse(Emp emp) {
+
+        this.id = emp.getId();
+        this.tenantId = emp.getTenantId();
+        this.orgId = emp.getOrgId();
+        this.empNum = emp.getEmpNum();
+        this.idNum = emp.getIdNum();
+        this.name = emp.getName();
+        this.genderCode = emp.getGender().code();
+        this.dob = emp.getDob();
+        this.statusCode = emp.getStatus().code();
+
+        this.skills = emp.getSkills().stream()
+                .filter(s -> !s.isDeleted())
+                .map(SkillDto::new).toList();
+
+        this.experiences = emp.getExperiences().stream()
+                .filter(e -> !e.isDeleted())
+                .map(WorkExperienceDto::new)
+                .toList();
+
+        this.postCodes = emp.getEmpPosts().stream()
+                .filter(p -> !p.isDeleted())
+                .map(EmpPost::getPostCode).toList();
+    }
+
 
     public Long getId() {
         return id;
@@ -125,4 +155,5 @@ public class EmpResponse {
         this.postCodes = postCodes;
         return this;
     }
+
 }

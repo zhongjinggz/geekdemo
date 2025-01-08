@@ -1,5 +1,8 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.application.orgmng.empservice.dto.SkillDto;
+import demo.unjuanable.application.orgmng.empservice.dto.UpdateEmpRequest;
+import demo.unjuanable.application.orgmng.empservice.dto.WorkExperienceDto;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.stereotype.Component;
 

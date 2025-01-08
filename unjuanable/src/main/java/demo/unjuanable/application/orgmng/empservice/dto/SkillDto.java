@@ -1,4 +1,6 @@
-package demo.unjuanable.application.orgmng.empservice;
+package demo.unjuanable.application.orgmng.empservice.dto;
+
+import demo.unjuanable.domain.orgmng.emp.Skill;
 
 public class SkillDto {
 
@@ -12,11 +14,17 @@ public class SkillDto {
         this.levelCode = levelCode;
         this.duration = duration;
     }
+
     public SkillDto(Long id, Long skillTypeId, String levelCode, Integer duration) {
+        this(skillTypeId, levelCode, duration);
         this.id = id;
-        this.skillTypeId = skillTypeId;
-        this.levelCode = levelCode;
-        this.duration = duration;
+    }
+
+    public SkillDto(Skill skill) {
+        this(skill.getId()
+                , skill.getSkillTypeId()
+                , skill.getLevel().code()
+                , skill.getDuration());
     }
 
     public Long getId() {

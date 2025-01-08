@@ -1,5 +1,8 @@
 package demo.unjuanable.application.orgmng.empservice;
 
+import demo.unjuanable.application.orgmng.empservice.dto.CreateEmpRequest;
+import demo.unjuanable.application.orgmng.empservice.dto.EmpResponse;
+import demo.unjuanable.application.orgmng.empservice.dto.UpdateEmpRequest;
 import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.emp.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +30,7 @@ public class EmpService {
         Emp emp = assembler.toEmp(request, userId);
 
         empRepository.save(emp);
-        return assembler.toResponse(emp);
+        return new EmpResponse(emp);
     }
 
     @Transactional
@@ -39,7 +42,7 @@ public class EmpService {
         updator.update(emp, request, userId);
 
         empRepository.save(emp);
-        return assembler.toResponse(emp);
+        return new EmpResponse(emp);
     }
 
 }

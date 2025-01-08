@@ -2,7 +2,6 @@ package demo.unjuanable.domain.orgmng.emp;
 
 
 import demo.unjuanable.common.framework.domain.AuditableEntity;
-import demo.unjuanable.common.framework.domain.ChangingStatus;
 
 import java.time.LocalDateTime;
 
@@ -87,4 +86,5 @@ public class Skill extends AuditableEntity {
         this.emp = emp;
         return this;
     }
+
 }

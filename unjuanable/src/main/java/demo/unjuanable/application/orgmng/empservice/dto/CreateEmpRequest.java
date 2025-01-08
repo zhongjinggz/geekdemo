@@ -1,4 +1,4 @@
-package demo.unjuanable.application.orgmng.empservice;
+package demo.unjuanable.application.orgmng.empservice.dto;
 
 import java.time.LocalDate;
 import java.util.List;
