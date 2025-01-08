@@ -8,6 +8,8 @@ package demo.unjuanable.application.orgmng.orgservice;
 // name should not blank
 // created user should not blank
 
+import demo.unjuanable.domain.orgmng.org.Org;
+
 import java.time.LocalDateTime;
 
 public class OrgResponse {
@@ -23,6 +25,22 @@ public class OrgResponse {
     private Long createdBy;
     private LocalDateTime lastUpdatedAt;
     private Long lastUpdatedBy;
+
+    public OrgResponse() { }
+
+    public OrgResponse(Org org) {
+        this.id = org.getId();
+        this.tenantId = org.getTenantId();
+        this.orgTypeCode = org.getOrgTypeCode();
+        this.name = org.getName();
+        this.leaderId = org.getLeaderId();
+        this.superiorId = org.getSuperiorId();
+        this.statusCode = org.getStatus().code();
+        this.createdBy = org.getCreatedBy();
+        this.createdAt = org.getCreatedAt();
+        this.lastUpdatedBy = org.getLastUpdatedBy();
+        this.lastUpdatedAt = org.getLastUpdatedAt();
+    }
 
     public Long getId() {
         return id;
@@ -130,4 +148,5 @@ public class OrgResponse {
                 ", lastUpdatedBy=" + lastUpdatedBy +
                 '}';
     }
+
 }
