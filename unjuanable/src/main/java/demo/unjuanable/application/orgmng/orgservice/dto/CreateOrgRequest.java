@@ -1,4 +1,4 @@
-package demo.unjuanable.application.orgmng.orgservice;
+package demo.unjuanable.application.orgmng.orgservice.dto;
 
 public class CreateOrgRequest {
     private Long tenant;

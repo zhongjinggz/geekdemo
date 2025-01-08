@@ -1,5 +1,8 @@
 package demo.unjuanable.application.orgmng.orgservice;
 
+import demo.unjuanable.application.orgmng.orgservice.dto.CreateOrgRequest;
+import demo.unjuanable.application.orgmng.orgservice.dto.OrgResponse;
+import demo.unjuanable.application.orgmng.orgservice.dto.UpdateOrgBasicRequest;
 import demo.unjuanable.common.framework.exception.BusinessException;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.springframework.beans.factory.annotation.Autowired;

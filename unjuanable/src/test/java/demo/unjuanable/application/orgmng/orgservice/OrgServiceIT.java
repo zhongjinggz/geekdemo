@@ -1,5 +1,8 @@
 package demo.unjuanable.application.orgmng.orgservice;
 
+import demo.unjuanable.application.orgmng.orgservice.dto.CreateOrgRequest;
+import demo.unjuanable.application.orgmng.orgservice.dto.OrgResponse;
+import demo.unjuanable.application.orgmng.orgservice.dto.UpdateOrgBasicRequest;
 import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.domain.orgmng.org.*;
 import org.junit.jupiter.api.Assertions;

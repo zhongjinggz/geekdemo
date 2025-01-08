@@ -1,9 +1,9 @@
 package demo.unjuanable.adapter.driving.restful.orgmng;
 
 import demo.unjuanable.application.orgmng.orgservice.OrgService;
-import demo.unjuanable.application.orgmng.orgservice.OrgResponse;
-import demo.unjuanable.application.orgmng.orgservice.CreateOrgRequest;
-import demo.unjuanable.application.orgmng.orgservice.UpdateOrgBasicRequest;
+import demo.unjuanable.application.orgmng.orgservice.dto.OrgResponse;
+import demo.unjuanable.application.orgmng.orgservice.dto.CreateOrgRequest;
+import demo.unjuanable.application.orgmng.orgservice.dto.UpdateOrgBasicRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
