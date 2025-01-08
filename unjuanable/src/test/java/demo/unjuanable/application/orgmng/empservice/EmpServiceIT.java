@@ -328,7 +328,7 @@ class EmpServiceIT {
 
     private Emp prepareEmpInDb() {
         CreateEmpRequest createRequest = buildCreateEmpRequest();
-        EmpResponse response = empService.addEmp(createRequest, DEFAULT_TENANT_ID);
+        EmpResponse response = empService.addEmp(createRequest, DEFAULT_USER_ID);
         return empRepository.findById(response.getTenantId(), response.getId())
                 .orElseGet(() -> fail("找不到新增的员工！"));
     }

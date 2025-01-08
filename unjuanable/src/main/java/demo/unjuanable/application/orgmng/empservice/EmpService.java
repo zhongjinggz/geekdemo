@@ -28,7 +28,30 @@ public class EmpService {
 
     @Transactional
     public EmpResponse addEmp(CreateEmpRequest request, Long userId) {
-        Emp emp = builderFactory.builder().build(request, userId);
+        EmpBuilder builder = builderFactory.builder()
+                .tenantId(request.getTenantId())
+                .orgId(request.getOrgId())
+                .idNum(request.getIdNum())
+                .dob(request.getDob())
+                .name(request.getName())
+                .genderCode(request.getGenderCode())
+                .statusCode(request.getStatusCode())
+                .createdBy(userId);
+
+        request.getSkills().forEach(
+                s -> builder.addSkill(
+                        s.getSkillTypeId(),
+                        s.getLevelCode(),
+                        s.getDuration()));
+        request.getExperiences().forEach(
+                e -> builder.addExperience(
+                        e.getStartDate(),
+                        e.getEndDate(),
+                        e.getCompany())
+        );
+        request.getPostCodes().forEach(builder::addPostCode);
+
+        Emp emp = builder.build();
 
         empRepository.save(emp);
         return new EmpResponse(emp);

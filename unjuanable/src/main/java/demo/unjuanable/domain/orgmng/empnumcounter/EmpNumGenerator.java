@@ -18,14 +18,14 @@ public class EmpNumGenerator {
 
     public String generateEmpNum(Long tenantId) {
         int yearNum = LocalDate.now().getYear();
-        int maxNum = empNumCounterRepositoryJdbc.increaseMaxNumByYear(tenantId, yearNum);
+        int maxNum = empNumCounterRepositoryJdbc.nextNumByYear(tenantId, yearNum);
         return String.format("%04d%08d", yearNum, maxNum);
     }
 
 
 
     public String generateEmpNumByYear(Long tenantId, int yearNum) {
-        int maxNum = empNumCounterRepositoryJdbc.increaseMaxNumByYear(tenantId, yearNum);
+        int maxNum = empNumCounterRepositoryJdbc.nextNumByYear(tenantId, yearNum);
         return String.format("%04d%08d", yearNum, maxNum);
     }
 }

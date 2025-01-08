@@ -37,7 +37,7 @@ class EmpNumGeneratorIT {
         EmpNumCounter empNumCounter = new EmpNumCounter(1, 9999, 100);
         empNumCounterRepositoryJdbc.save(empNumCounter);
 
-        int maxNum = empNumGenerator.empNumCounterRepositoryJdbc.increaseMaxNumByYear(1L, 9999);
+        int maxNum = empNumGenerator.empNumCounterRepositoryJdbc.nextNumByYear(1L, 9999);
         String actualEmpNum = String.format("%04d%08d", 9999, maxNum);
         assertEquals("999900000101", actualEmpNum);
 
@@ -52,7 +52,7 @@ class EmpNumGeneratorIT {
     void generateEmpNumByYear_throwSystemException_whenCounterNotExists() {
         Exception e = assertThrows(SystemException.class
                 , () -> {
-                    int maxNum = empNumGenerator.empNumCounterRepositoryJdbc.increaseMaxNumByYear(1L, 9999);
+                    int maxNum = empNumGenerator.empNumCounterRepositoryJdbc.nextNumByYear(1L, 9999);
                 });
 
         assertEquals("租户ID为'1'的年份为'9999'的员工编号计数器不存在！", e.getMessage());

@@ -85,7 +85,7 @@ public class EmpNumCounterRepositoryJdbc extends Mapper<EmpNumCounter> implement
     }
 
     @Override
-    public Integer increaseMaxNumByYear(Long tenantId, int yearNum) {
+    public Integer nextNumByYear(Long tenantId, int yearNum) {
         final String increaseSql = " update emp_num_counter "
                 + " set max_emp_num = max_emp_num + 1 "
                 + " where tenant_id = ?  and year_num = ? ";

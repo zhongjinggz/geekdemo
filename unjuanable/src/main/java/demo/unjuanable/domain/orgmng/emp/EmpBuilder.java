@@ -1,23 +1,34 @@
 package demo.unjuanable.domain.orgmng.emp;
 
 
-import demo.unjuanable.application.orgmng.empservice.dto.CreateEmpRequest;
 import demo.unjuanable.domain.common.validator.CommonOrgValidator;
 import demo.unjuanable.domain.common.valueobject.Period;
 import demo.unjuanable.domain.orgmng.empnumcounter.EmpNumCounterRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class EmpBuilder {
     final CommonOrgValidator assertOrg;
     final EmpNumCounterRepository empNumCounterRepository;
 
     private Long tenantId;
-    private Long createdBy;
+    private Long orgId;
+    private String idNum;
+    private LocalDate dob;
     private String name;
+    private String genderCode;
+    private String statusCode;
+    private Long createdBy;
+
+    private final List<Map<String, Object>> skills = new ArrayList<>();
+    private final List<Map<String, Object>> experiences = new ArrayList<>();
+    private final List<String> postCodes = new ArrayList<>();
 
     EmpBuilder(CommonOrgValidator assertOrg
-    , EmpNumCounterRepository empNumCounterRepository) {
+            , EmpNumCounterRepository empNumCounterRepository) {
         this.assertOrg = assertOrg;
         this.empNumCounterRepository = empNumCounterRepository;
     }
@@ -27,8 +38,33 @@ public class EmpBuilder {
         return this;
     }
 
+    public EmpBuilder orgId(Long orgId) {
+        this.orgId = orgId;
+        return this;
+    }
+
+    public EmpBuilder idNum(String idNum) {
+        this.idNum = idNum;
+        return this;
+    }
+
+    public EmpBuilder dob(LocalDate dob) {
+        this.dob = dob;
+        return this;
+    }
+
     public EmpBuilder name(String name) {
         this.name = name;
+        return this;
+    }
+
+    public EmpBuilder genderCode(String genderCode) {
+        this.genderCode = genderCode;
+        return this;
+    }
+
+    public EmpBuilder statusCode(String statusCode) {
+        this.statusCode = statusCode;
         return this;
     }
 
@@ -37,56 +73,65 @@ public class EmpBuilder {
         return this;
     }
 
-    public Emp build() {
-        validate();
-
-        return null;
-    }
-
-    private void validate() {
-    }
-
-
-    public void validateCreateRequest(Long tenantId, Long orgId) {
-        assertOrg.shouldValid(
-                tenantId, orgId);
+    public void validate() {
+        assertOrg.shouldValid(tenantId, orgId);
     }
 
     public String generateEmpNum(Long tenantId) {
         int yearNum = LocalDate.now().getYear();
-        int maxNum = empNumCounterRepository.increaseMaxNumByYear(tenantId, yearNum);
+        int maxNum = empNumCounterRepository.nextNumByYear(tenantId, yearNum);
         return (String.format("%04d%08d", yearNum, maxNum));
     }
 
-    public Emp build(CreateEmpRequest request, Long userId) {
+    public EmpBuilder addSkill(Long skillTypeId, String levelCode, Integer duration) {
+        skills.add(Map.of(
+                "skillTypeId", skillTypeId
+                , "levelCode", levelCode
+                , "duration", duration));
+        return this;
+    }
 
-        validateCreateRequest(request.getTenantId(), request.getOrgId());
+    public EmpBuilder addExperience(LocalDate startDate, LocalDate endDate, String company) {
+        experiences.add(Map.of(
+                "startDate", startDate
+                , "endDate", endDate
+                , "company", company));
+        return this;
+    }
 
-        String empNum = generateEmpNum(request.getTenantId());
+    public EmpBuilder addPostCode(String postCode) {
+        postCodes.add(postCode);
+        return this;
+    }
 
-        Emp result = new Emp(request.getTenantId()
-                , EmpStatus.ofCode(request.getStatusCode())
-                , userId);
-        result.setEmpNum(empNum)
-                .setIdNum(request.getIdNum())
-                .setDob(request.getDob())
-                .setOrgId(request.getOrgId())
-                .setName(request.getName())
-                .setGender(Gender.ofCode(request.getGenderCode()));
+    public Emp build() {
+
+        validate();
+
+        Emp result = new Emp(tenantId, EmpStatus.ofCode(statusCode), createdBy)
+                .setEmpNum(generateEmpNum(tenantId))
+                .setIdNum(idNum)
+                .setDob(dob)
+                .setOrgId(orgId)
+                .setName(name)
+                .setGender(Gender.ofCode(genderCode));
 
 
-        request.getSkills().forEach(s -> result.addSkill(
-                s.getSkillTypeId()
-                , SkillLevel.ofCode(s.getLevelCode())
-                , s.getDuration()
-                , userId));
+        skills.forEach(s ->
+                result.addSkill(
+                        (Long) s.get("skillTypeId")
+                        , SkillLevel.ofCode((String) s.get("levelCode"))
+                        , (Integer) s.get("duration")
+                        , createdBy)
+        );
 
-        request.getExperiences().forEach(e -> result.addExperience(
-                Period.of(e.getStartDate(), e.getEndDate())
-                , e.getCompany()
-                , userId));
+        experiences.forEach(e -> result.addExperience(
+                Period.of((LocalDate) e.get("startDate"), (LocalDate) e.get("endDate"))
+                , (String) e.get("company")
+                , createdBy)
+        );
 
-        request.getPostCodes().forEach((p -> result.addEmpPost(p, userId)));
+        postCodes.forEach((p -> result.addEmpPost(p, createdBy)));
 
         return result;
     }

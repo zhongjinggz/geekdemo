@@ -7,5 +7,5 @@ public interface EmpNumCounterRepository {
 
     Optional<EmpNumCounter> findByYear(Long tenantId, int yearNum);
 
-    Integer increaseMaxNumByYear(Long tenantId, int yearNum);
+    Integer nextNumByYear(Long tenantId, int yearNum);
 }
