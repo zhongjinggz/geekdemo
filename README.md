@@ -11,5 +11,5 @@
 - 集成测试: mvn failsafe:integration-test
 - 集成测试&单元测试: mvn verify
 - 运行:
-    mvn spring-boot:run
-    localhost:8080/swagger-ui/index.html
+    - mvn spring-boot:run
+    - localhost:8080/swagger-ui/index.html
