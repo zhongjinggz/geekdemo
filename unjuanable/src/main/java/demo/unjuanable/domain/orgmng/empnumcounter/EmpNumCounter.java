@@ -1,7 +1,9 @@
 package demo.unjuanable.domain.orgmng.empnumcounter;
 
 
-public class EmpNumCounter {
+import demo.unjuanable.common.framework.domain.AbstractPersistent;
+
+public class EmpNumCounter extends AbstractPersistent {
     final private long tenantId;
     private int yearNum;
     private int maxEmpNum;

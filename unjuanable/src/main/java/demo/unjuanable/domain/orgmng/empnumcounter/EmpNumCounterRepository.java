@@ -1,9 +1,11 @@
 package demo.unjuanable.domain.orgmng.empnumcounter;
 
-public interface EmpNumCounterRepository {
-    void save(EmpNumCounter empNumCounter);
+import java.util.Optional;
 
-    EmpNumCounter findByYear(Long tenantId, int yearNum);
+public interface EmpNumCounterRepository {
+    EmpNumCounter save(EmpNumCounter empNumCounter);
+
+    Optional<EmpNumCounter> findByYear(Long tenantId, int yearNum);
 
     Integer increaseMaxNumByYear(Long tenantId, int yearNum);
 }

@@ -9,8 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -39,8 +40,9 @@ class EmpNumGeneratorIT {
         String actualEmpNum = empNumGenerator.generateEmpNumByYear(1L, 9999);
         assertEquals("999900000101", actualEmpNum);
 
-        EmpNumCounter actualEmpNumCounter = empNumCounterRepositoryJdbc.findByYear(1L, 9999);
-        assertEquals(101, actualEmpNumCounter.getMaxEmpNum());
+        Optional<EmpNumCounter> actualEmpNumCounter = empNumCounterRepositoryJdbc.findByYear(1L, 9999);
+        assertTrue(actualEmpNumCounter.isPresent());
+        assertEquals(101, actualEmpNumCounter.get().getMaxEmpNum());
 
     }
 
