@@ -8,6 +8,8 @@ public class AggregateRoot
 
     public AggregateRoot(LocalDateTime createdAt, Long createdBy) {
         super(createdAt, createdBy);
+        this.changingStatus = ChangingStatus.NEW;
+        this.version = 0L;
     }
 
     @Override
