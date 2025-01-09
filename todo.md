@@ -2,9 +2,10 @@
   - DONE use new version of springboot and optimize pom.xml
   - DONE improve OrgRepository like EmpRepository (use ChangeStatus and dao)
   - DONE extract EntityPersister(Mapper now)
-  - improve other repositories to use Mapper
+  - DONE improve other repositories to use Mapper
   - make builder version (builder for both )
-  - make assembler version
+  - fix optimize lock
   - introduce mybatis (or mybatis plus?)
+  - make assembler version
 
 - Introduce JPA
