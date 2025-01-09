@@ -1,5 +1,6 @@
 package demo.unjuanable.domain.orgmng.emp;
 
+import demo.unjuanable.common.framework.domain.AbstractPersistent;
 import demo.unjuanable.common.framework.domain.AggregateRoot;
 import demo.unjuanable.common.framework.domain.ChangingStatus;
 import demo.unjuanable.common.framework.exception.BusinessException;
@@ -8,8 +9,6 @@ import demo.unjuanable.domain.common.valueobject.Period;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static demo.unjuanable.common.util.SqlUtil.toLocalDate;
 
 
 public class Emp extends AggregateRoot {
@@ -289,8 +288,10 @@ public class Emp extends AggregateRoot {
         return this;
     }
 
-    public Emp deleteEmpPost(String postCode, Long userId) {
-        //TODO ...
+    public Emp deleteEmpPost(String postCode) {
+        empPosts.stream()
+                .filter(p -> p.getPostCode().equals(postCode))
+                .forEach(EmpPost::toDelete);
         return this;
     }
 }

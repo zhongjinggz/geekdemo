@@ -28,9 +28,8 @@ public class EmpHandler {
                 .toUpdate();
     }
 
-    private void updateAuditInfo(Emp emp, Long userId) {
-        emp.setLastUpdatedBy(userId);
-        emp.setLastUpdatedAt(LocalDateTime.now());
+    public void addSkill(Emp emp, Long userId, Long skillTypeId, SkillLevel level, Integer duration) {
+        emp.addSkill(skillTypeId , level , duration , userId);
     }
 
     public void deleteSkill(Emp emp, Long skillTypeId) {
@@ -41,16 +40,6 @@ public class EmpHandler {
         emp.updateSkill(skillTypeId, level, duration, userId);
     }
 
-    public void addSkill(Emp emp, Long userId, Long skillTypeId, SkillLevel level, Integer duration) {
-        emp.addSkill(skillTypeId , level , duration , userId);
-    }
-
-    public void updateExperience(Emp emp, Period period, String company, Long updatedBy) {
-        emp.updateExperience(period
-                , company
-                , updatedBy);
-    }
-
     public void addExperience(Emp emp, Period period, String company, Long createdBy) {
         emp.addExperience(period
                 , company
@@ -59,5 +48,19 @@ public class EmpHandler {
 
     public void deleteExperience(Emp emp, Period period) {
         emp.deleteExperience(period);
+    }
+
+    public void updateExperience(Emp emp, Period period, String company, Long updatedBy) {
+        emp.updateExperience(period
+                , company
+                , updatedBy);
+    }
+
+    public void addEmpPost(Emp emp, String postCode, Long createdBy) {
+        emp.addEmpPost(postCode, createdBy);
+    }
+
+    public void deleteEmpPost(Emp emp, String postCode) {
+        emp.deleteEmpPost(postCode);
     }
 }

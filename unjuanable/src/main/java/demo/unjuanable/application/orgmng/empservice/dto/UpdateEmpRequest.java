@@ -1,9 +1,5 @@
 package demo.unjuanable.application.orgmng.empservice.dto;
 
-import demo.unjuanable.domain.common.valueobject.Period;
-import demo.unjuanable.domain.orgmng.emp.Skill;
-import demo.unjuanable.domain.orgmng.emp.WorkExperience;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -57,17 +53,6 @@ public class UpdateEmpRequest extends BaseEmpRequest {
     public UpdateEmpRequest addSkill(Long id, Long skillTypeId, String levelCode, Integer duration) {
         super.addSkill(id, skillTypeId, levelCode, duration);
         return this;
-    }
-
-    public boolean isSkillAbsent(Skill otherSkill) {
-        return skills.stream()
-                .noneMatch(skill -> skill.getSkillTypeId().equals(otherSkill.getSkillTypeId()));
-    }
-
-    public boolean isExperienceAbsent(WorkExperience otherExperience) {
-        return experiences.stream()
-                .noneMatch(experience -> Period.of(experience.getStartDate() , experience.getEndDate())
-                        .equals(otherExperience.getPeriod()));
     }
 
     public UpdateEmpRequest removeSkill(long skillTypeId) {
