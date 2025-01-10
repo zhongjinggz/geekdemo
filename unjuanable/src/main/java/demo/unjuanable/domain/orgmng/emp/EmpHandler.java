@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Component
 public class EmpHandler {
 
-    public EmpHandler() {
-    }
-
+// TODO: 增加校验规则
     public void updateRoot(Emp emp
             , Long userId
             , String idNum

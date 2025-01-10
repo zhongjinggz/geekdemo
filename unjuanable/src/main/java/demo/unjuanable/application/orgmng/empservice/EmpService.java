@@ -12,18 +12,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class EmpService {
     private final EmpRepository empRepository;
-    private final EmpUpdator updator;
     private final EmpBuilderFactory builderFactory;
+    private final EmpHandler handler;
+    private final SkillUpdator skillUpdator;
+    private final WorkExperienceUpdator experienceUpdator;
+    private final EmpPostUpdator empPostUpdator;
 
 
     @Autowired
     public EmpService(EmpRepository empRepository
-            , EmpUpdator updator
-    , EmpBuilderFactory builderFactory
+            , EmpBuilderFactory builderFactory
+            , EmpHandler handler
+            , SkillUpdator skillUpdator
+            , WorkExperienceUpdator experienceUpdator
+            , EmpPostUpdator empPostUpdator
     ) {
         this.empRepository = empRepository;
-        this.updator = updator;
         this.builderFactory = builderFactory;
+        this.handler = handler;
+        this.skillUpdator = skillUpdator;
+        this.experienceUpdator = experienceUpdator;
+        this.empPostUpdator = empPostUpdator;
     }
 
     @Transactional
@@ -63,7 +72,16 @@ public class EmpService {
                 .orElseThrow(() -> new BusinessException(
                         "Emp id(" + empId + ") 不正确！"));
 
-        updator.update(emp, request, userId);
+        handler.updateRoot(emp
+                , userId
+                , request.getIdNum()
+                , request.getName()
+                , request.getDob()
+                , Gender.ofCode(request.getGenderCode()));
+
+        skillUpdator.update(emp, emp.getSkills(), request.getSkills(), userId);
+        experienceUpdator.update(emp, emp.getExperiences(), request.getExperiences(), userId);
+        empPostUpdator.update(emp, emp.getEmpPosts(), request.getPostCodes(), userId);
 
         empRepository.save(emp);
         return new EmpResponse(emp);
