@@ -4,13 +4,13 @@ spring:
     username: unjuanable
     password: unjuanable
     driver-class-name: com.mysql.cj.jdbc.Driver
-#springdoc:
-#  api-docs:
-#    path: /api-docs
-#  swagger-ui:
-#    path: /swagger-ui.html
-#    enabled: true
-logging:
+mybatis:
+  mapper-locations: "classpath:/mapper/**/*.xml"
+  type-aliases-package: demo.unjuanable.domain.**
+  configuration:
+    map-underscore-to-camel-case: true
+
+
   level:
     root: INFO
     org:

@@ -2,12 +2,12 @@ package demo.unjuanable.domain.orgmng.emp;
 
 
 
-import demo.unjuanable.common.framework.domain.WithCode;
+import demo.unjuanable.common.framework.domain.CodeEnum;
 import demo.unjuanable.common.framework.exception.BusinessException;
 
 import java.util.Arrays;
 
-public enum Gender implements WithCode {
+public enum Gender implements CodeEnum {
     MALE("M", "男"),
     FEMALE("F", "女");
 

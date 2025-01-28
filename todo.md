@@ -3,9 +3,8 @@
   - DONE improve OrgRepository like EmpRepository (use ChangeStatus and dao)
   - DONE extract EntityPersister(Mapper now)
   - DONE improve other repositories to use Mapper
-  - make builder version (builder for both )
+  - DONE make builder version (builder for both )
   - fix optimize lock
   - introduce mybatis (or mybatis plus?)
-  - make assembler version
 
 - Introduce JPA

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="demo.unjuanable.adapter.driven.persistence.tenantmng.TenantMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into tenant (name, status_code, created_at, created_by)
+        values (#{name}, #{status.code}, #{createdAt}, #{createdBy})
+    </insert>
+
+    <update id="update">
+        update tenant
+        set name          = #{name},
+            status_code   = #{status.code},
+            last_updated_at  = #{lastUpdatedAt},
+            last_updated_by  = #{lastUpdatedBy}
+        where id = #{id}
+    </update>
+
+    <select id="selectById" resultMap="tenantResult">
+        select id, name, status_code, created_at, created_by, last_updated_at, last_updated_by
+        from tenant
+        where id = #{id}
+    </select>
+
+    <resultMap id="tenantResult"  type="tenant">
+        <constructor>
+            <idArg column="id" javaType="long" name="id"/>
+            <arg column="name" javaType="string" name="name"/>
+            <arg column="status_code" javaType="string" name="statusCode"/>
+            <arg column="created_at" javaType="java.time.LocalDateTime" name="createdAt"/>
+            <arg column="created_by" javaType="Long" name="createdBy"/>
+            <arg column="last_updated_at" javaType="java.time.LocalDateTime" name="lastUpdatedAt"/>
+            <arg column="last_updated_by" javaType="long" name="lastUpdatedBy"/>
+        </constructor>
+    </resultMap>
+
+    <select id="selectExistByIdAndStatus" resultType="java.lang.Integer">
+        select 1
+        from tenant
+        where id = #{id} and status_code = #{statusCode}
+        limit 1
+    </select>
+
+</mapper>

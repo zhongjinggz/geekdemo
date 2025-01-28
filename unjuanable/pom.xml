@@ -40,17 +40,22 @@
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.h2database</groupId>-->
+<!--            <artifactId>h2</artifactId>-->
+<!--            <scope>runtime</scope>-->
+<!--        </dependency>-->
         <!-- mysql-connector-j 已经取代了原来的 mysql-connector-java -->
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <version>9.1.0</version>
             <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>3.0.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,7 +91,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 如过不使用@{argLine}，则会完全替换掉原来的命令参数，使用了，则是在原来的参数后面添加 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -95,7 +99,7 @@
                     JDK21 默认不使用动态加载代理（https://openjdk.org/jeps/451）。
                     因此使用 Mockito 时会报警： WARNING: A Java agent has been loaded dynamically ...
                     有两种解决方法：
-                    方法一：适用于 Mockito 5.14.0 之前的版本(Springboot3.4.0 之后才会引入这个版本)。
+                    方法一：适用于 Mockito 5.14.0 之前的版本(对应于Springboot3.4.0 之前)。
                     如下所示，增加命令行参数以便启动动态大道理加载。这个方案并不彻底，因为将来可能某个JDK版本会彻底禁止动态加载大道理。
                     <argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
 
